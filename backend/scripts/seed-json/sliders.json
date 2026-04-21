@@ -1,0 +1,32 @@
+[
+  {
+    "heading": "Cyber Security & Cloud",
+    "title": "Securing Your Digital Future",
+    "subtitle": "Protect your business with enterprise-grade security, cloud computing, and cutting-edge solutions.",
+    "buttonText": "Get Started",
+    "buttonLink": "/services",
+    "image": "1773738325577.jpg",
+    "order": 1,
+    "isActive": true
+  },
+  {
+    "heading": "Digital Transformation",
+    "title": "Transform Your Business",
+    "subtitle": "Leverage modern technology to drive growth, efficiency, and innovation.",
+    "buttonText": "Learn More",
+    "buttonLink": "/about",
+    "image": "Dr Tahirsb.jpg",
+    "order": 2,
+    "isActive": true
+  },
+  {
+    "heading": "Managed IT Services",
+    "title": "24/7 IT Support",
+    "subtitle": "Get round-the-clock support from certified professionals ready to help.",
+    "buttonText": "Explore Services",
+    "buttonLink": "/services",
+    "image": "Saeed.png",
+    "order": 3,
+    "isActive": true
+  }
+]

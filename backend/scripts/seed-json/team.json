@@ -1,0 +1,252 @@
+[
+  {
+    "slug": "tahir-ali",
+    "name": "Tahir Ali",
+    "role": "CEO & Founder",
+    "bio": "Tahir Ali is a visionary leader, passionate about IT solutions, cloud strategy, and driving innovation in business technology.",
+    "image": "Dr Tahirsb.jpg",
+    "order": 1,
+    "skills": [
+      {
+        "name": "IT Management",
+        "value": 95
+      },
+      {
+        "name": "Network Security",
+        "value": 90
+      },
+      {
+        "name": "Web Development",
+        "value": 85
+      },
+      {
+        "name": "Platform Integration",
+        "value": 90
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor's in Computer Science",
+        "year": "2008"
+      },
+      {
+        "degree": "Master's in IT Management",
+        "year": "2012"
+      }
+    ],
+    "socialLinks": {
+      "facebook": "#",
+      "instagram": "#",
+      "linkedin": "#"
+    }
+  },
+  {
+    "slug": "muhadisa-kazmi",
+    "name": "Muhadisa Kazmi",
+    "role": "Social Media Manager",
+    "bio": "I’m a Social Media Manager passionate about building strong online communities and helping brands grow through creative content and data-driven strategies.",
+    "image": "muhadisa.png",
+    "order": 2,
+    "skills": [
+      {
+        "name": "Marketing & Growth",
+        "value": 95
+      },
+      {
+        "name": "Social Media Strategy",
+        "value": 90
+      },
+      {
+        "name": "Content Creation",
+        "value": 92
+      },
+      {
+        "name": "Platform Management",
+        "value": 85
+      }
+    ],
+    "education": [
+      {
+        "degree": "SSIT Social Media Marketing Certification",
+        "year": ""
+      },
+      {
+        "degree": "SSIT Social Media Management Certificate",
+        "year": ""
+      },
+      {
+        "degree": "HP Certification in Content Creation",
+        "year": ""
+      }
+    ],
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/share/19ZQek3bYS/",
+      "instagram": "https://www.instagram.com/muhadisa._.kazmi",
+      "linkedin": "https://www.linkedin.com/in/muhadisa-kazmi-151312371"
+    }
+  },
+  {
+    "slug": "saeed-ali",
+    "name": "Saeed Ali",
+    "role": "Lead Web Developer",
+    "bio": "Saeed is an expert in web development, building scalable and secure web applications.",
+    "image": "Saeed.png",
+    "order": 3,
+    "skills": [
+      {
+        "name": "Full Stack Developer",
+        "value": 98
+      },
+      {
+        "name": "Laravel Developer",
+        "value": 95
+      },
+      {
+        "name": "API Integration",
+        "value": 90
+      },
+      {
+        "name": "Database Management",
+        "value": 96
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor's in Software Engineering",
+        "year": "2018"
+      },
+      {
+        "degree": "Master's in Computer Science",
+        "year": "2022"
+      }
+    ],
+    "socialLinks": {
+      "facebook": "#",
+      "instagram": "#",
+      "linkedin": "#"
+    }
+  },
+  {
+    "slug": "asad-khan",
+    "name": "Asad Khan",
+    "role": "Art Director and Producer",
+    "bio": "BS Software Engineering graduate with IT diploma and cybersecurity training. 5+ years experience in Graphic Design, Video Editing, and Digital Marketing.",
+    "image": "Asad.jpg",
+    "order": 4,
+    "skills": [
+      {
+        "name": "Graphic Designing",
+        "value": 95
+      },
+      {
+        "name": "Video Editing",
+        "value": 90
+      },
+      {
+        "name": "Digital Marketing",
+        "value": 88
+      },
+      {
+        "name": "Web Development",
+        "value": 85
+      },
+      {
+        "name": "App Development",
+        "value": 85
+      }
+    ],
+    "education": [
+      {
+        "degree": "BS Software Engineering",
+        "year": ""
+      }
+    ],
+    "socialLinks": {
+      "facebook": "#",
+      "instagram": "#",
+      "linkedin": "#"
+    }
+  },
+  {
+    "slug": "areeba-imtiaz",
+    "name": "Areeba Imtiaz",
+    "role": "Media & Communication Specialist",
+    "bio": "Media and Communication Studies graduate focused on digital media, content creation, and strategic communication.",
+    "image": "areeba.png",
+    "order": 5,
+    "skills": [
+      {
+        "name": "Content Creation",
+        "value": 95
+      },
+      {
+        "name": "Digital Media Management",
+        "value": 92
+      },
+      {
+        "name": "Social Media Communication",
+        "value": 90
+      },
+      {
+        "name": "Media Research & Analysis",
+        "value": 88
+      },
+      {
+        "name": "Public Relations Fundamentals",
+        "value": 89
+      },
+      {
+        "name": "Creative Storytelling",
+        "value": 90
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelors in Media Studies & Communication",
+        "year": ""
+      }
+    ],
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/share/1EnUTQyL9K/",
+      "instagram": "https://www.instagram.com/areebaimtiaz_mughal",
+      "linkedin": "https://www.linkedin.com/in/areeba-imtiaz-3a8173285"
+    }
+  },
+  {
+    "slug": "mesum",
+    "name": "Maisam Ali",
+    "role": "Technical Project Manager & DevSecOps Engineer",
+    "bio": "Technical Project Manager and DevSecOps Engineer specializing in secure, scalable, high-performance software solutions.",
+    "image": "mesum.png",
+    "order": 6,
+    "skills": [
+      {
+        "name": "Team Collaboration",
+        "value": 95
+      },
+      {
+        "name": "Agile/Scrum Project Management",
+        "value": 92
+      },
+      {
+        "name": "Vulnerability Management",
+        "value": 90
+      },
+      {
+        "name": "CI/CD Automation",
+        "value": 88
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor's in Computer Science",
+        "year": ""
+      }
+    ],
+    "socialLinks": {
+      "facebook": "#",
+      "instagram": "https://www.instagram.com/maisamaliii",
+      "linkedin": "https://www.linkedin.com/in/maisam-ali-b749ba2b4"
+    }
+  }
+]

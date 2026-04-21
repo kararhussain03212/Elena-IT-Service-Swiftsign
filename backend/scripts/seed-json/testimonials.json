@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Kawser Ahmed",
+    "role": "Founder & CEO, DigiTech Labs",
+    "company": "DigiTech Labs",
+    "message": "The team at Swift Solutions delivered a seamless digital transformation. Their IT management, SEO optimization, and data security services exceeded our expectations.",
+    "avatar": "testimonial-two-image1.png",
+    "rating": 4,
+    "order": 1,
+    "isActive": true
+  },
+  {
+    "name": "Alex Rony",
+    "role": "CTO, TechCorp Solutions",
+    "company": "TechCorp Solutions",
+    "message": "Swift Solutions transformed our IT infrastructure. Their team ensured secure, scalable, and reliable systems that boosted our business productivity.",
+    "avatar": "testimonial-two-image2.png",
+    "rating": 5,
+    "order": 2,
+    "isActive": true
+  },
+  {
+    "name": "Jhon Rony",
+    "role": "CTO, TechCorp Solutions",
+    "company": "TechCorp Solutions",
+    "message": "Swift Solutions transformed our IT infrastructure. Their team ensured secure, scalable, and reliable systems that boosted our business productivity.",
+    "avatar": "testimonial-two-image2.png",
+    "rating": 4,
+    "order": 3,
+    "isActive": true
+  },
+  {
+    "name": "Jhon Don",
+    "role": "CTO, TechCorp Solutions",
+    "company": "TechCorp Solutions",
+    "message": "Swift Solutions transformed our IT infrastructure. Their team ensured secure, scalable, and reliable systems that boosted our business productivity.",
+    "avatar": "testimonial-two-image2.png",
+    "rating": 5,
+    "order": 4,
+    "isActive": true
+  }
+]

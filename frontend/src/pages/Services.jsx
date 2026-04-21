@@ -1,0 +1,113 @@
+import Banner from "@/components/Banner";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { getServices } from "@/api/Apis";
+import serviceItemShape from "@/assets/images/shape/service-two-item-shape.png";
+import useScrollReveal from "@/hooks/useScrollReveal";
+import useScrollRevealGrid from "@/hooks/useScrollRevealGrid";
+import { sortContentItems } from "@/lib/sortContentItems";
+
+const Services = () => {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const headingRef = useScrollReveal();
+  const gridRef = useScrollRevealGrid(services);
+
+  const apiRoot = useMemo(() => {
+    const base = import.meta.env.VITE_API_URL || "";
+    return base.replace(/\/api\/?$/, "");
+  }, []);
+
+  const resolveImage = (value) => {
+    if (!value)
+      return "https://placehold.co/800x500/1b1832/ffffff?text=Service";
+    if (value.startsWith("http")) return value;
+    if (value.startsWith("/uploads/")) return apiRoot + value;
+    return apiRoot + "/uploads/" + value;
+  };
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await getServices();
+        setServices(sortContentItems(Array.isArray(res.data) ? res.data : []));
+      } catch (error) {
+        console.error("Services load failed", error);
+        setServices([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, []);
+
+  return (
+    <section>
+      <Banner title="Service" />
+
+      <div className="py-28 bg-[#151327]">
+        <div className="mx-auto w-full max-w-[1320px] px-6 md:px-10">
+          <div ref={headingRef} className="sr-hidden sr-up text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+              Our Services
+            </h2>
+            <p className="text-white/60 max-w-xl mx-auto">
+              Smart, scalable, and swift IT solutions tailored for the digital
+              era.
+            </p>
+          </div>
+
+          <div
+            ref={gridRef}
+            className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {loading ? (
+              <p className="col-span-full text-white/70 text-center">
+                Loading services...
+              </p>
+            ) : (
+              services.map((service, index) => (
+                <article
+                  key={service._id || service.slug || index}
+                  className="sr-hidden sr-up group relative flex w-full max-w-[380px] flex-col overflow-hidden rounded-[60px] rounded-tr-none rounded-bl-none bg-[#1b1832]"
+                >
+                  <img
+                    src={resolveImage(service.image)}
+                    alt={service.title}
+                    className="h-[230px] w-full object-cover"
+                  />
+
+                  <div className="relative flex flex-1 flex-col px-6 pb-7 pt-14">
+                    <img
+                      src={serviceItemShape}
+                      alt=""
+                      className="pointer-events-none absolute right-0 top-3 w-[145px] opacity-35"
+                    />
+
+                    <h3 className="text-[24px] font-bold leading-tight text-white">
+                      {service.title}
+                    </h3>
+                    <p className="mt-3 text-[15px] leading-relaxed text-white/75">
+                      {service.shortDescription || service.description}
+                    </p>
+
+                    <Link
+                      to={"/services/" + service.slug}
+                      className="mt-auto inline-flex items-center gap-2 pt-5 text-[15px] font-semibold text-[#3c72fc] hover:text-white"
+                    >
+                      <span>Read More</span>
+                      <span>-&gt;</span>
+                    </Link>
+                  </div>
+                </article>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Services;

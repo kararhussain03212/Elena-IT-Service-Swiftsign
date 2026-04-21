@@ -1,0 +1,463 @@
+[
+  {
+    "page": "about",
+    "key": "about.stats",
+    "order": 1,
+    "isActive": true,
+    "content": {
+      "items": [
+        {
+          "iconKey": "icon1",
+          "value": "300+",
+          "label": "Satisfied Clients"
+        },
+        {
+          "iconKey": "icon2",
+          "value": "1000+",
+          "label": "Finished Projects"
+        },
+        {
+          "iconKey": "icon3",
+          "value": "60+",
+          "label": "Skilled Experts"
+        },
+        {
+          "iconKey": "icon4",
+          "value": "1000+",
+          "label": "Media Posts"
+        }
+      ]
+    }
+  },
+  {
+    "page": "about",
+    "key": "about.whoWeAre",
+    "order": 2,
+    "isActive": true,
+    "content": {
+      "badge": "WHO WE ARE",
+      "heading": "Swiftly Shaping the Future of Technology",
+      "description": "At Swift Sign, we combine creativity, technology, and strategy to build digital products that make an impact. Our team specializes in crafting innovative solutions, from responsive web applications and intelligent AI tools to complete enterprise systems. We build success through smart swift solutions.",
+      "highlights": [
+        "Technology Consultancy",
+        "We Provide best services",
+        "Maintenance And Support",
+        "Requirements Gathering"
+      ],
+      "mainImage": "/backend/uploads/about-two-image1.jpg",
+      "smallImage": "/backend/uploads/about-two-image2.png"
+    }
+  },
+  {
+    "page": "contact",
+    "key": "contact.faq",
+    "order": 3,
+    "isActive": true,
+    "content": {
+      "heading": "Frequently Asked Questions",
+      "subheading": "Quick answers to common questions about our services and support",
+      "items": [
+        {
+          "id": 1,
+          "question": "How do I request a new project or service?",
+          "answer": "You can submit a request through our Contact page or call us directly at +92 315 8399446. Our team will review your requirements and provide a detailed proposal within 24-48 hours."
+        },
+        {
+          "id": 2,
+          "question": "What are your support hours?",
+          "answer": "Our technical support team is available Monday through Saturday, 9:00 AM to 6:00 PM (PKT / GST). For urgent issues, we offer 24/7 emergency support via phone and WhatsApp."
+        },
+        {
+          "id": 3,
+          "question": "How quickly will I receive a response to my inquiry?",
+          "answer": "We aim to respond to all inquiries within 2-4 business hours. Critical support tickets are prioritized and typically addressed within 1 hour during business hours."
+        },
+        {
+          "id": 4,
+          "question": "Do you offer ongoing maintenance and support packages?",
+          "answer": "Yes, we offer flexible maintenance packages including basic, standard, and premium tiers. Each plan includes different levels of response time, monitoring, and dedicated support resources."
+        },
+        {
+          "id": 5,
+          "question": "Can I track the status of my support request?",
+          "answer": "Absolutely. Once your ticket is submitted, you will receive a unique tracking ID. You can use this ID to check the status of your request or follow up with our support team."
+        }
+      ]
+    }
+  },
+  {
+    "page": "contact",
+    "key": "contact.main",
+    "order": 4,
+    "isActive": true,
+    "content": {
+      "infoTitle": "Contact Information",
+      "infoSubtitle": "Let's Collaborate with Us!",
+      "phoneLabel": "Call Us 7/24",
+      "phoneValue": "+92 315 8399446",
+      "phoneHref": "tel:+923158399446",
+      "emailLabel": "Make a Quote",
+      "emailValue": "info@it.swiftsignbm.com",
+      "emailHref": "mailto:info@it.swiftsignbm.com",
+      "locations": [
+        {
+          "label": "Location",
+          "text": "Office 22, 4th Floor, Pakland city center, I-8 Markaz, Islamabad, Pakistan.",
+          "href": "https://www.google.com/maps/place/Pakland+City+Centre/@33.6674951,73.0729195,17z/data=!4m10!1m2!2m1!1sPakland+City+Centre,+I-8+Markaz,+Islamabad,+Pakistan!3m6!1s0x38df95459e0a78e7:0xd3a23606fb4be450!8m2!3d33.6683328!4d73.0748494!15sCjRQYWtsYW5kIENpdHkgQ2VudHJlLCBJLTggTWFya2F6LCBJc2xhbWFiYWQsIFBha2lzdGFuWjMiMXBha2xhbmQgY2l0eSBjZW50cmUgaSA4IG1hcmtheiBpc2xhbWFiYWQgcGFraXN0YW6SARthc3NvY2lhdGlvbl9vcl9vcmdhbml6YXRpb26aASNDaFpEU1VoTk1HOW5TMFZKUTBGblNVUTFaMkpsTkZobkVBReABAPoBBAgAEEI!16s%2Fg%2F11hdb4bm79?entry=ttu&g_ep=EgoyMDI2MDMwMi4wIKXMDSoASAFQAw%3D%3D"
+        },
+        {
+          "label": "Dubai Office",
+          "text": "Village Block-B, 3rd Floor, Office 301, Dubai, UAE",
+          "href": "https://www.google.com/maps?q=Parfait+Business+Center+Business+Village+Block+B+3rd+Floor+Office+301+Dubai+UAE"
+        }
+      ],
+      "formBadge": "Get In Touch",
+      "formHeading": "Start Your Project - Today!",
+      "formDescription": "Tell us about your requirements and let's build something amazing together",
+      "formNameLabel": "Your Name*",
+      "formNamePlaceholder": "Your Name",
+      "formEmailLabel": "Your Email*",
+      "formEmailPlaceholder": "Your Email",
+      "formMessageLabel": "Write Message*",
+      "formMessagePlaceholder": "Write Message",
+      "submitButtonText": "Send Message"
+    }
+  },
+  {
+    "page": "contact",
+    "key": "contact.supportChannels",
+    "order": 1,
+    "isActive": true,
+    "content": {
+      "introBadge": "We're Here to Help",
+      "introHeading": "How Can We Assist You Today?",
+      "introDescription": "Our dedicated support team is ready to help with any questions, technical issues, or project inquiries you may have.",
+      "channels": [
+        {
+          "icon": "PhoneCall",
+          "title": "Phone Support",
+          "description": "Speak directly with our support team",
+          "value": "+92 315 8399446",
+          "href": "tel:+923158399446",
+          "color": "#3c72fc"
+        },
+        {
+          "icon": "MessageCircle",
+          "title": "WhatsApp Chat",
+          "description": "Quick answers via instant messaging",
+          "value": "+92 315 8399446",
+          "href": "https://wa.me/923158399446",
+          "color": "#25D366"
+        },
+        {
+          "icon": "Mail",
+          "title": "Email Support",
+          "description": "Detailed inquiries and documentation",
+          "value": "info@it.swiftsignbm.com",
+          "href": "mailto:info@it.swiftsignbm.com",
+          "color": "#f59e0b"
+        }
+      ]
+    }
+  },
+  {
+    "page": "contact",
+    "key": "contact.supportHours",
+    "order": 2,
+    "isActive": true,
+    "content": {
+      "title": "Support Hours",
+      "rows": [
+        {
+          "label": "Mon - Sat",
+          "value": "9:00 AM - 6:00 PM (PKT / GST)"
+        },
+        {
+          "label": "Emergency Support",
+          "value": "24/7 via Phone and WhatsApp"
+        },
+        {
+          "label": "Email Response",
+          "value": "Within 2-4 business hours"
+        }
+      ]
+    }
+  },
+  {
+    "page": "global",
+    "key": "global.footer",
+    "order": 2,
+    "isActive": true,
+    "content": {
+      "brandDescription": "Swift Sign IT and Cyber Solutions transformed our IT infrastructure, improving performance, security, and scalability while reducing downtime and boosting efficiency.",
+      "itSolutions": [
+        {
+          "name": "IT Consultancy",
+          "href": "/services"
+        },
+        {
+          "name": "App Development",
+          "href": "/services"
+        },
+        {
+          "name": "Database Security",
+          "href": "/services"
+        },
+        {
+          "name": "Cyber Security",
+          "href": "/services"
+        },
+        {
+          "name": "UI/UX Design",
+          "href": "/services"
+        }
+      ],
+      "quickLinks": [
+        {
+          "name": "About US",
+          "href": "/about"
+        },
+        {
+          "name": "Our Services",
+          "href": "/services"
+        },
+        {
+          "name": "Blogs",
+          "href": "/blog"
+        },
+        {
+          "name": "Our Projects",
+          "href": "/projects"
+        },
+        {
+          "name": "Our Team",
+          "href": "/ourteam"
+        }
+      ],
+      "socials": [
+        {
+          "name": "Facebook",
+          "href": "https://www.facebook.com/itandcybersolutions/"
+        },
+        {
+          "name": "LinkedIn",
+          "href": "https://www.linkedin.com/company/swift-sign-it-cyber-solutions/posts/?feedView=all"
+        },
+        {
+          "name": "Instagram",
+          "href": "https://www.instagram.com/ssitandcybersolutions"
+        }
+      ],
+      "locations": [
+        {
+          "text": "Village Block-B, 3rd Floor, Office 301, Dubai, UAE",
+          "href": "https://www.google.com/maps?q=Parfait+Business+Center+Business+Village+Block+B+3rd+Floor+Office+301+Dubai+UAE"
+        },
+        {
+          "text": "Office 22, 4th Floor, Pakland city center, I-8 Markaz, Islamabad, Pakistan.",
+          "href": "https://www.google.com/maps/place/Pakland+City+Centre/@33.6674951,73.0729195,17z/data=!4m10!1m2!2m1!1sPakland+City+Centre,+I-8+Markaz,+Islamabad,+Pakistan!3m6!1s0x38df95459e0a78e7:0xd3a23606fb4be450!8m2!3d33.6683328!4d73.0748494!16s%2Fg%2F11hdb4bm79"
+        }
+      ],
+      "openingHours": "Mon - Sat: 09:00 AM - 5:00 PM",
+      "phone": "+92 315 8399446",
+      "phoneHref": "tel:+923158399446",
+      "policies": [
+        {
+          "name": "Privacy Policy",
+          "href": "/contact"
+        },
+        {
+          "name": "Terms of Service",
+          "href": "/contact"
+        }
+      ]
+    }
+  },
+  {
+    "page": "global",
+    "key": "global.navbar",
+    "order": 1,
+    "isActive": true,
+    "content": {
+      "topBar": {
+        "liveLabel": "LIVE",
+        "badgeText": "IT",
+        "message": "Swift Sign IT Solution delivers premium IT consulting and business services across the UAE and beyond. Trusted. Compliant. Scalable."
+      },
+      "logoUrl": "",
+      "navLinks": [
+        {
+          "name": "Home",
+          "href": "/",
+          "order": 1
+        },
+        {
+          "name": "About",
+          "href": "/about",
+          "order": 2
+        },
+        {
+          "name": "Services",
+          "href": "/services",
+          "order": 3
+        },
+        {
+          "name": "Projects",
+          "href": "/projects",
+          "order": 4
+        },
+        {
+          "name": "Blogs",
+          "href": "/blog",
+          "order": 5
+        },
+        {
+          "name": "Contact",
+          "href": "/contact",
+          "order": 6
+        }
+      ],
+      "cta": {
+        "text": "Get a Quote",
+        "to": "/contact"
+      },
+      "whatsappHref": "https://wa.me/923158399446",
+      "mobile": {
+        "locationText": "Office 22, 4th Floor, Pakland city center, I-8 Markaz, Islamabad, Pakistan.",
+        "locationHref": "https://www.google.com/maps/place/Pakland+City+Centre/@33.6674951,73.0729195,17z/data=!4m10!1m2!2m1!1sPakland+City+Centre,+I-8+Markaz,+Islamabad,+Pakistan!3m6!1s0x38df95459e0a78e7:0xd3a23606fb4be450!8m2!3d33.6683328!4d73.0748494!16s%2Fg%2F11hdb4bm79",
+        "phone": "+92 315 8399446",
+        "phoneHref": "tel:+923158399446",
+        "email": "info@it.swiftsignbm.com",
+        "emailHref": "mailto:info@it.swiftsignbm.com",
+        "socials": [
+          {
+            "name": "Facebook",
+            "href": "https://facebook.com"
+          },
+          {
+            "name": "LinkedIn",
+            "href": "https://linkedin.com"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "page": "home",
+    "key": "home.about",
+    "order": 1,
+    "isActive": true,
+    "content": {
+      "badge": "WHO WE ARE",
+      "heading": "Ensuring Your Success Through Reliable IT Solutions",
+      "description": "At Swift Sign IT and Cyber Solutions, we combine creativity, technology, and strategy to build digital products that make an impact. Our team specializes in crafting innovative solutions, from responsive web applications and intelligent AI tools to complete enterprise systems. We build success through smart, swift solutions.",
+      "highlights": [
+        "Quick Solutions",
+        "Cost-Effectiveness",
+        "Expert advice",
+        "Industry Expertise"
+      ],
+      "buttonText": "About Us",
+      "buttonTo": "/about"
+    }
+  },
+  {
+    "page": "home",
+    "key": "home.caseStudiesHeader",
+    "order": 7,
+    "isActive": true,
+    "content": {
+      "badge": "From Our Case Studies",
+      "heading": "Delivered Designed, Developed, And Delivered By Swift",
+      "ctaText": "View All Cases",
+      "ctaTo": "/projects"
+    }
+  },
+  {
+    "page": "home",
+    "key": "home.chooseUs",
+    "order": 2,
+    "isActive": true,
+    "content": {
+      "badge": "Why Choose Us",
+      "heading": "Elevate Your Achievements Using Premier IT Solutions",
+      "featureCards": [
+        {
+          "iconKey": "icon1",
+          "title": "Best Services",
+          "description": "Top-tier professional digital solutions."
+        },
+        {
+          "iconKey": "icon2",
+          "title": "24/7 Call Support",
+          "description": "Continuous expert technical support."
+        }
+      ],
+      "progressBars": [
+        {
+          "label": "Information Technology",
+          "value": 80
+        },
+        {
+          "label": "Technology Consultant",
+          "value": 95
+        }
+      ],
+      "videoUrl": "https://www.youtube.com/watch?v=DsBRpCUeVaA"
+    }
+  },
+  {
+    "page": "home",
+    "key": "home.faq",
+    "order": 3,
+    "isActive": true,
+    "content": {
+      "badge": "FAQ",
+      "heading": "Frequently Asked Questions About Our IT Solutions",
+      "items": [
+        {
+          "id": 1,
+          "question": "What IT services does your company provide?",
+          "answer": "We offer a wide range of IT solutions including software development, web development and mobile application, cloud computing, cybersecurity, IT consulting, system integration, and ongoing technical support tailored to your business needs."
+        },
+        {
+          "id": 2,
+          "question": "How do you ensure the security of our data and systems?",
+          "answer": "We implement industry-standard security protocols including end-to-end encryption, multi-factor authentication, regular security audits, and compliance with international data protection regulations to keep your systems and data safe."
+        },
+        {
+          "id": 3,
+          "question": "Do you provide customized IT solutions for businesses?",
+          "answer": "Absolutely. Every solution we build is tailored to your specific business requirements, industry, and goals. We work closely with your team to understand your workflows and deliver technology that fits perfectly."
+        },
+        {
+          "id": 4,
+          "question": "What kind of support do you offer after project completion?",
+          "answer": "We provide comprehensive post-launch support including 24/7 monitoring, bug fixes, performance optimization, software updates, and a dedicated help desk to ensure your systems run smoothly at all times."
+        }
+      ]
+    }
+  },
+  {
+    "page": "home",
+    "key": "home.inTouch",
+    "order": 10,
+    "isActive": true,
+    "content": {
+      "badge": "Get In Touch",
+      "heading": "We Take Care Of Your Technology",
+      "buttonText": "Get A Quote",
+      "buttonTo": "/contact"
+    }
+  },
+  {
+    "page": "home",
+    "key": "home.servicesHeader",
+    "order": 4,
+    "isActive": true,
+    "content": {
+      "badge": "SERVICES WE'RE OFFERING",
+      "heading": "Smart, Scalable, and Swift Solutions for the Digital Era"
+    }
+  }
+]

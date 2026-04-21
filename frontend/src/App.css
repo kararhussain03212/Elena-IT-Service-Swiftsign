@@ -1,0 +1,163 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none;
+}
+
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--kumbh);
+  color: var(--paragraph);
+  background-color: var(--main-bg);
+  line-height: 28px;
+  font-weight: 400;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  color: var(--heading-color);
+  font-family: var(--kumbh);
+}
+
+h1 {
+  font-size: 90px;
+  font-weight: 700;
+  line-height: 100px;
+}
+
+h2 {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 48px;
+}
+@media (max-width: 767px) {
+  h2 {
+    font-size: 36px;
+    line-height: 44px;
+  }
+}
+@media (max-width: 575px) {
+  h2 {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: 700;
+}
+
+h5 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+h6 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+  line-height: 28px;
+  font-size: 16px;
+}
+
+span {
+  display: inline-block;
+  color: var(--span);
+}
+
+a {
+  text-decoration: none;
+  display: inline-block;
+  color: var(--heading-color);
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--heading-color);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+@media (max-width: 991px) {
+  br {
+    display: none;
+  }
+}
+
+::placeholder {
+  color: var(--span);
+}
+
+::selection {
+  color: var(--white);
+  background-color: var(--primary-color);
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--sub-bg);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sub-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 100%
+  );
+  border-radius: 999px;
+  border: 2px solid var(--sub-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}

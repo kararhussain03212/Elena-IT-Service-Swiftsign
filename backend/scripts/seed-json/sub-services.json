@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Requirements Gathering",
+    "description": "We align stakeholders, define scope, and turn goals into actionable specifications.",
+    "icon": "",
+    "order": 1,
+    "isActive": true
+  },
+  {
+    "title": "UI/UX Planning",
+    "description": "Wireframes, user flows, and interface planning for a smooth experience.",
+    "icon": "",
+    "order": 2,
+    "isActive": true
+  },
+  {
+    "title": "Development",
+    "description": "Robust implementation with clean architecture and secure integrations.",
+    "icon": "",
+    "order": 3,
+    "isActive": true
+  },
+  {
+    "title": "Quality Assurance",
+    "description": "Testing for reliability, performance, and cross-device compatibility.",
+    "icon": "",
+    "order": 4,
+    "isActive": true
+  },
+  {
+    "title": "Deployment",
+    "description": "Launch-ready delivery with monitoring and rollback support.",
+    "icon": "",
+    "order": 5,
+    "isActive": true
+  },
+  {
+    "title": "Maintenance And Support",
+    "description": "Ongoing updates, fixes, and improvements after release.",
+    "icon": "",
+    "order": 6,
+    "isActive": true
+  }
+]

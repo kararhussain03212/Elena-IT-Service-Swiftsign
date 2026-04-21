@@ -1,0 +1,11 @@
+{
+  "name": "swift-sign-it-backend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "PHP backend (no Node.js runtime dependencies)",
+  "scripts": {
+    "dev": "php -S localhost:5000 -t public public/router.php",
+    "start": "php -S localhost:5000 -t public public/router.php",
+    "postinstall": "echo Backend is PHP-only. No npm packages are required."
+  }
+}
