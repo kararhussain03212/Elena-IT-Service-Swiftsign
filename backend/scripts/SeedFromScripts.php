@@ -13,6 +13,8 @@ require_once __DIR__ . '/DataInserter.php';
 class SeedFromScripts
 {
     private PDO $pdo;
+    private ?bool $serviceExtrasTablesReady = null;
+    private ?bool $serviceExtrasColumnsReady = null;
 
     public function __construct()
     {
@@ -70,6 +72,168 @@ class SeedFromScripts
             return;
         }
         DataInserter::insert($table, $data, $jsonColumns);
+    }
+
+    private function serviceExtrasTablesExist(): bool
+    {
+        if ($this->serviceExtrasTablesReady !== null) {
+            return $this->serviceExtrasTablesReady;
+        }
+
+        $stmt = $this->pdo->prepare(
+            'SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = :table LIMIT 1'
+        );
+
+        $stmt->execute(['table' => 'service_benefits']);
+        $hasBenefits = (bool) $stmt->fetchColumn();
+
+        $stmt->execute(['table' => 'service_faqs']);
+        $hasFaqs = (bool) $stmt->fetchColumn();
+
+        $this->serviceExtrasTablesReady = $hasBenefits && $hasFaqs;
+        return $this->serviceExtrasTablesReady;
+    }
+
+    private function serviceExtrasColumnsExist(): bool
+    {
+        if ($this->serviceExtrasColumnsReady !== null) {
+            return $this->serviceExtrasColumnsReady;
+        }
+
+        $stmt = $this->pdo->prepare(
+            'SELECT 1 FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = :table AND column_name = :column LIMIT 1'
+        );
+
+        $stmt->execute(['table' => 'services', 'column' => 'benefits']);
+        $hasBenefits = (bool) $stmt->fetchColumn();
+
+        $stmt->execute(['table' => 'services', 'column' => 'faqs']);
+        $hasFaqs = (bool) $stmt->fetchColumn();
+
+        $this->serviceExtrasColumnsReady = $hasBenefits && $hasFaqs;
+        return $this->serviceExtrasColumnsReady;
+    }
+
+    private function serviceHasExtrasRows(string $table, int $serviceId): bool
+    {
+        $stmt = $this->pdo->prepare(sprintf('SELECT COUNT(*) FROM %s WHERE service_id = :id', $table));
+        $stmt->execute(['id' => $serviceId]);
+        return ((int) $stmt->fetchColumn()) > 0;
+    }
+
+    private function decodeJsonColumn($value): array
+    {
+        if ($value === null || $value === '') {
+            return [];
+        }
+        if (is_array($value)) {
+            return $value;
+        }
+        $decoded = json_decode((string) $value, true);
+        return json_last_error() === JSON_ERROR_NONE && is_array($decoded) ? $decoded : [];
+    }
+
+    private function seedServiceExtras(array $defaults): void
+    {
+        if (!$this->serviceExtrasTablesExist()) {
+            echo "Skipping service extras seed (tables not migrated yet).\n";
+            return;
+        }
+
+        $defaultBenefits = array_values(array_filter(array_map(
+            fn($v) => sanitize_string($v ?? ''),
+            $defaults['benefits'] ?? []
+        ), fn($v) => $v !== ''));
+
+        $defaultFaqs = [];
+        foreach (($defaults['faqs'] ?? []) as $faq) {
+            if (!is_array($faq)) continue;
+            $question = sanitize_string($faq['question'] ?? '');
+            $answer = sanitize_string($faq['answer'] ?? '');
+            if ($question === '' && $answer === '') continue;
+            $defaultFaqs[] = ['question' => $question, 'answer' => $answer];
+        }
+
+        $supportsLegacyColumns = $this->serviceExtrasColumnsExist();
+        $services = $this->pdo->query('SELECT id' . ($supportsLegacyColumns ? ', benefits, faqs' : '') . ' FROM services')
+            ->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $insertedBenefits = 0;
+        $insertedFaqs = 0;
+
+        $benefitStmt = $this->pdo->prepare(
+            'INSERT INTO service_benefits (service_id, label, sort_order, created_at, updated_at)
+             VALUES (:service_id, :label, :sort_order, :created_at, :updated_at)'
+        );
+        $faqStmt = $this->pdo->prepare(
+            'INSERT INTO service_faqs (service_id, question, answer, sort_order, created_at, updated_at)
+             VALUES (:service_id, :question, :answer, :sort_order, :created_at, :updated_at)'
+        );
+
+        foreach ($services as $service) {
+            $serviceId = (int) ($service['id'] ?? 0);
+            if ($serviceId <= 0) continue;
+
+            $timestamp = now();
+
+            if (!$this->serviceHasExtrasRows('service_benefits', $serviceId)) {
+                $benefits = $defaultBenefits;
+                if ($supportsLegacyColumns) {
+                    $legacy = $this->decodeJsonColumn($service['benefits'] ?? null);
+                    $legacy = array_values(array_filter(array_map(fn($v) => sanitize_string($v ?? ''), $legacy), fn($v) => $v !== ''));
+                    if (!empty($legacy)) {
+                        $benefits = $legacy;
+                    }
+                }
+
+                $order = 1;
+                foreach ($benefits as $label) {
+                    $benefitStmt->execute([
+                        'service_id' => $serviceId,
+                        'label' => $label,
+                        'sort_order' => $order++,
+                        'created_at' => $timestamp,
+                        'updated_at' => $timestamp,
+                    ]);
+                    $insertedBenefits++;
+                }
+            }
+
+            if (!$this->serviceHasExtrasRows('service_faqs', $serviceId)) {
+                $faqs = $defaultFaqs;
+                if ($supportsLegacyColumns) {
+                    $legacy = $this->decodeJsonColumn($service['faqs'] ?? null);
+                    $normalized = [];
+                    foreach ($legacy as $faq) {
+                        if (!is_array($faq)) continue;
+                        $question = sanitize_string($faq['question'] ?? '');
+                        $answer = sanitize_string($faq['answer'] ?? '');
+                        if ($question === '' && $answer === '') continue;
+                        $normalized[] = ['question' => $question, 'answer' => $answer];
+                    }
+                    if (!empty($normalized)) {
+                        $faqs = $normalized;
+                    }
+                }
+
+                $order = 1;
+                foreach ($faqs as $faq) {
+                    $faqStmt->execute([
+                        'service_id' => $serviceId,
+                        'question' => $faq['question'],
+                        'answer' => $faq['answer'],
+                        'sort_order' => $order++,
+                        'created_at' => $timestamp,
+                        'updated_at' => $timestamp,
+                    ]);
+                    $insertedFaqs++;
+                }
+            }
+        }
+
+        echo "Service extras seed completed.\n";
+        echo "Inserted benefits rows: {$insertedBenefits}\n";
+        echo "Inserted faq rows: {$insertedFaqs}\n";
     }
 
     private function seedServices(array $items): void
@@ -247,6 +411,7 @@ class SeedFromScripts
     {
         $base = 'seed-json';
         $services = $this->readJson("$base/services.json");
+        $serviceExtras = $this->readJson("$base/service-extras.json");
         $projects = array_merge(
             $this->readJson("$base/projects.json"),
             $this->readJson("$base/projects-extra.json")
@@ -259,6 +424,7 @@ class SeedFromScripts
         $subServices = $this->readJson("$base/sub-services.json");
 
         $this->seedServices($services);
+        $this->seedServiceExtras($serviceExtras);
         $this->seedProjects($projects);
         $this->seedBlogs($blogs);
         $this->seedSliders($sliders);

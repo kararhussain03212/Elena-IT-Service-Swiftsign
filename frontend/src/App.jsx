@@ -18,8 +18,10 @@ import TeamDetails from "./pages/TeamDetails";
 
 
 function App() {
+  const routerBase = import.meta.env.BASE_URL || "/";
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={routerBase}>
       <Routes>
         {/* Wrap all public pages with MainLayout */}
         <Route element={<MainLayout />}>

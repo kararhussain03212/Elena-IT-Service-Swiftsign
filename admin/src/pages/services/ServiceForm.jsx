@@ -19,6 +19,8 @@ export default function ServiceForm() {
     description: "",
     description1: "",
     description2: "",
+    benefits: [],
+    faqs: [],
     icon: "",
     image1: "",
     detailImage: "",
@@ -26,6 +28,8 @@ export default function ServiceForm() {
     isActive: true,
     imageFile: null,
     imagePreview: "",
+    image1File: null,
+    detailImageFile: null,
   });
 
   const apiRoot = useMemo(() => {
@@ -69,6 +73,8 @@ export default function ServiceForm() {
           description: item.description || "",
           description1: item.description1 || "",
           description2: item.description2 || "",
+          benefits: Array.isArray(item.benefits) ? item.benefits : [],
+          faqs: Array.isArray(item.faqs) ? item.faqs : [],
           icon: item.icon || "",
           image1: item.image1 || item.detailImage || "",
           detailImage: item.detailImage || "",
@@ -76,6 +82,8 @@ export default function ServiceForm() {
           isActive: Boolean(item.isActive ?? true),
           imageFile: null,
           imagePreview: toImageUrl(item.image || ""),
+          image1File: null,
+          detailImageFile: null,
         });
       } catch (err) {
         console.error(err);
@@ -102,9 +110,14 @@ export default function ServiceForm() {
       payload.append("description", form.description.trim());
       payload.append("description1", form.description1.trim());
       payload.append("description2", form.description2.trim());
+      payload.append("benefits", JSON.stringify(form.benefits || []));
+      payload.append("faqs", JSON.stringify(form.faqs || []));
       payload.append("icon", form.icon.trim());
-      payload.append("image1", form.image1.trim());
-      payload.append("detailImage", form.detailImage.trim());
+      if (form.image1File) payload.append("image1", form.image1File);
+      else payload.append("image1", form.image1.trim());
+
+      if (form.detailImageFile) payload.append("detailImage", form.detailImageFile);
+      else payload.append("detailImage", form.detailImage.trim());
       payload.append("order", String(form.order || 0));
       payload.append("isActive", String(form.isActive));
 
@@ -225,6 +238,139 @@ export default function ServiceForm() {
           />
         </div>
 
+        <div className="rounded-xl border border-white/10 bg-[#0f0d1d] p-4">
+          <div className="flex items-center justify-between gap-3">
+            <h4 className="text-lg font-semibold text-white">
+              Benefits With Our Service
+            </h4>
+            <button
+              type="button"
+              onClick={() =>
+                setField("benefits", [...(form.benefits || []), ""])
+              }
+              className="admin-modern-btn-secondary px-3 py-1.5 text-sm"
+            >
+              Add Benefit
+            </button>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            {(form.benefits || []).map((item, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <input
+                  value={item}
+                  onChange={(e) => {
+                    const next = [...(form.benefits || [])];
+                    next[idx] = e.target.value;
+                    setField("benefits", next);
+                  }}
+                  placeholder={`Benefit ${idx + 1}`}
+                  className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = [...(form.benefits || [])];
+                    next.splice(idx, 1);
+                    setField("benefits", next);
+                  }}
+                  className="rounded-lg border border-red-500/40 px-3 py-2 text-sm text-red-200 hover:bg-red-500/10"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+            {(form.benefits || []).length === 0 ? (
+              <p className="text-sm text-white/60">
+                Add benefits to show on the service detail page.
+              </p>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-white/10 bg-[#0f0d1d] p-4">
+          <div className="flex items-center justify-between gap-3">
+            <h4 className="text-lg font-semibold text-white">
+              Most Common Questions (FAQ)
+            </h4>
+            <button
+              type="button"
+              onClick={() =>
+                setField("faqs", [...(form.faqs || []), { question: "", answer: "" }])
+              }
+              className="admin-modern-btn-secondary px-3 py-1.5 text-sm"
+            >
+              Add FAQ
+            </button>
+          </div>
+
+          <div className="mt-4 space-y-4">
+            {(form.faqs || []).map((faq, idx) => (
+              <div
+                key={idx}
+                className="rounded-xl border border-white/10 bg-[#151327] p-3"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-semibold text-white/80">
+                    FAQ {idx + 1}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = [...(form.faqs || [])];
+                      next.splice(idx, 1);
+                      setField("faqs", next);
+                    }}
+                    className="rounded-lg border border-red-500/40 px-3 py-1.5 text-sm text-red-200 hover:bg-red-500/10"
+                  >
+                    Delete
+                  </button>
+                </div>
+
+                <div className="mt-3 space-y-3">
+                  <div>
+                    <label className="mb-1 block text-sm text-white/80">
+                      Question
+                    </label>
+                    <input
+                      value={faq?.question || ""}
+                      onChange={(e) => {
+                        const next = [...(form.faqs || [])];
+                        next[idx] = { ...(next[idx] || {}), question: e.target.value };
+                        setField("faqs", next);
+                      }}
+                      className="w-full rounded-lg border border-white/20 bg-[#0f0d1d] px-3 py-2 text-white"
+                      placeholder="Type your question"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-sm text-white/80">
+                      Answer
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={faq?.answer || ""}
+                      onChange={(e) => {
+                        const next = [...(form.faqs || [])];
+                        next[idx] = { ...(next[idx] || {}), answer: e.target.value };
+                        setField("faqs", next);
+                      }}
+                      className="w-full rounded-lg border border-white/20 bg-[#0f0d1d] px-3 py-2 text-white"
+                      placeholder="Type the answer"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+            {(form.faqs || []).length === 0 ? (
+              <p className="text-sm text-white/60">
+                Add FAQs to show below the benefits section on the service detail page.
+              </p>
+            ) : null}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <label className="mb-1 block text-sm text-white/80">
@@ -238,10 +384,10 @@ export default function ServiceForm() {
           </div>
         </div>
         <ImageUpload
-          value={form.image1}
-          onFileSelect={(file) => setField("imageFile", file)}
-          label="Upload faq Service Image"
-          helperText="Optional image for cards and detail top section"
+          value={toImageUrl(form.image1)}
+          onFileSelect={(file) => setField("image1File", file)}
+          label="Upload Service Detail Image"
+          helperText="This is the second image (shown on service details)."
         />
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

@@ -1,20 +1,17 @@
+Options -Indexes
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # If you deploy this build under a subfolder, set RewriteBase accordingly, e.g.:
+  # RewriteBase /site/
+
+  # Serve existing files/directories as-is
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  RewriteRule ^api/?$ backend/public/index.php?route=/api [L,QSA]
-  RewriteRule ^api/(.*)$ backend/public/index.php?route=/api/$1 [L,QSA]
-
-  RewriteRule ^uploads/?$ backend/public/router.php [L,QSA]
-  RewriteRule ^uploads/(.*)$ backend/public/router.php [L,QSA]
-
-  RewriteRule ^admin/?$ admin/index.html [L]
-  RewriteRule ^admin/(.*)$ admin/index.html [L]
-
+  # SPA fallback (React Router)
   RewriteRule ^ index.html [L]
 </IfModule>
 
-Options -Indexes

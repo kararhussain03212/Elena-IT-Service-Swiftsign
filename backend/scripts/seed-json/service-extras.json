@@ -1,0 +1,24 @@
+{
+  "benefits": [
+    "Technology Consultancy",
+    "Maintenance & Support",
+    "Best Industry Practices",
+    "Secure Solutions",
+    "Business Growth"
+  ],
+  "faqs": [
+    {
+      "question": "What industries do you serve?",
+      "answer": "We serve a wide range of industries including healthcare, finance, education, and e-commerce."
+    },
+    {
+      "question": "What is your development process?",
+      "answer": "Our development process includes requirement analysis, design, development, testing, and deployment."
+    },
+    {
+      "question": "Do you provide post-launch support?",
+      "answer": "Yes, we offer comprehensive post-launch support to ensure your application runs smoothly."
+    }
+  ]
+}
+

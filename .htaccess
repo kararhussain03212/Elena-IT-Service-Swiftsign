@@ -1,0 +1,30 @@
+Options -Indexes
+DirectoryIndex index.html index.php
+
+<IfModule mod_negotiation.c>
+  Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # cPanel subfolder deploy path.
+  RewriteBase /it/
+
+  # 1) Serve existing files/directories directly.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 2) Route API calls to PHP backend.
+  RewriteRule ^api(?:/(.*))?$ backend/public/index.php?route=/api/$1 [QSA,L]
+
+  # 3) Route uploads via backend router (supports public/uploads + legacy uploads).
+  RewriteRule ^uploads(?:/(.*))?$ backend/public/router.php?asset=/uploads/$1 [QSA,L]
+
+  # 4) Admin SPA fallback when deployed at /admin.
+  RewriteRule ^admin(?:/(.*))?$ admin/index.html [L]
+
+  # 5) Frontend SPA fallback for all other non-file routes.
+  RewriteRule ^ index.html [L]
+</IfModule>

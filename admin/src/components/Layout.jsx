@@ -109,7 +109,7 @@ export default function Layout({ children }) {
       {/* Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-90 lg:hidden"
+          className="fixed inset-0 z-[90] bg-black/60 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -118,7 +118,7 @@ export default function Layout({ children }) {
       <aside
         className={`
         fixed top-0 left-0 bottom-0 w-65 bg-[#0f0d1d]
-        border-r border-white/6 flex flex-col z-100
+        border-r border-white/6 flex flex-col z-[100]
         transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0

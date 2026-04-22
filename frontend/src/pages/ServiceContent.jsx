@@ -6,41 +6,13 @@ import { Check } from "lucide-react";
 import useScrollReveal from "@/hooks/useScrollReveal";
 import { sortContentItems } from "@/lib/sortContentItems";
 
-const benefits = [
-  "Technology Consultancy",
-  "Maintenance & Support",
-  "Best Industry Practices",
-  "Secure Solutions",
-  "Business Growth",
-];
-
-const questions = [
-  {
-    id: 1,
-    question: "What industries do you serve?",
-    answer:
-      "We serve a wide range of industries including healthcare, finance, education, and e-commerce.",
-  },
-  {
-    id: 2,
-    question: "What is your development process?",
-    answer:
-      "Our development process includes requirement analysis, design, development, testing, and deployment.",
-  },
-  {
-    id: 3,
-    question: "Do you provide post-launch support?",
-    answer:
-      "Yes, we offer comprehensive post-launch support to ensure your application runs smoothly.",
-  },
-];
 
 const ServiceContent = () => {
   const { slug, id } = useParams();
   const [service, setService] = useState(null);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [openId, setOpenId] = useState(questions?.[0]?.id ?? null);
+  const [openId, setOpenId] = useState(0);
   const mainImageRef = useScrollReveal();
   const detailTextRef = useScrollReveal();
   const benefitsRef = useScrollReveal();
@@ -63,6 +35,9 @@ const ServiceContent = () => {
 
   const toggle = (faqId) => setOpenId(openId === faqId ? null : faqId);
 
+  const benefitItems = Array.isArray(service?.benefits) ? service.benefits : [];
+  const faqItems = Array.isArray(service?.faqs) ? service.faqs : [];
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -78,6 +53,7 @@ const ServiceContent = () => {
 
         setService(detail);
         setServices(list);
+        setOpenId(detail?.faqs?.[0]?.id ?? 0);
       } catch (error) {
         console.error("Service detail load failed", error);
         setService(null);
@@ -152,24 +128,26 @@ const ServiceContent = () => {
               </div>
 
               <div className="mt-10 grid gap-8 md:grid-cols-[1fr_1fr]">
-                <div ref={benefitsRef} className="sr-hidden sr-left">
-                  <h4 className="text-xl font-semibold">
-                    Benefits With Our Service
-                  </h4>
-                  <ul className="mt-4 space-y-4 text-sm text-white/80">
-                    {benefits.map((item) => (
-                      <li
-                        key={item}
-                        className="flex items-center gap-3 text-[16px]"
-                      >
-                        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#3c72fc] text-white">
-                          <Check size={14} />
-                        </span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {benefitItems.length > 0 ? (
+                  <div ref={benefitsRef} className="sr-hidden sr-left">
+                    <h4 className="text-xl font-semibold">
+                      Benefits With Our Service
+                    </h4>
+                    <ul className="mt-4 space-y-4 text-sm text-white/80">
+                      {benefitItems.map((item, index) => (
+                        <li
+                          key={`${index}-${item}`}
+                          className="flex items-center gap-3 text-[16px]"
+                        >
+                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#3c72fc] text-white">
+                            <Check size={14} />
+                          </span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
                 <div
                   ref={secondaryImageRef}
                   className="sr-hidden sr-right overflow-hidden"
@@ -182,57 +160,60 @@ const ServiceContent = () => {
                 </div>
               </div>
 
-              <div ref={faqRef} className="sr-hidden sr-up mt-12">
-                <h4 className="text-xl font-bold text-white">
-                  Most Common Questions
-                </h4>
-                <div className="mt-5 overflow-hidden bg-[#0f0d1d]">
-                  {questions.map((faq, idx) => {
-                    const isOpen = openId === faq.id;
-                    return (
-                      <div
-                        key={faq.id}
-                        className={`${idx !== 0 ? "border-t border-white/10" : ""}`}
-                      >
-                        <button
-                          onClick={() => toggle(faq.id)}
-                          className="w-full flex items-center justify-between px-5 py-4 text-left group/faq"
-                        >
-                          <span
-                            className={`font-semibold text-[15px] pr-4 transition-colors duration-200 ${
-                              isOpen ? "text-[#3c72fc]" : "text-white"
-                            }`}
-                          >
-                            {faq.question}
-                          </span>
-                          <span
-                            className={`flex-shrink-0 w-7 h-7 flex items-center justify-center text-lg font-bold transition-colors duration-200 ${
-                              isOpen
-                                ? "bg-[#3c72fc] text-white"
-                                : "bg-transparent border border-white/30 text-white/60"
-                            }`}
-                          >
-                            {isOpen ? "-" : "+"}
-                          </span>
-                        </button>
+              {faqItems.length > 0 ? (
+                <div ref={faqRef} className="sr-hidden sr-up mt-12">
+                  <h4 className="text-xl font-bold text-white">
+                    Most Common Questions
+                  </h4>
+                  <div className="mt-5 overflow-hidden bg-[#0f0d1d]">
+                    {faqItems.map((faq, idx) => {
+                      const faqKey = faq?.id ?? idx;
+                      const isOpen = openId === faqKey;
+                      return (
                         <div
-                          style={{
-                            display: "grid",
-                            gridTemplateRows: isOpen ? "1fr" : "0fr",
-                            transition: "grid-template-rows 300ms ease",
-                          }}
+                          key={faqKey}
+                          className={`${idx !== 0 ? "border-t border-white/10" : ""}`}
                         >
-                          <div style={{ overflow: "hidden", minHeight: 0 }}>
-                            <p className="px-5 pb-5 text-white/70 text-[14.5px] leading-relaxed">
-                              {faq.answer}
-                            </p>
+                          <button
+                            onClick={() => toggle(faqKey)}
+                            className="w-full flex items-center justify-between px-5 py-4 text-left group/faq"
+                          >
+                            <span
+                              className={`font-semibold text-[15px] pr-4 transition-colors duration-200 ${
+                                isOpen ? "text-[#3c72fc]" : "text-white"
+                              }`}
+                            >
+                              {faq.question}
+                            </span>
+                            <span
+                              className={`flex-shrink-0 w-7 h-7 flex items-center justify-center text-lg font-bold transition-colors duration-200 ${
+                                isOpen
+                                  ? "bg-[#3c72fc] text-white"
+                                  : "bg-transparent border border-white/30 text-white/60"
+                              }`}
+                            >
+                              {isOpen ? "-" : "+"}
+                            </span>
+                          </button>
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateRows: isOpen ? "1fr" : "0fr",
+                              transition: "grid-template-rows 300ms ease",
+                            }}
+                          >
+                            <div style={{ overflow: "hidden", minHeight: 0 }}>
+                              <p className="px-5 pb-5 text-white/70 text-[14.5px] leading-relaxed">
+                                {faq.answer}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
 
             <aside ref={asideRef} className="sr-hidden sr-left text-white">

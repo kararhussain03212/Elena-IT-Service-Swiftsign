@@ -56,7 +56,16 @@ require_once __DIR__ . '/../bootstrap.php';
 
 $router = require __DIR__ . '/../routes/api.php';
 $routeOverride = $_GET['route'] ?? '';
-$path = is_string($routeOverride) && $routeOverride !== ''
-    ? $routeOverride
-    : parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$path = '/';
+if (is_string($routeOverride) && $routeOverride !== '') {
+    $path = $routeOverride;
+} else {
+    $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    $scriptDir = rtrim(str_replace('\\', '/', dirname((string) ($_SERVER['SCRIPT_NAME'] ?? ''))), '/');
+    if ($scriptDir !== '' && $scriptDir !== '/' && strpos($requestPath, $scriptDir . '/') === 0) {
+        $requestPath = substr($requestPath, strlen($scriptDir));
+    }
+    $path = $requestPath === '' ? '/' : $requestPath;
+}
+
 $router->dispatch($_SERVER['REQUEST_METHOD'], $path);

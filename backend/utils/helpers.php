@@ -78,8 +78,8 @@ function get_authorization_header(): ?string
 
 function ensure_uploaded_directory(string $relativePath): string
 {
-    // Store uploads under backend/uploads so the router can serve them reliably.
-    $target = __DIR__ . '/../' . ltrim($relativePath, '/');
+    // Store uploads under backend/public/uploads so Apache/cPanel can serve them directly.
+    $target = __DIR__ . '/../public/' . ltrim($relativePath, '/');
     $directory = dirname($target);
     if (!is_dir($directory)) {
         mkdir($directory, 0755, true);

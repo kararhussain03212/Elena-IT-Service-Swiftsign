@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   normalizeUserRole,
   PERMISSION_OPTIONS,
@@ -42,6 +42,15 @@ export default function UserFormModal({
   const [form, setForm] = useState(() => buildInitialState(initialData));
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState("");
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
 
   if (!open) return null;
 
@@ -111,13 +120,13 @@ export default function UserFormModal({
   };
 
   return (
-    <div className="fixed inset-0 z-120 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto px-4 py-6 sm:items-center">
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-[1px] transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-xl rounded-2xl border border-white/10 bg-[#0f0d1d] p-5 shadow-2xl shadow-black/50 transition-all duration-300">
+      <div className="relative z-10 w-full max-w-xl rounded-2xl border border-white/10 bg-[#0f0d1d] p-4 shadow-2xl shadow-black/50 transition-all duration-300 sm:p-5">
         <header className="mb-4 flex items-start justify-between">
           <div>
             <h2 className="text-xl font-semibold text-white">
@@ -138,7 +147,10 @@ export default function UserFormModal({
           </button>
         </header>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="max-h-[calc(100dvh-8rem)] space-y-4 overflow-y-auto pr-1"
+        >
           {submitError ? (
             <div className="rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
               {submitError}

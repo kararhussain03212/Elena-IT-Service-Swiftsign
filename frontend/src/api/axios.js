@@ -10,7 +10,7 @@ const API = axios.create({
 const shouldRetryWithFallback = (error) => {
   const status = error?.response?.status
   const code = error?.code
-  return code === 'ERR_NETWORK' || status === 404
+  return code === 'ERR_NETWORK' || status === 404 || (typeof status === 'number' && status >= 500)
 }
 
 API.interceptors.response.use(

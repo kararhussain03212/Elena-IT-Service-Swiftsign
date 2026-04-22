@@ -1,5 +1,12 @@
 <?php
-$path = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$path = urldecode((string) ($_GET['asset'] ?? $requestPath));
+$scriptDir = rtrim(str_replace('\\', '/', dirname((string) ($_SERVER['SCRIPT_NAME'] ?? ''))), '/');
+if ($scriptDir !== '' && $scriptDir !== '/' && strpos($path, $scriptDir . '/') === 0) {
+    $path = substr($path, strlen($scriptDir));
+}
+$path = $path === '' ? '/' : $path;
+
 $candidatePaths = [];
 if ($path !== '/') {
     $candidatePaths[] = __DIR__ . $path;

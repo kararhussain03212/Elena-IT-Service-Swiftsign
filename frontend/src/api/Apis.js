@@ -10,9 +10,9 @@ export const getTeamMemberBySlug = (slug) => API.get("/team/slug/" + slug);
 export const getSliders = () => API.get("/sliders");
 
 // Service API
-export const getServices = () => API.get("/services");
-export const getServiceBySlug = (slug) => API.get("/services/slug/" + slug);
-export const getServiceById = (id) => API.get("/services/" + id);
+export const getServices = () => API.get("/services", fresh());
+export const getServiceBySlug = (slug) => API.get("/services/slug/" + slug, fresh());
+export const getServiceById = (id) => API.get("/services/" + id, fresh());
 export const getSubServices = () => API.get("/sub-services");
 
 // Project API
