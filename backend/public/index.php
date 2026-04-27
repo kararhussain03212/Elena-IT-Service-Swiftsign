@@ -52,20 +52,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once __DIR__ . '/../bootstrap.php';
+try {
+    require_once __DIR__ . '/../bootstrap.php';
 
-$router = require __DIR__ . '/../routes/api.php';
-$routeOverride = $_GET['route'] ?? '';
-$path = '/';
-if (is_string($routeOverride) && $routeOverride !== '') {
-    $path = $routeOverride;
-} else {
-    $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-    $scriptDir = rtrim(str_replace('\\', '/', dirname((string) ($_SERVER['SCRIPT_NAME'] ?? ''))), '/');
-    if ($scriptDir !== '' && $scriptDir !== '/' && strpos($requestPath, $scriptDir . '/') === 0) {
-        $requestPath = substr($requestPath, strlen($scriptDir));
+    $router = require __DIR__ . '/../routes/api.php';
+    $routeOverride = $_GET['route'] ?? '';
+    $path = '/';
+    if (is_string($routeOverride) && $routeOverride !== '') {
+        $path = $routeOverride;
+    } else {
+        $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+        $scriptDir = rtrim(str_replace('\\', '/', dirname((string) ($_SERVER['SCRIPT_NAME'] ?? ''))), '/');
+        if ($scriptDir !== '' && $scriptDir !== '/' && strpos($requestPath, $scriptDir . '/') === 0) {
+            $requestPath = substr($requestPath, strlen($scriptDir));
+        }
+        $path = $requestPath === '' ? '/' : $requestPath;
     }
-    $path = $requestPath === '' ? '/' : $requestPath;
+    $router->dispatch($_SERVER['REQUEST_METHOD'], $path);
+} catch (Throwable $exception) {
+    error_log('[api] Fatal bootstrap/router error: ' . $exception->getMessage());
+    if (function_exists('error_response')) {
+        error_response(500, 'Internal server error.', ['details' => $exception->getMessage()]);
+    }
+    http_response_code(500);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['message' => 'Internal server error.'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 }
-
-$router->dispatch($_SERVER['REQUEST_METHOD'], $path);

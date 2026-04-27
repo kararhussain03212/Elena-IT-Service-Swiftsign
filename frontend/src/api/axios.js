@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const primaryBaseUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').trim()
-const fallbackBaseUrl = (import.meta.env.VITE_API_URL_FALLBACK || 'https://it.swiftsignbm.com/api').trim()
+const primaryBaseUrl = (import.meta.env.VITE_API_URL || '/api').trim()
+const fallbackBaseUrl = (import.meta.env.VITE_API_URL_FALLBACK || '').trim()
 
 const API = axios.create({
   baseURL: primaryBaseUrl,

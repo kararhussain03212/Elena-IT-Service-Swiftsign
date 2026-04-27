@@ -9,7 +9,7 @@ const Whoarewe = ({ content = {} }) => {
   const contentRef = useScrollReveal();
 
   const apiRoot = useMemo(() => {
-    const base = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+    const base = import.meta.env.VITE_API_URL || "/api";
     return base.replace(/\/api\/?$/, "");
   }, []);
 

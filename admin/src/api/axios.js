@@ -1,8 +1,7 @@
 import axios from 'axios'
 
-// CHANGE: fallback API base URL
-// WHY: if .env is missing, admin should still fetch backend data in local dev
-const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+// Fallback to same-origin API route; root .htaccess forwards /api to backend/public.
+const apiBaseUrl = import.meta.env.VITE_API_URL || '/api'
 const appBaseUrl = (() => {
   const configuredBase = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '/')
   if (configuredBase !== '/') {

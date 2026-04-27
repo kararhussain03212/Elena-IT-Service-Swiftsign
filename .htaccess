@@ -1,30 +1,27 @@
-Options -Indexes
-DirectoryIndex index.html index.php
-
-<IfModule mod_negotiation.c>
-  Options -MultiViews
-</IfModule>
+﻿Options -Indexes
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /
 
-  # cPanel subfolder deploy path.
-  RewriteBase /it/
+  RewriteRule ^index\.html$ - [L]
 
-  # 1) Serve existing files/directories directly.
+  # Serve existing files/directories as-is
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 2) Route API calls to PHP backend.
-  RewriteRule ^api(?:/(.*))?$ backend/public/index.php?route=/api/$1 [QSA,L]
+  # Route backend endpoints when frontend and backend are deployed together.
+  RewriteRule ^api/?$ backend/public/index.php?route=/api [L,QSA]
+  RewriteRule ^api/(.*)$ backend/public/index.php?route=/api/$1 [L,QSA]
 
-  # 3) Route uploads via backend router (supports public/uploads + legacy uploads).
-  RewriteRule ^uploads(?:/(.*))?$ backend/public/router.php?asset=/uploads/$1 [QSA,L]
+  RewriteRule ^uploads/?$ backend/public/router.php?asset=/uploads/ [L,QSA]
+  RewriteRule ^uploads/(.*)$ backend/public/router.php?asset=/uploads/$1 [L,QSA]
 
-  # 4) Admin SPA fallback when deployed at /admin.
-  RewriteRule ^admin(?:/(.*))?$ admin/index.html [L]
+  # Do not rewrite missing static assets to index.html
+  RewriteCond %{REQUEST_URI} \.(?:js|mjs|css|map|json|txt|xml|svg|png|jpe?g|gif|webp|ico|woff2?|ttf|eot|mp4|webm|ogg)$ [NC]
+  RewriteRule ^ - [R=404,L]
 
-  # 5) Frontend SPA fallback for all other non-file routes.
-  RewriteRule ^ index.html [L]
+  # SPA fallback (React Router)
+  RewriteRule . /index.html [L]
 </IfModule>

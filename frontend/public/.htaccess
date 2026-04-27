@@ -1,17 +1,27 @@
-Options -Indexes
+﻿Options -Indexes
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /
 
-  # If you deploy this build under a subfolder, set RewriteBase accordingly, e.g.:
-  # RewriteBase /site/
+  RewriteRule ^index\.html$ - [L]
 
   # Serve existing files/directories as-is
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # SPA fallback (React Router)
-  RewriteRule ^ index.html [L]
-</IfModule>
+  # Route backend endpoints when frontend and backend are deployed together.
+  RewriteRule ^api/?$ backend/public/index.php?route=/api [L,QSA]
+  RewriteRule ^api/(.*)$ backend/public/index.php?route=/api/$1 [L,QSA]
 
+  RewriteRule ^uploads/?$ backend/public/router.php?asset=/uploads/ [L,QSA]
+  RewriteRule ^uploads/(.*)$ backend/public/router.php?asset=/uploads/$1 [L,QSA]
+
+  # Do not rewrite missing static assets to index.html
+  RewriteCond %{REQUEST_URI} \.(?:js|mjs|css|map|json|txt|xml|svg|png|jpe?g|gif|webp|ico|woff2?|ttf|eot|mp4|webm|ogg)$ [NC]
+  RewriteRule ^ - [R=404,L]
+
+  # SPA fallback (React Router)
+  RewriteRule . /index.html [L]
+</IfModule>

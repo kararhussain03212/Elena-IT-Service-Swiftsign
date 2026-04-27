@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "description": "PHP backend (no Node.js runtime dependencies)",
   "scripts": {
-    "dev": "set PHPRC=%USERPROFILE%\\php&& php -S localhost:5000 -t public public/router.php",
-    "start": "set PHPRC=%USERPROFILE%\\php&& php -S localhost:5000 -t public public/router.php",
+    "dev": "set PHPRC=%USERPROFILE%\\php&& php -S 127.0.0.1:5000 -t public public/router.php",
+    "start": "set PHPRC=%USERPROFILE%\\php&& php -S 127.0.0.1:5000 -t public public/router.php",
     "postinstall": "echo Backend is PHP-only. No npm packages are required."
   }
 }

@@ -3,7 +3,6 @@ require_once __DIR__ . '/config/env.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/utils/helpers.php';
 require_once __DIR__ . '/utils/request_context.php';
-require_once __DIR__ . '/utils/initializers.php';
 
 set_exception_handler(function (Throwable $exception) {
     $message = $exception->getMessage();
@@ -19,8 +18,18 @@ set_exception_handler(function (Throwable $exception) {
 });
 
 try {
-    ensure_default_roles();
-    ensure_default_admin_user();
+    $initializersPath = __DIR__ . '/utils/initializers.php';
+    if (file_exists($initializersPath)) {
+        require_once $initializersPath;
+        if (function_exists('ensure_default_roles')) {
+            ensure_default_roles();
+        }
+        if (function_exists('ensure_default_admin_user')) {
+            ensure_default_admin_user();
+        }
+    } else {
+        error_log('[bootstrap] initializers.php not found. Skipping default seed.');
+    }
 } catch (Throwable $exception) {
     // Bootstrapping defaults should not block public API reads in production.
     error_log('[bootstrap] Default seed skipped: ' . $exception->getMessage());

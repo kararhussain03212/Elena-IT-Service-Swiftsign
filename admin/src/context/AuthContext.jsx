@@ -10,6 +10,97 @@ import {
 const TOKEN_KEY = "token";
 const AUTH_USER_KEY = "authUser";
 
+const parseJsonSafely = (value) => {
+  if (typeof value !== "string") return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+};
+
+const findFirstStringValue = (input, keys, depth = 0) => {
+  if (depth > 6 || !input || typeof input !== "object") return "";
+
+  for (const key of keys) {
+    const direct = String(input?.[key] || "").trim();
+    if (direct) return direct;
+  }
+
+  for (const value of Object.values(input)) {
+    if (!value || typeof value !== "object") continue;
+    const nested = findFirstStringValue(value, keys, depth + 1);
+    if (nested) return nested;
+  }
+
+  return "";
+};
+
+const findFirstObjectValue = (input, keys, depth = 0) => {
+  if (depth > 6 || !input || typeof input !== "object") return null;
+
+  for (const key of keys) {
+    const direct = input?.[key];
+    if (direct && typeof direct === "object" && !Array.isArray(direct)) {
+      return direct;
+    }
+  }
+
+  for (const value of Object.values(input)) {
+    if (!value || typeof value !== "object") continue;
+    const nested = findFirstObjectValue(value, keys, depth + 1);
+    if (nested) return nested;
+  }
+
+  return null;
+};
+
+const extractAuthPayload = (response) => {
+  const root = parseJsonSafely(response?.data);
+  const nested = parseJsonSafely(root?.data);
+  const payload = nested && typeof nested === "object" ? nested : root;
+  const authHeader = String(
+    response?.headers?.authorization ||
+      response?.headers?.Authorization ||
+      "",
+  ).trim();
+  const bearerToken = authHeader.toLowerCase().startsWith("bearer ")
+    ? authHeader.slice(7).trim()
+    : "";
+
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return { token: bearerToken, user: null };
+  }
+
+  const nextToken =
+    bearerToken ||
+    findFirstStringValue(payload, [
+      "token",
+      "accessToken",
+      "access_token",
+      "jwt",
+      "jwtToken",
+      "idToken",
+    ]);
+
+  const nextUser = findFirstObjectValue(payload, ["user", "authUser", "profile"]);
+  return {
+    token: nextToken || "",
+    user: nextUser,
+  };
+};
+
+const sanitizeSessionUser = (rawUser) => {
+  if (!rawUser || typeof rawUser !== "object") return null;
+  const role = String(rawUser?.role || "viewer").trim();
+  const permissions = Array.isArray(rawUser?.permissions) ? rawUser.permissions : [];
+  return {
+    ...rawUser,
+    role,
+    permissions,
+  };
+};
+
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
   const [user, setUser] = useState(() => {
@@ -62,12 +153,23 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const normalizedEmail = String(email || "").trim().toLowerCase();
     const response = await loginUser({ email: normalizedEmail, password });
+    const { token: nextToken, user: rawSessionUser } = extractAuthPayload(response);
+    let sessionUser = sanitizeSessionUser(rawSessionUser);
 
-    const nextToken = response?.data?.token;
-    const sessionUser = response?.data?.user;
-
-    if (!nextToken || !sessionUser) {
+    if (!nextToken) {
       throw new Error("Invalid login response from server.");
+    }
+
+    if (!sessionUser) {
+      localStorage.setItem(TOKEN_KEY, nextToken);
+      setToken(nextToken);
+      try {
+        const profileResponse = await getMe();
+        sessionUser = sanitizeSessionUser(profileResponse?.data || null);
+      } catch {
+        clearSession();
+        throw new Error("Could not load user profile after login.");
+      }
     }
 
     localStorage.setItem(TOKEN_KEY, nextToken);
