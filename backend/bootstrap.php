@@ -9,28 +9,51 @@ set_exception_handler(function (Throwable $exception) {
     $isDbConnectionError =
         $exception instanceof PDOException
         && (stripos($message, 'SQLSTATE[HY000] [2002]') !== false || stripos($message, 'Connection refused') !== false);
+    $isMissingTableError =
+        $exception instanceof PDOException
+        && (stripos($message, 'SQLSTATE[42S02]') !== false || stripos($message, "Base table or view not found") !== false);
 
     if ($isDbConnectionError) {
         error_response(503, 'Database is unavailable. Start MySQL (XAMPP) and verify backend/.env database settings.');
+    }
+    if ($isMissingTableError) {
+        error_response(503, 'Database schema is missing. Import your SQL schema or run backend migration/seed scripts on the server.');
     }
 
     error_response(500, 'Internal server error.', ['details' => $message]);
 });
 
-try {
-    $initializersPath = __DIR__ . '/utils/initializers.php';
-    if (file_exists($initializersPath)) {
-        require_once $initializersPath;
-        if (function_exists('ensure_default_roles')) {
-            ensure_default_roles();
-        }
-        if (function_exists('ensure_default_admin_user')) {
-            ensure_default_admin_user();
-        }
-    } else {
-        error_log('[bootstrap] initializers.php not found. Skipping default seed.');
+function should_run_bootstrap_initializers(): bool
+{
+    $force = strtolower((string) env('BOOTSTRAP_INIT_EACH_REQUEST', ''));
+    if (in_array($force, ['1', 'true', 'yes', 'on'], true)) {
+        return true;
     }
-} catch (Throwable $exception) {
-    // Bootstrapping defaults should not block public API reads in production.
-    error_log('[bootstrap] Default seed skipped: ' . $exception->getMessage());
+
+    if (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg' || PHP_SAPI === 'cli-server') {
+        return true;
+    }
+
+    $appEnv = strtolower((string) env('APP_ENV', 'production'));
+    return in_array($appEnv, ['local', 'development', 'dev'], true);
+}
+
+if (should_run_bootstrap_initializers()) {
+    try {
+        $initializersPath = __DIR__ . '/utils/initializers.php';
+        if (file_exists($initializersPath)) {
+            require_once $initializersPath;
+            if (function_exists('ensure_default_roles')) {
+                ensure_default_roles();
+            }
+            if (function_exists('ensure_default_admin_user')) {
+                ensure_default_admin_user();
+            }
+        } else {
+            error_log('[bootstrap] initializers.php not found. Skipping default seed.');
+        }
+    } catch (Throwable $exception) {
+        // Bootstrapping defaults should not block public API reads in production.
+        error_log('[bootstrap] Default seed skipped: ' . $exception->getMessage());
+    }
 }

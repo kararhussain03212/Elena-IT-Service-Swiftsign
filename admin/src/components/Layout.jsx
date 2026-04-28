@@ -257,12 +257,15 @@ export default function Layout({ children }) {
       <div className="flex-1 lg:ml-65 flex flex-col min-w-0">
         {/* Topbar */}
         <header className="sticky top-0 z-50 h-16 bg-[#0f0d1d] border-b border-white/6 flex items-center gap-4 px-6">
-          <button
-            className="lg:hidden text-white/50 hover:text-white text-xl"
-            onClick={() => setSidebarOpen(true)}
-          >
-            ☰
-          </button>
+          {!sidebarOpen ? (
+            <button
+              className="lg:hidden text-white/50 hover:text-white text-xl"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open sidebar"
+            >
+              ☰
+            </button>
+          ) : null}
           <h1 className="flex-1 font-bold text-white text-lg capitalize">
             {location.pathname === "/"
               ? "Dashboard"

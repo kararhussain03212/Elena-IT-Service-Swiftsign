@@ -15,6 +15,7 @@ class SeedFromScripts
     private PDO $pdo;
     private ?bool $serviceExtrasTablesReady = null;
     private ?bool $serviceExtrasColumnsReady = null;
+    private ?bool $teamSocialLinksTableReady = null;
 
     public function __construct()
     {
@@ -119,6 +120,21 @@ class SeedFromScripts
         $stmt = $this->pdo->prepare(sprintf('SELECT COUNT(*) FROM %s WHERE service_id = :id', $table));
         $stmt->execute(['id' => $serviceId]);
         return ((int) $stmt->fetchColumn()) > 0;
+    }
+
+    private function teamSocialLinksTableExist(): bool
+    {
+        if ($this->teamSocialLinksTableReady !== null) {
+            return $this->teamSocialLinksTableReady;
+        }
+
+        $stmt = $this->pdo->prepare(
+            'SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = :table LIMIT 1'
+        );
+        $stmt->execute(['table' => 'team_social_links']);
+        $this->teamSocialLinksTableReady = (bool) $stmt->fetchColumn();
+
+        return $this->teamSocialLinksTableReady;
     }
 
     private function decodeJsonColumn($value): array
@@ -334,6 +350,7 @@ class SeedFromScripts
     private function seedTeam(array $items): void
     {
         foreach ($items as $item) {
+            $socialLinks = ensure_array($item['socialLinks'] ?? []);
             $payload = [
                 'name' => sanitize_string($item['name'] ?? ''),
                 'slug' => sanitize_string($item['slug'] ?? ''),
@@ -343,13 +360,20 @@ class SeedFromScripts
                 'sort_order' => parse_integer($item['order'] ?? 0, 0),
                 'skills' => $item['skills'] ?? [],
                 'education' => $item['education'] ?? [],
-                'social_links' => $item['socialLinks'] ?? [],
+                'social_links' => $socialLinks,
                 'is_active' => parse_boolean($item['isActive'] ?? true, true) ? 1 : 0,
             ];
             if ($payload['slug'] === '') {
                 continue;
             }
             $this->upsert('team_members', 'slug', $payload['slug'], $payload, ['skills', 'education', 'social_links']);
+
+            if ($this->teamSocialLinksTableExist()) {
+                $teamId = $this->findId('team_members', 'slug', $payload['slug']);
+                if ($teamId) {
+                    TeamModel::replaceSocialLinks($teamId, $socialLinks);
+                }
+            }
         }
     }
 

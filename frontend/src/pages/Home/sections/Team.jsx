@@ -33,6 +33,52 @@ const PLACEHOLDER_MEMBERS = [
   },
 ];
 
+const isValidSocialUrl = (value) => {
+  const raw = String(value ?? "").trim();
+  if (!raw || raw === "#") return false;
+
+  try {
+    const parsed = new URL(raw);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch (_unusedError) {
+    return false;
+  }
+};
+
+const normalizeSocialLinks = (socialLinks) => {
+  if (!socialLinks) return [];
+
+  if (Array.isArray(socialLinks)) {
+    return socialLinks
+      .map((item) => ({
+        platform: String(item?.name || item?.platform || item?.key || "").trim(),
+        url: String(item?.href || item?.url || item?.link || "").trim(),
+      }))
+      .filter((item) => item.platform && isValidSocialUrl(item.url));
+  }
+
+  if (typeof socialLinks === "object") {
+    return Object.entries(socialLinks)
+      .map(([platform, url]) => ({
+        platform: String(platform || "").trim(),
+        url: String(url || "").trim(),
+      }))
+      .filter((item) => item.platform && isValidSocialUrl(item.url));
+  }
+
+  return [];
+};
+
+const getSocialIcon = (platform) => {
+  const normalized = String(platform || "").toLowerCase();
+
+  if (normalized.includes("facebook")) return FaFacebookF;
+  if (normalized.includes("instagram")) return IoLogoInstagram;
+  if (normalized.includes("linkedin")) return FaLinkedinIn;
+
+  return IoShareSocialSharp;
+};
+
 const Team = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,66 +143,64 @@ const Team = () => {
           ref={gridRef}
           className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {displayMembers.map((member, index) => (
-            <div
-              key={(member.slug || "member") + "-" + index}
-              className="sr-hidden sr-up group relative w-full max-w-[380px] cursor-pointer lg:max-w-[300px] xl:max-w-[380px]"
-            >
-              <div className="relative h-[480px] w-full overflow-hidden lg:h-[400px] xl:h-[500px]">
-                <Link to={"/team/" + member.slug} className="block h-full">
-                  <img
-                    src={getImageUrl(member.image)}
-                    alt={member.name}
-                    className="block h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
-                </Link>
-              </div>
+          {displayMembers.map((member, index) => {
+            const socialLinks = normalizeSocialLinks(member.social_links ?? member.socialLinks);
 
-              <div className="absolute bottom-0 left-0 right-0 flex h-[110px] items-center bg-[linear-gradient(90deg,rgb(60,114,252)_-10.59%,rgb(0,6,12)_300.59%)] px-5">
-                <div className="w-[260px]">
-                  <h3 className="text-[25px] font-bold leading-tight text-white">
-                    <Link to={"/team/" + member.slug}>{member.name}</Link>
-                  </h3>
-                  <p className="mt-0.5 text-[16px] text-white">{member.role}</p>
+            return (
+              <div
+                key={(member.slug || "member") + "-" + index}
+                className="sr-hidden sr-up group relative w-full max-w-[380px] cursor-pointer lg:max-w-[300px] xl:max-w-[380px]"
+              >
+                <div className="relative h-[480px] w-full overflow-hidden lg:h-[400px] xl:h-[500px]">
+                  <Link to={"/team/" + member.slug} className="block h-full">
+                    <img
+                      src={getImageUrl(member.image)}
+                      alt={member.name}
+                      className="block h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </Link>
                 </div>
 
-                <div className="group/share absolute bottom-[33px] right-[15px] z-30 flex flex-col items-center">
-                  <div className="mb-2 max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out group-hover/share:max-h-[200px]">
-                    <div className="flex flex-col items-center gap-1 rounded-full bg-[linear-gradient(90deg,rgb(60,114,252)_-10.59%,rgb(0,6,12)_300.59%)] px-[7px] py-3">
-                      <a
-                        href={member.socialLinks?.facebook || "#"}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex h-9 w-9 items-center justify-center rounded-full text-white hover:bg-white hover:text-[#3c72fc]"
-                      >
-                        <FaFacebookF className="h-3.5 w-3.5" />
-                      </a>
-                      <a
-                        href={member.socialLinks?.instagram || "#"}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex h-9 w-9 items-center justify-center rounded-full text-white hover:bg-white hover:text-[#3c72fc]"
-                      >
-                        <IoLogoInstagram className="h-4 w-4" />
-                      </a>
-                      <a
-                        href={member.socialLinks?.linkedin || "#"}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex h-9 w-9 items-center justify-center rounded-full text-white hover:bg-white hover:text-[#3c72fc]"
-                      >
-                        <FaLinkedinIn className="h-3.5 w-3.5" />
-                      </a>
-                    </div>
+                <div className="absolute bottom-0 left-0 right-0 flex h-[110px] items-center bg-[linear-gradient(90deg,rgb(60,114,252)_-10.59%,rgb(0,6,12)_300.59%)] px-5">
+                  <div className="w-[260px]">
+                    <h3 className="text-[25px] font-bold leading-tight text-white">
+                      <Link to={"/team/" + member.slug}>{member.name}</Link>
+                    </h3>
+                    <p className="mt-0.5 text-[16px] text-white">{member.role}</p>
                   </div>
 
-                  <button className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white">
-                    <IoShareSocialSharp className="h-5 w-5" />
-                  </button>
+                  {socialLinks.length > 0 ? (
+                    <div className="group/share absolute bottom-[33px] right-[15px] z-30 flex flex-col items-center">
+                      <div className="mb-2 max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out group-hover/share:max-h-[200px]">
+                        <div className="flex max-h-[240px] flex-col items-center gap-1 overflow-y-auto rounded-full bg-[linear-gradient(90deg,rgb(60,114,252)_-10.59%,rgb(0,6,12)_300.59%)] px-[7px] py-3">
+                          {socialLinks.map((link) => {
+                            const Icon = getSocialIcon(link.platform);
+
+                            return (
+                              <a
+                                key={link.platform + link.url}
+                                href={link.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={link.platform}
+                                className="flex h-9 w-9 items-center justify-center rounded-full text-white hover:bg-white hover:text-[#3c72fc]"
+                              >
+                                <Icon className="h-4 w-4" />
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <button className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white">
+                        <IoShareSocialSharp className="h-5 w-5" />
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

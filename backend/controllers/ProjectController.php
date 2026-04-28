@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../models/ProjectModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 
 class ProjectController
@@ -23,6 +22,7 @@ class ProjectController
 
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $payload = [
             'title' => sanitize_string($body['title'] ?? ''),
@@ -54,10 +54,6 @@ class ProjectController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
-        $existing = ProjectModel::findById($id);
-        if (!$existing) {
-            error_response(404, 'Project not found.');
-        }
         $body = $context['body'] ?? [];
         $payload = [];
         $mapping = [
@@ -95,6 +91,9 @@ class ProjectController
             $payload['cover_image'] = $upload['path'];
         }
         $updated = ProjectModel::update($id, $payload);
+        if (!$updated) {
+            error_response(404, 'Project not found.');
+        }
         return $updated;
     }
 

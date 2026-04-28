@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../models/SectionContentModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 
 class SectionContentController
@@ -70,6 +69,7 @@ class SectionContentController
 
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $payload = [
             'page' => sanitize_string($body['page'] ?? ''),
@@ -85,10 +85,6 @@ class SectionContentController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
-        $existing = SectionContentModel::findById($id);
-        if (!$existing) {
-            error_response(404, 'Section content not found.');
-        }
         $body = $context['body'] ?? [];
         $payload = [];
         if (array_key_exists('page', $body)) {
@@ -107,6 +103,9 @@ class SectionContentController
             $payload['is_active'] = parse_boolean($body['isActive'], true) ? 1 : 0;
         }
         $updated = SectionContentModel::update($id, $payload);
+        if (!$updated) {
+            error_response(404, 'Section content not found.');
+        }
         return $updated;
     }
 

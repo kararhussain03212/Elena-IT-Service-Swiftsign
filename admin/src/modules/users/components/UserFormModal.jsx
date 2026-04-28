@@ -87,6 +87,9 @@ export default function UserFormModal({
     }
 
     if (!form.role) nextErrors.role = "Role is required.";
+    if (!Array.isArray(form.permissions) || form.permissions.length === 0) {
+      nextErrors.permissions = "Select at least one permission.";
+    }
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };

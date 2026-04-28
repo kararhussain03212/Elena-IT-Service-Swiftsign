@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/UserModel.php';
 require_once __DIR__ . '/../models/RoleModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 require_once __DIR__ . '/../utils/rbac.php';
 
@@ -53,13 +52,15 @@ class UserController
 
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $name = sanitize_string($body['name'] ?? '');
         $email = strtolower(trim($body['email'] ?? ''));
         $password = $body['password'] ?? '';
         $role = normalize_role_value($body['role'] ?? 'viewer');
         $status = strtolower(trim($body['status'] ?? 'pending'));
-        $permissions = normalize_permissions_list($body['permissions'] ?? []);
+        $hasExplicitPermissions = array_key_exists('permissions', $body);
+        $permissions = $hasExplicitPermissions ? normalize_permissions_list($body['permissions']) : [];
 
         if ($name === '' || $email === '' || $password === '') {
             error_response(400, 'Name, email and password are required.');
@@ -76,7 +77,10 @@ class UserController
         if (!in_array($status, USER_STATUSES, true)) {
             error_response(400, 'Status must be active, suspended, or pending.');
         }
-        if (!empty($permissions) && array_diff($permissions, PERMISSIONS)) {
+        if (!$hasExplicitPermissions || empty($permissions)) {
+            error_response(400, 'At least one permission must be selected.');
+        }
+        if ($hasExplicitPermissions && array_diff($permissions, PERMISSIONS)) {
             error_response(400, 'Permissions must be valid.');
         }
         $existing = UserModel::findByEmail($email);
@@ -95,7 +99,9 @@ class UserController
             'location' => sanitize_string($body['location'] ?? ''),
             'bio' => sanitize_string($body['bio'] ?? ''),
             'avatar' => '',
-            'permissions' => $permissions ?: ($roleDoc['permissions'] ?? DEFAULT_ROLE_PERMISSIONS[$role] ?? []),
+            'permissions' => $hasExplicitPermissions
+                ? $permissions
+                : ($roleDoc['permissions'] ?? DEFAULT_ROLE_PERMISSIONS[$role] ?? []),
             'activity' => [
                 ['action' => 'user_created', 'description' => 'Account was created by admin.', 'at' => now()],
             ],
@@ -147,6 +153,9 @@ class UserController
         }
         if (isset($body['permissions'])) {
             $value = normalize_permissions_list($body['permissions']);
+            if (empty($value)) {
+                error_response(400, 'At least one permission must be selected.');
+            }
             if (array_diff($value, PERMISSIONS)) {
                 error_response(400, 'Invalid permissions.');
             }

@@ -78,7 +78,7 @@ function get_authorization_header(): ?string
 
 function ensure_uploaded_directory(string $relativePath): string
 {
-    // Store uploads under backend/public/uploads so Apache/cPanel can serve them directly.
+    // Store uploads under backend/public/uploads so frontend can access via /uploads/*
     $target = __DIR__ . '/../public/' . ltrim($relativePath, '/');
     $directory = dirname($target);
     if (!is_dir($directory)) {
@@ -87,23 +87,82 @@ function ensure_uploaded_directory(string $relativePath): string
     return $target;
 }
 
+function sanitize_upload_filename(string $originalName): string
+{
+    $originalName = trim($originalName);
+    if ($originalName === '') {
+        return 'file.bin';
+    }
+
+    $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+    $base = pathinfo($originalName, PATHINFO_FILENAME);
+    $base = preg_replace('/[^a-zA-Z0-9._-]+/', '-', (string) $base);
+    $base = trim((string) $base, '-_.');
+    if ($base === '') {
+        $base = 'file';
+    }
+    if ($extension === '') {
+        $extension = 'bin';
+    }
+
+    return $base . '.' . $extension;
+}
+
+function resolve_unique_upload_filename(string $subFolder, string $fileName): string
+{
+    $subFolder = trim($subFolder, '/');
+    $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+    $base = pathinfo($fileName, PATHINFO_FILENAME);
+
+    $candidate = $fileName;
+    $counter = 1;
+    while (true) {
+        $relative = $subFolder . '/' . $candidate;
+        $target = __DIR__ . '/../public/' . ltrim($relative, '/');
+        if (!file_exists($target)) {
+            return $candidate;
+        }
+        $candidate = $base . '-' . $counter . ($extension !== '' ? '.' . $extension : '');
+        $counter++;
+    }
+}
+
 function handle_file_upload(string $field, string $subFolder = 'uploads'): ?array
 {
-    if (empty($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+    if (empty($_FILES[$field])) {
         return null;
     }
 
-    $info = pathinfo($_FILES[$field]['name']);
-    $filename = bin2hex(random_bytes(8)) . '.' . ($info['extension'] ?? 'bin');
+    $errorCode = (int) ($_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE);
+    if ($errorCode === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+    if ($errorCode !== UPLOAD_ERR_OK) {
+        $errorMap = [
+            UPLOAD_ERR_INI_SIZE => 'Uploaded file exceeds server upload_max_filesize.',
+            UPLOAD_ERR_FORM_SIZE => 'Uploaded file exceeds form MAX_FILE_SIZE.',
+            UPLOAD_ERR_PARTIAL => 'Uploaded file was only partially uploaded.',
+            UPLOAD_ERR_NO_TMP_DIR => 'Server is missing a temporary upload directory.',
+            UPLOAD_ERR_CANT_WRITE => 'Server failed to write uploaded file to disk.',
+            UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload.',
+        ];
+        $message = $errorMap[$errorCode] ?? ('File upload failed with error code ' . $errorCode . '.');
+        error_response(400, $message, ['field' => $field, 'code' => $errorCode]);
+    }
+
+    $originalName = (string) ($_FILES[$field]['name'] ?? '');
+    $filename = sanitize_upload_filename($originalName);
+    $filename = resolve_unique_upload_filename($subFolder, $filename);
     $relative = trim($subFolder, '/') . '/' . $filename;
     $destination = ensure_uploaded_directory($relative);
 
     if (!move_uploaded_file($_FILES[$field]['tmp_name'], $destination)) {
-        return null;
+        error_response(500, 'Uploaded file could not be moved into uploads directory.', ['field' => $field]);
     }
 
     return [
         'filename' => $filename,
+        'original_name' => $originalName,
         'path' => $relative,
         'url' => '/' . $relative,
     ];
@@ -179,8 +238,8 @@ function normalize_upload_path(string $value): string
     if ($relative !== null) {
         $relative = ltrim($relative, '/');
         $candidates = [
-            __DIR__ . '/../' . $relative,
             __DIR__ . '/../public/' . $relative,
+            __DIR__ . '/../../' . $relative,
         ];
 
         foreach ($candidates as $candidate) {
@@ -276,4 +335,21 @@ function transform_api_response($payload)
     }
 
     return $output;
+}
+
+function require_data_inserter(): void
+{
+    static $loaded = false;
+    if ($loaded || class_exists('DataInserter', false)) {
+        $loaded = true;
+        return;
+    }
+
+    $path = __DIR__ . '/../scripts/DataInserter.php';
+    if (!file_exists($path)) {
+        error_response(503, 'Data write module is unavailable. Upload backend/scripts/DataInserter.php to the server.');
+    }
+
+    require_once $path;
+    $loaded = true;
 }

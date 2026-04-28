@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../models/ServiceModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 
 class ServiceController
@@ -68,6 +67,7 @@ class ServiceController
 
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $benefits = self::normalizeBenefits($body['benefits'] ?? []);
         $faqs = self::normalizeFaqs($body['faqs'] ?? []);
@@ -124,10 +124,6 @@ class ServiceController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
-        $existing = ServiceModel::findById($id);
-        if (!$existing) {
-            error_response(404, 'Service not found.');
-        }
         $body = $context['body'] ?? [];
         $payload = [];
         foreach ([
@@ -165,6 +161,9 @@ class ServiceController
             $payload['detail_image'] = $detailUpload['path'];
         }
         $updated = ServiceModel::update($id, $payload);
+        if (!$updated) {
+            error_response(404, 'Service not found.');
+        }
 
         try {
             if (ServiceModel::shouldUseExtrasTables()) {
@@ -196,7 +195,7 @@ class ServiceController
             // Ignore extras save failures to avoid breaking service update.
         }
 
-        return ServiceModel::attachExtras($updated);
+        return ServiceModel::attachExtras($updated ?: []);
     }
 
     public static function toggleActive(array $context): array

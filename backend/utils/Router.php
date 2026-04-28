@@ -3,7 +3,8 @@ require_once __DIR__ . '/helpers.php';
 
 class Router
 {
-    private array $routes = [];
+    /** @var array<int, array<string, mixed>> */
+    private $routes = [];
 
     public function add(string $method, string $pattern, callable $handler, array $options = []): void
     {
@@ -48,7 +49,6 @@ class Router
                 }
             }
 
-            $body = parse_request_body();
             $context = [
                 'params' => $params,
                 'query' => $_GET,

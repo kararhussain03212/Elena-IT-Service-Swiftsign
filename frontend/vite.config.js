@@ -27,10 +27,10 @@ export default defineConfig(({ mode }) => {
     build:
       mode === "production"
         ? {
-            // Deploy build directly to project root: /index.html + /assets/*
-            outDir: "../",
+            // Standard frontend build output
+            outDir: "dist",
             assetsDir: "assets",
-            emptyOutDir: false,
+            emptyOutDir: true,
           }
         : undefined,
     plugins: [react(), tailwindcss()],

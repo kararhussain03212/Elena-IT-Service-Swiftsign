@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../models/TestimonialModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 
 class TestimonialController
@@ -23,6 +22,7 @@ class TestimonialController
 
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $payload = [
             'name' => sanitize_string($body['name'] ?? ''),
@@ -44,10 +44,6 @@ class TestimonialController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
-        $existing = TestimonialModel::findById($id);
-        if (!$existing) {
-            error_response(404, 'Testimonial not found.');
-        }
         $body = $context['body'] ?? [];
         $payload = [];
         foreach (['name', 'role', 'company', 'message'] as $field) {
@@ -69,6 +65,9 @@ class TestimonialController
             $payload['avatar'] = $upload['path'];
         }
         $updated = TestimonialModel::update($id, $payload);
+        if (!$updated) {
+            error_response(404, 'Testimonial not found.');
+        }
         return $updated;
     }
 

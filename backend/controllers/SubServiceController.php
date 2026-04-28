@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../models/SubServiceModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 
 class SubServiceController
@@ -23,6 +22,7 @@ class SubServiceController
 
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $payload = [
             'title' => sanitize_string($body['title'] ?? ''),
@@ -42,10 +42,6 @@ class SubServiceController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
-        $existing = SubServiceModel::findById($id);
-        if (!$existing) {
-            error_response(404, 'Sub service not found.');
-        }
         $body = $context['body'] ?? [];
         $payload = [];
         if (array_key_exists('title', $body)) {
@@ -68,6 +64,9 @@ class SubServiceController
             $payload['icon'] = $upload['path'];
         }
         $updated = SubServiceModel::update($id, $payload);
+        if (!$updated) {
+            error_response(404, 'Sub service not found.');
+        }
         return $updated;
     }
 

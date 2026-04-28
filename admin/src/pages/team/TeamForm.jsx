@@ -14,6 +14,97 @@ const DEFAULT_SKILLS = [
 
 const DEFAULT_EDUCATION = [{ degree: "Bachelor Degree", year: "2020" }];
 
+const DEFAULT_SOCIAL_ACCOUNTS = [
+  { key: "facebook", label: "Facebook" },
+  { key: "instagram", label: "Instagram" },
+  { key: "linkedin", label: "LinkedIn" },
+];
+
+const createInitialSocialLinks = () => ({
+  facebook: "",
+  instagram: "",
+  linkedin: "",
+});
+
+const createInitialSocialErrors = () => ({
+  facebook: false,
+  instagram: false,
+  linkedin: false,
+});
+
+const parseSkillValue = (value) => {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  const raw = String(value ?? "").trim();
+  if (!raw) {
+    return null;
+  }
+
+  // Accept legacy formats such as "85%" while keeping numeric bounds checks.
+  const match = raw.match(/-?\d+(?:\.\d+)?/);
+  if (!match) {
+    return null;
+  }
+
+  const numeric = Number(match[0]);
+  return Number.isFinite(numeric) ? numeric : null;
+};
+
+const isValidEducationYear = (value) => {
+  const text = String(value ?? "").trim();
+  if (!text) {
+    return false;
+  }
+
+  if (/^\d{4}$/.test(text)) {
+    return true;
+  }
+
+  if (/^(present|current|ongoing)$/i.test(text)) {
+    return true;
+  }
+
+  return /^\d{4}\s*[-/]\s*(\d{4}|present|current|ongoing)$/i.test(text);
+};
+
+const normalizeSocialAccounts = (socialLinks) => {
+  const output = createInitialSocialLinks();
+  if (!socialLinks) {
+    return output;
+  }
+
+  const mapKey = (value) => {
+    const raw = String(value ?? "").trim().toLowerCase();
+    if (!raw) return null;
+    if (raw.includes("facebook")) return "facebook";
+    if (raw.includes("instagram")) return "instagram";
+    if (raw.includes("linkedin") || raw.includes("linkdin")) return "linkedin";
+    return null;
+  };
+
+  if (typeof socialLinks === "object" && !Array.isArray(socialLinks)) {
+    Object.entries(socialLinks).forEach(([platform, url]) => {
+      const key = mapKey(platform);
+      if (!key) return;
+      output[key] = url === "#" ? "" : String(url || "");
+    });
+    return output;
+  }
+
+  if (Array.isArray(socialLinks)) {
+    socialLinks.forEach((item) => {
+      const key = mapKey(item?.name || item?.platform || item?.key || "");
+      if (!key) return;
+      const rawValue = String(item?.href || item?.url || item?.link || "");
+      output[key] = rawValue === "#" ? "" : rawValue;
+    });
+  }
+
+  return output;
+};
+
 const createInitialForm = () => ({
   name: "",
   slug: "",
@@ -30,9 +121,7 @@ const createInitialForm = () => ({
     degree: item.degree || "",
     year: item.year || "",
   })),
-  facebook: "#",
-  instagram: "#",
-  linkedin: "#",
+  socialLinks: createInitialSocialLinks(),
 });
 
 export default function TeamForm() {
@@ -47,6 +136,7 @@ export default function TeamForm() {
   const [fieldErrors, setFieldErrors] = useState({
     skills: [],
     education: [],
+    socialLinks: createInitialSocialErrors(),
   });
 
   // CHANGE: normalize API root once
@@ -136,6 +226,49 @@ export default function TeamForm() {
     }));
   };
 
+  const updateSocialLink = (key, value) => {
+    setForm((prev) => ({
+      ...prev,
+      socialLinks: {
+        ...prev.socialLinks,
+        [key]: value,
+      },
+    }));
+    setFieldErrors((prev) => ({
+      ...prev,
+      socialLinks: {
+        ...(prev.socialLinks ?? {}),
+        [key]: false,
+      },
+    }));
+    setError("");
+  };
+
+  const validateSocialLinks = (socialLinks) => {
+    const nextErrors = createInitialSocialErrors();
+    let hasError = false;
+
+    DEFAULT_SOCIAL_ACCOUNTS.forEach(({ key }) => {
+      const raw = String(socialLinks?.[key] ?? "").trim();
+      if (!raw || raw === "#") {
+        return;
+      }
+
+      try {
+        const parsed = new URL(raw);
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+          nextErrors[key] = true;
+          hasError = true;
+        }
+      } catch (_unusedError) {
+        nextErrors[key] = true;
+        hasError = true;
+      }
+    });
+
+    return { socialLinkErrors: nextErrors, hasError };
+  };
+
   const removeEducation = (index) => {
     setForm((prev) => ({
       ...prev,
@@ -161,8 +294,11 @@ export default function TeamForm() {
     skills.forEach((skill, index) => {
       const name = String(skill?.name ?? "").trim();
       const valueText = String(skill?.value ?? "").trim();
+      // Skip completely empty rows (name AND value both empty)
       const isEmpty = !name && !valueText;
       if (isEmpty) return;
+      // Skip rows where only value is missing — treat as incomplete, discard silently
+      if (name && !valueText) return;
 
       let rowHasError = false;
       if (!name) {
@@ -170,10 +306,9 @@ export default function TeamForm() {
         rowHasError = true;
       }
 
-      const valueNum = Number(valueText);
+      const valueNum = parseSkillValue(valueText);
       if (
-        valueText === "" ||
-        Number.isNaN(valueNum) ||
+        valueNum === null ||
         valueNum < 0 ||
         valueNum > 100
       ) {
@@ -201,7 +336,7 @@ export default function TeamForm() {
         rowHasError = true;
       }
 
-      if (!/^\d{4}$/.test(yearText)) {
+      if (yearText && !isValidEducationYear(yearText)) {
         educationErrors[index].year = true;
         rowHasError = true;
       }
@@ -261,7 +396,7 @@ export default function TeamForm() {
           skills: incomingSkills.length
             ? incomingSkills.map((skill) => ({
                 name: skill?.name || "",
-                value: skill?.value ?? "",
+                value: parseSkillValue(skill?.value) ?? "",
               }))
             : [{ name: "", value: "" }],
           education: incomingEducation.length
@@ -270,11 +405,13 @@ export default function TeamForm() {
                 year: item?.year || "",
               }))
             : [{ degree: "", year: "" }],
-          facebook: member.socialLinks?.facebook || "#",
-          instagram: member.socialLinks?.instagram || "#",
-          linkedin: member.socialLinks?.linkedin || "#",
+          socialLinks: normalizeSocialAccounts(member.social_links ?? member.socialLinks),
         });
-        setFieldErrors({ skills: [], education: [] });
+        setFieldErrors({
+          skills: [],
+          education: [],
+          socialLinks: createInitialSocialErrors(),
+        });
       } catch (err) {
         console.error("Team member load failed:", err);
         setError("Failed to load team member.");
@@ -298,17 +435,32 @@ export default function TeamForm() {
         cleanedEducation,
         skillErrors,
         educationErrors,
-        hasError,
+        hasError: hasSkillsEducationError,
       } = validateSkillsEducation(form.skills, form.education);
 
-      setFieldErrors({ skills: skillErrors, education: educationErrors });
+      const {
+        socialLinkErrors,
+        hasError: hasSocialLinksError,
+      } = validateSocialLinks(form.socialLinks);
 
-      if (hasError) {
+      setFieldErrors({
+        skills: skillErrors,
+        education: educationErrors,
+        socialLinks: socialLinkErrors,
+      });
+
+      if (hasSkillsEducationError || hasSocialLinksError) {
         setError("Please fix the highlighted fields.");
         return;
       }
 
       const payload = new FormData();
+      const normalizedSocialLinks = {
+        facebook: String(form.socialLinks?.facebook ?? "").trim() || "#",
+        instagram: String(form.socialLinks?.instagram ?? "").trim() || "#",
+        linkedin: String(form.socialLinks?.linkedin ?? "").trim() || "#",
+      };
+
       payload.append("name", form.name.trim());
       payload.append("slug", form.slug.trim());
       payload.append("role", form.role.trim());
@@ -316,14 +468,7 @@ export default function TeamForm() {
       payload.append("order", String(form.order || 0));
       payload.append("skills", JSON.stringify(cleanedSkills));
       payload.append("education", JSON.stringify(cleanedEducation));
-      payload.append(
-        "socialLinks",
-        JSON.stringify({
-          facebook: form.facebook || "#",
-          instagram: form.instagram || "#",
-          linkedin: form.linkedin || "#",
-        }),
-      );
+      payload.append("socialLinks", JSON.stringify(normalizedSocialLinks));
 
       if (form.imageFile) {
         payload.append("image", form.imageFile);
@@ -432,34 +577,41 @@ export default function TeamForm() {
           helperText="PNG, JPG, JPEG - used in frontend Team section"
         />
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div>
-            <label className="mb-2 block text-sm text-white/80">Facebook</label>
-            <input
-              value={form.facebook}
-              onChange={(e) => setField("facebook", e.target.value)}
-              className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
-            />
-          </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">
+            Social Media Links
+          </label>
+          <p className="mb-3 text-xs text-white/50">
+            Leave a field empty to save <code>#</code>. Empty links are hidden
+            on the frontend.
+          </p>
 
-          <div>
-            <label className="mb-2 block text-sm text-white/80">
-              Instagram
-            </label>
-            <input
-              value={form.instagram}
-              onChange={(e) => setField("instagram", e.target.value)}
-              className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm text-white/80">LinkedIn</label>
-            <input
-              value={form.linkedin}
-              onChange={(e) => setField("linkedin", e.target.value)}
-              className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
-            />
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            {DEFAULT_SOCIAL_ACCOUNTS.map((account) => (
+              <div
+                key={`social-${account.key}`}
+                className="rounded-lg border border-white/15 bg-[#151327] p-3"
+              >
+                <label className="mb-2 block text-xs font-medium text-white/70">
+                  {account.label}
+                </label>
+                <input
+                  value={form.socialLinks?.[account.key] ?? ""}
+                  onChange={(e) => updateSocialLink(account.key, e.target.value)}
+                  className={`w-full rounded-lg border bg-[#111022] px-3 py-2 text-sm text-white outline-none ${
+                    fieldErrors.socialLinks?.[account.key]
+                      ? "border-red-500/60 focus:border-red-500/60"
+                      : "border-white/15 focus:border-[#3c72fc]"
+                  }`}
+                  placeholder={`https://${account.key}.com/...`}
+                />
+                {fieldErrors.socialLinks?.[account.key] ? (
+                  <p className="mt-1 text-xs text-red-300">
+                    Use a valid URL (http/https) or leave it empty.
+                  </p>
+                ) : null}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -600,7 +752,7 @@ export default function TeamForm() {
               Add Education
             </button>
             <p className="text-xs text-white/50">
-              Year must be a 4-digit number.
+              Year is optional. If filled, accepted: 2024, 2020-2024, or Present.
             </p>
           </div>
         </div>

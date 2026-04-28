@@ -150,27 +150,16 @@ const NavInner = ({
           </div>
         ) : null}
 
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden relative z-1051 w-10 h-10 flex items-center justify-center transition-transform duration-200 active:scale-90"
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isMobileMenuOpen}
-        >
-          <span
-            className={`absolute transition-all duration-200 ${
-              isMobileMenuOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
-            }`}
+        {!isMobileMenuOpen ? (
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="lg:hidden relative z-1051 w-10 h-10 flex items-center justify-center transition-transform duration-200 active:scale-90"
+            aria-label="Open menu"
+            aria-expanded={false}
           >
             <Menu className="w-6 h-6 text-white" />
-          </span>
-          <span
-            className={`absolute transition-all duration-200 ${
-              isMobileMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"
-            }`}
-          >
-            <X className="w-6 h-6 text-white" />
-          </span>
-        </button>
+          </button>
+        ) : null}
       </div>
     </div>
   );

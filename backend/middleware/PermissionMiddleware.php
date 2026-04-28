@@ -32,8 +32,8 @@ class PermissionMiddleware
     private static function resolvePermissions(array $user): array
     {
         $role = normalize_role_value($user['role'] ?? 'viewer');
-        $permissions = $user['permissions'] ?? [];
-        if (is_array($permissions) && !empty($permissions)) {
+        if (array_key_exists('permissions', $user) && $user['permissions'] !== null) {
+            $permissions = $user['permissions'];
             return normalize_permissions_list($permissions);
         }
         return DEFAULT_ROLE_PERMISSIONS[$role] ?? [];

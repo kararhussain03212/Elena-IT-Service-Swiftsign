@@ -1,10 +1,91 @@
 <?php
 require_once __DIR__ . '/../models/TeamModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 
 class TeamController
 {
+    private static function normalizeSocialLinks($rawLinks): array
+    {
+        $links = ensure_array($rawLinks);
+        if (!is_array($links) || empty($links)) {
+            return [];
+        }
+
+        $normalized = [];
+
+        if (is_assoc_array($links)) {
+            foreach ($links as $platform => $url) {
+                $name = sanitize_string($platform);
+                $href = sanitize_string($url);
+                if ($name === '' || $href === '' || $href === '#') {
+                    continue;
+                }
+                $normalized[$name] = $href;
+            }
+
+            return $normalized;
+        }
+
+        foreach ($links as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $name = sanitize_string($item['name'] ?? $item['platform'] ?? $item['key'] ?? '');
+            $href = sanitize_string($item['href'] ?? $item['url'] ?? $item['link'] ?? '');
+
+            if ($name === '' || $href === '' || $href === '#') {
+                continue;
+            }
+
+            $normalized[$name] = $href;
+        }
+
+        return $normalized;
+    }
+
+    private static function buildSocialLinksPayload(array $body, array $existing = [], bool $forCreate = false): ?array
+    {
+        $hasSocialLinksPayload = array_key_exists('socialLinks', $body) || array_key_exists('social_links', $body);
+        $legacyKeys = ['facebook', 'instagram', 'linkedin'];
+
+        $hasLegacyFields = false;
+        foreach ($legacyKeys as $key) {
+            if (array_key_exists($key, $body)) {
+                $hasLegacyFields = true;
+                break;
+            }
+        }
+
+        if (!$hasSocialLinksPayload && !$hasLegacyFields) {
+            return $forCreate ? [] : null;
+        }
+
+        $existingLinks = self::normalizeSocialLinks($existing['social_links'] ?? $existing['socialLinks'] ?? []);
+
+        if ($hasSocialLinksPayload) {
+            $incomingLinks = self::normalizeSocialLinks($body['socialLinks'] ?? $body['social_links'] ?? []);
+            return $incomingLinks;
+        }
+
+        $nextLinks = $existingLinks;
+        foreach ($legacyKeys as $key) {
+            if (!array_key_exists($key, $body)) {
+                continue;
+            }
+
+            $value = sanitize_string($body[$key]);
+            if ($value === '' || $value === '#') {
+                unset($nextLinks[$key]);
+                continue;
+            }
+
+            $nextLinks[$key] = $value;
+        }
+
+        return $nextLinks;
+    }
+
     public static function list(array $context): array
     {
         $includeAll = ($context['query']['all'] ?? '') === '1';
@@ -34,7 +115,10 @@ class TeamController
 
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
+        $socialLinksPayload = self::buildSocialLinksPayload($body, [], true) ?? [];
+
         $payload = [
             'name' => sanitize_string($body['name'] ?? ''),
             'slug' => slugify($body['slug'] ?? $body['name'] ?? ''),
@@ -44,18 +128,30 @@ class TeamController
             'is_active' => parse_boolean($body['isActive'] ?? '', true) ? 1 : 0,
             'skills' => ensure_array($body['skills'] ?? []),
             'education' => ensure_array($body['education'] ?? []),
-            'social_links' => [
-                'facebook' => sanitize_string($body['socialLinks']['facebook'] ?? $body['facebook'] ?? '#'),
-                'instagram' => sanitize_string($body['socialLinks']['instagram'] ?? $body['instagram'] ?? '#'),
-                'linkedin' => sanitize_string($body['socialLinks']['linkedin'] ?? $body['linkedin'] ?? '#'),
-            ],
         ];
+
+        if (TeamModel::shouldUseSocialLinksColumn()) {
+            $payload['social_links'] = $socialLinksPayload;
+        }
+
         $upload = handle_file_upload('image');
         if ($upload) {
             $payload['image'] = $upload['path'];
         }
-        $created = DataInserter::insert('team_members', $payload, ['skills', 'education', 'social_links']);
-        return ['status' => 201, 'data' => $created];
+
+        $jsonColumns = ['skills', 'education'];
+        if (array_key_exists('social_links', $payload)) {
+            $jsonColumns[] = 'social_links';
+        }
+
+        $created = DataInserter::insert('team_members', $payload, $jsonColumns);
+        $memberId = (int) ($created['id'] ?? 0);
+        if ($memberId > 0) {
+            TeamModel::replaceSocialLinks($memberId, $socialLinksPayload);
+        }
+
+        $fresh = $memberId > 0 ? TeamModel::findById($memberId) : null;
+        return ['status' => 201, 'data' => $fresh ?: $created];
     }
 
     public static function update(array $context): array
@@ -85,24 +181,29 @@ class TeamController
         if (array_key_exists('education', $body)) {
             $payload['education'] = ensure_array($body['education']);
         }
-        if (
-            array_key_exists('socialLinks', $body) ||
-            array_key_exists('facebook', $body) ||
-            array_key_exists('instagram', $body) ||
-            array_key_exists('linkedin', $body)
-        ) {
-            $payload['social_links'] = [
-                'facebook' => sanitize_string($body['socialLinks']['facebook'] ?? $body['facebook'] ?? ($existing['social_links']['facebook'] ?? '#')),
-                'instagram' => sanitize_string($body['socialLinks']['instagram'] ?? $body['instagram'] ?? ($existing['social_links']['instagram'] ?? '#')),
-                'linkedin' => sanitize_string($body['socialLinks']['linkedin'] ?? $body['linkedin'] ?? ($existing['social_links']['linkedin'] ?? '#')),
-            ];
+
+        $socialLinksPayload = self::buildSocialLinksPayload($body, $existing, false);
+        if ($socialLinksPayload !== null) {
+            if (TeamModel::shouldUseSocialLinksColumn()) {
+                $payload['social_links'] = $socialLinksPayload;
+            }
         }
+
         $upload = handle_file_upload('image');
         if ($upload) {
             $payload['image'] = $upload['path'];
         }
+
         $updated = TeamModel::update($id, $payload);
-        return $updated;
+        if (!$updated) {
+            error_response(404, 'Team member not found.');
+        }
+        if ($socialLinksPayload !== null) {
+            TeamModel::replaceSocialLinks($id, $socialLinksPayload);
+        }
+
+        $fresh = TeamModel::findById($id);
+        return $fresh ?: $updated;
     }
 
     public static function toggleActive(array $context): array

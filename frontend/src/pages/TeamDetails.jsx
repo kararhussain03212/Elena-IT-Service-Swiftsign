@@ -2,7 +2,54 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Banner from "@/components/Banner";
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { IoShareSocialSharp } from "react-icons/io5";
 import { getTeamMemberBySlug } from "@/api/Apis";
+
+const isValidSocialUrl = (value) => {
+  const raw = String(value ?? "").trim();
+  if (!raw || raw === "#") return false;
+
+  try {
+    const parsed = new URL(raw);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch (_unusedError) {
+    return false;
+  }
+};
+
+const normalizeSocialLinks = (socialLinks) => {
+  if (!socialLinks) return [];
+
+  if (Array.isArray(socialLinks)) {
+    return socialLinks
+      .map((item) => ({
+        platform: String(item?.name || item?.platform || item?.key || "").trim(),
+        url: String(item?.href || item?.url || item?.link || "").trim(),
+      }))
+      .filter((item) => item.platform && isValidSocialUrl(item.url));
+  }
+
+  if (typeof socialLinks === "object") {
+    return Object.entries(socialLinks)
+      .map(([platform, url]) => ({
+        platform: String(platform || "").trim(),
+        url: String(url || "").trim(),
+      }))
+      .filter((item) => item.platform && isValidSocialUrl(item.url));
+  }
+
+  return [];
+};
+
+const getSocialIcon = (platform) => {
+  const normalized = String(platform || "").toLowerCase();
+
+  if (normalized.includes("facebook")) return FaFacebookF;
+  if (normalized.includes("instagram")) return FaInstagram;
+  if (normalized.includes("linkedin")) return FaLinkedinIn;
+
+  return IoShareSocialSharp;
+};
 
 const TeamDetails = () => {
   const { slug } = useParams();
@@ -68,6 +115,7 @@ const TeamDetails = () => {
 
   const skills = Array.isArray(member.skills) ? member.skills : [];
   const education = Array.isArray(member.education) ? member.education : [];
+  const socialLinks = normalizeSocialLinks(member.social_links ?? member.socialLinks);
 
   return (
     <main className="bg-[#0f0d1d]">
@@ -91,36 +139,26 @@ const TeamDetails = () => {
                   className="h-[360px] w-full object-cover object-top sm:h-[420px] md:h-[520px] lg:h-[520px]"
                 />
               </div>
-              <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 items-center gap-2 px-4 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.35)]">
-                {[
-                  {
-                    label: "Facebook",
-                    href: member.socialLinks?.facebook || "#",
-                    icon: FaFacebookF,
-                  },
-                  {
-                    label: "Instagram",
-                    href: member.socialLinks?.instagram || "#",
-                    icon: FaInstagram,
-                  },
-                  {
-                    label: "LinkedIn",
-                    href: member.socialLinks?.linkedin || "#",
-                    icon: FaLinkedinIn,
-                  },
-                ].map(({ label, href, icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="flex h-12 w-12 items-center justify-center border border-white text-white transition-colors hover:border-[#3c72fc] hover:bg-[#3c72fc]"
-                  >
-                    {React.createElement(icon, { size: 17 })}
-                  </a>
-                ))}
-              </div>
+              {socialLinks.length > 0 ? (
+                <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 items-center gap-2 px-4 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.35)]">
+                  {socialLinks.map((link) => {
+                    const Icon = getSocialIcon(link.platform);
+
+                    return (
+                      <a
+                        key={link.platform + link.url}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={link.platform}
+                        className="flex h-12 w-12 items-center justify-center border border-white text-white transition-colors hover:border-[#3c72fc] hover:bg-[#3c72fc]"
+                      >
+                        {React.createElement(Icon, { size: 17 })}
+                      </a>
+                    );
+                  })}
+                </div>
+              ) : null}
             </div>
 
             <div className="bg-[#151327] p-6 md:p-8">

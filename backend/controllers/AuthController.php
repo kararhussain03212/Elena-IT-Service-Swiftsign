@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/UserModel.php';
 require_once __DIR__ . '/../models/RoleModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 require_once __DIR__ . '/../utils/jwt.php';
 require_once __DIR__ . '/../utils/rbac.php';
@@ -21,12 +20,12 @@ class AuthController
     private static function sanitizeUser(array $user): array
     {
         unset($user['password']);
-        $permissions = $user['permissions'] ?? [];
-        if (!is_array($permissions)) {
-            $permissions = [];
-        }
         $normalizedRole = normalize_role_value($user['role'] ?? 'viewer');
-        $resolved = !empty($permissions) ? normalize_permissions_list($permissions) : (DEFAULT_ROLE_PERMISSIONS[$normalizedRole] ?? []);
+        if (array_key_exists('permissions', $user) && $user['permissions'] !== null) {
+            $resolved = normalize_permissions_list($user['permissions']);
+        } else {
+            $resolved = DEFAULT_ROLE_PERMISSIONS[$normalizedRole] ?? [];
+        }
         return array_merge($user, [
             'role' => $normalizedRole,
             'permissions' => $resolved,
@@ -47,6 +46,7 @@ class AuthController
 
     public static function register(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $name = sanitize_string($body['name'] ?? '');
         $email = strtolower(trim($body['email'] ?? ''));

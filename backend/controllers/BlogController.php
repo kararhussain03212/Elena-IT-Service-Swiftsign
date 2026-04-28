@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../models/BlogModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 
 class BlogController
@@ -67,6 +66,7 @@ class BlogController
 
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $payload = [
             'title' => sanitize_string($body['title'] ?? ''),
@@ -90,10 +90,6 @@ class BlogController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
-        $existing = BlogModel::findById($id);
-        if (!$existing) {
-            error_response(404, 'Blog not found.');
-        }
         $body = $context['body'] ?? [];
         $payload = [];
         foreach (['title', 'slug', 'excerpt', 'content', 'author', 'readTime', 'category'] as $field) {
@@ -113,6 +109,9 @@ class BlogController
             $payload['cover_image'] = $coverImage;
         }
         $updated = BlogModel::update($id, $payload);
+        if (!$updated) {
+            error_response(404, 'Blog not found.');
+        }
         return $updated;
     }
 

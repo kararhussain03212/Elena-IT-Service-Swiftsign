@@ -1,0 +1,8 @@
+{
+  "name": "swift-sign-it-php-workspace",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix frontend run build",
+    "build:frontend": "npm --prefix frontend run build"
+  }
+}

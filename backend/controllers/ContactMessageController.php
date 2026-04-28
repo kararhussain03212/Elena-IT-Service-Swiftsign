@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../models/ContactMessageModel.php';
-require_once __DIR__ . '/../scripts/DataInserter.php';
 require_once __DIR__ . '/../utils/helpers.php';
 require_once __DIR__ . '/../utils/email.php';
 
@@ -8,6 +7,7 @@ class ContactMessageController
 {
     public static function create(array $context): array
     {
+        require_data_inserter();
         $body = $context['body'] ?? [];
         $name = sanitize_string($body['name'] ?? '');
         $email = sanitize_string($body['email'] ?? '');
