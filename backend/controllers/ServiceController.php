@@ -4,6 +4,31 @@ require_once __DIR__ . '/../utils/helpers.php';
 
 class ServiceController
 {
+    private static function ensureUniqueSlug(string $preferredSlug, ?int $ignoreId = null): string
+    {
+        $base = slugify($preferredSlug);
+        if ($base === '') {
+            $base = 'service';
+        }
+
+        $candidate = $base;
+        $suffix = 2;
+        while (true) {
+            $existing = ServiceModel::findBySlug($candidate, true);
+            if (!$existing) {
+                return $candidate;
+            }
+
+            $existingId = (int) ($existing['id'] ?? $existing['_id'] ?? 0);
+            if ($ignoreId !== null && $existingId === $ignoreId) {
+                return $candidate;
+            }
+
+            $candidate = $base . '-' . $suffix;
+            $suffix++;
+        }
+    }
+
     private static function normalizeBenefits($value): array
     {
         $items = ensure_array($value);
@@ -71,9 +96,10 @@ class ServiceController
         $body = $context['body'] ?? [];
         $benefits = self::normalizeBenefits($body['benefits'] ?? []);
         $faqs = self::normalizeFaqs($body['faqs'] ?? []);
+        $slug = self::ensureUniqueSlug((string) ($body['slug'] ?? $body['title'] ?? ''));
         $payload = [
             'title' => sanitize_string($body['title'] ?? ''),
-            'slug' => slugify($body['slug'] ?? $body['title'] ?? ''),
+            'slug' => $slug,
             'short_description' => sanitize_string($body['shortDescription'] ?? ''),
             'description' => sanitize_string($body['description'] ?? ''),
             'description1' => sanitize_string($body['description1'] ?? ''),
@@ -144,6 +170,10 @@ class ServiceController
         }
         if (array_key_exists('order', $body)) {
             $payload['sort_order'] = parse_integer($body['order'], 0);
+        }
+        if (array_key_exists('slug', $body) || array_key_exists('title', $body)) {
+            $preferredSlug = (string) ($body['slug'] ?? $body['title'] ?? '');
+            $payload['slug'] = self::ensureUniqueSlug($preferredSlug, $id);
         }
         if (array_key_exists('isActive', $body)) {
             $payload['is_active'] = parse_boolean($body['isActive'], true) ? 1 : 0;

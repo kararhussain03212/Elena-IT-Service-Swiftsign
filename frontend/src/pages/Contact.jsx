@@ -204,7 +204,7 @@ const Contact = () => {
   };
 
   return (
-    <section>
+    <section className="w-full overflow-x-hidden">
       <Banner title="Contact & Support" />
 
       {/* ── Support intro ── */}

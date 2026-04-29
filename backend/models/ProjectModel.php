@@ -5,6 +5,7 @@ class ProjectModel extends BaseModel
 {
     protected static string $table = 'projects';
     protected static array $jsonColumns = ['tags'];
+    protected static array $imageColumns = ['cover_image'];
 
     public static function list(bool $includeInactive = false): array
     {

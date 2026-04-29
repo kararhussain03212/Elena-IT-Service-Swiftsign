@@ -9,6 +9,11 @@ import serviceItemShape from "../../../assets/images/shape/service-two-item-shap
 import useScrollReveal from "@/hooks/useScrollReveal";
 import { sortContentItems } from "@/lib/sortContentItems";
 
+const serviceAssetModules = import.meta.glob(
+  "@/assets/images/service/*",
+  { eager: true, import: "default" },
+);
+
 const Services = ({ content = {} }) => {
   const swiperRef = useRef(null);
   const [services, setServices] = useState([]);
@@ -25,11 +30,56 @@ const Services = ({ content = {} }) => {
   }, []);
 
   const resolveImage = (value) => {
-    if (!value)
-      return "https://placehold.co/800x500/1b1832/ffffff?text=Service";
-    if (value.startsWith("http")) return value;
-    if (value.startsWith("/uploads/")) return apiRoot + value;
-    return apiRoot + "/uploads/" + value;
+    const raw = String(value || "").trim();
+    
+    // CHANGE: Check if value is a valid image path from database
+    if (raw) {
+      // Try local static assets first
+      const key = Object.keys(serviceAssetModules).find((path) =>
+        path.toLowerCase().endsWith("/" + raw.toLowerCase().replace(/^uploads\//i, "").replace(/^\//, "")),
+      );
+      if (key) return serviceAssetModules[key];
+      
+      // CHANGE: Handle absolute paths from database
+      if (raw.startsWith("http")) return raw;
+      if (raw.startsWith("/uploads/")) return apiRoot + raw;
+      if (raw.startsWith("uploads/")) return apiRoot + "/" + raw;
+      
+      // WHY: Treat as filename if it's just a name
+      return apiRoot + "/uploads/" + raw;
+    }
+
+    // Fallback placeholder
+    return "https://placehold.co/800x500/1b1832/ffffff?text=Service";
+  };
+
+  const pickServiceImage = (service) => {
+    // CHANGE: Check API fields first (snake_case), then fallbacks
+    const candidates = [
+      service?.image,
+      service?.image1,
+      service?.detail_image,
+      service?.detailImage,
+      service?.icon,
+    ];
+
+    for (const raw of candidates) {
+      const value = String(raw || "").trim();
+      if (!value) continue;
+      
+      // WHY: Accept any non-empty image field from database
+      // CHANGE: Simpler detection - if it looks like a path or has extension, use it
+      if (value.includes("/") || /\.(png|jpe?g|webp|gif|svg)$/i.test(value)) {
+        return value;
+      }
+      
+      // WHY: Also accept anything that starts with protocol or /uploads
+      if (value.startsWith("http") || value.startsWith("/uploads/") || value.startsWith("uploads/")) {
+        return value;
+      }
+    }
+    
+    return "";
   };
 
   useEffect(() => {
@@ -132,7 +182,7 @@ const Services = ({ content = {} }) => {
               >
                 <article className="group relative flex h-full flex-col overflow-hidden rounded-[60px] rounded-tr-none rounded-bl-none bg-[#1b1832]">
                   <img
-                    src={resolveImage(service.image)}
+                    src={resolveImage(pickServiceImage(service))}
                     alt={service.title}
                     className="h-[210px] w-full object-cover"
                   />

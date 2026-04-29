@@ -153,7 +153,7 @@ const ServiceContent = () => {
                   className="sr-hidden sr-right overflow-hidden"
                 >
                   <img
-                    src={resolveImage(service.image1 || service.detailImage)}
+                    src={resolveImage(service.image1 || service.detail_image || service.detailImage)}
                     alt=""
                     className="h-full w-full object-cover"
                   />

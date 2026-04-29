@@ -127,7 +127,7 @@ const BlogDetails = () => {
                 className="sr-hidden sr-up mb-8 overflow-hidden "
               >
                 <img
-                  src={resolveImage(currentBlog.coverImage)}
+                  src={resolveImage(currentBlog.cover_image || currentBlog.coverImage)}
                   alt={currentBlog.title}
                   className="max-h-[520px] w-full object-cover"
                 />

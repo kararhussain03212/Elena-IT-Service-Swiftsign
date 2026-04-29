@@ -101,7 +101,7 @@ const Projects = () => {
                 >
                   {/* Image */}
                   <img
-                    src={resolveImage(item.coverImage)}
+                    src={resolveImage(item.cover_image || item.coverImage)}
                     alt={item.title}
                     className="absolute inset-0 h-full w-full object-cover object-center"
                   />

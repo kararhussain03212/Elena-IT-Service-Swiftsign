@@ -4,6 +4,7 @@ require_once __DIR__ . '/BaseModel.php';
 class TestimonialModel extends BaseModel
 {
     protected static string $table = 'testimonials';
+    protected static array $imageColumns = ['avatar'];
 
     public static function list(bool $includeInactive = false): array
     {

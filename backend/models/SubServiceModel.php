@@ -4,6 +4,7 @@ require_once __DIR__ . '/BaseModel.php';
 class SubServiceModel extends BaseModel
 {
     protected static string $table = 'sub_services';
+    protected static array $imageColumns = ['icon'];
 
     public static function list(bool $includeInactive = false): array
     {

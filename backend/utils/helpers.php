@@ -78,8 +78,8 @@ function get_authorization_header(): ?string
 
 function ensure_uploaded_directory(string $relativePath): string
 {
-    // Store uploads under backend/public/uploads so frontend can access via /uploads/*
-    $target = __DIR__ . '/../public/' . ltrim($relativePath, '/');
+    // Store uploads under backend/uploads
+    $target = __DIR__ . '/../' . ltrim($relativePath, '/');
     $directory = dirname($target);
     if (!is_dir($directory)) {
         mkdir($directory, 0755, true);
@@ -118,7 +118,7 @@ function resolve_unique_upload_filename(string $subFolder, string $fileName): st
     $counter = 1;
     while (true) {
         $relative = $subFolder . '/' . $candidate;
-        $target = __DIR__ . '/../public/' . ltrim($relative, '/');
+        $target = __DIR__ . '/../' . ltrim($relative, '/');
         if (!file_exists($target)) {
             return $candidate;
         }
@@ -238,7 +238,7 @@ function normalize_upload_path(string $value): string
     if ($relative !== null) {
         $relative = ltrim($relative, '/');
         $candidates = [
-            __DIR__ . '/../public/' . $relative,
+            __DIR__ . '/../' . $relative,
             __DIR__ . '/../../' . $relative,
         ];
 
@@ -346,10 +346,88 @@ function require_data_inserter(): void
     }
 
     $path = __DIR__ . '/../scripts/DataInserter.php';
-    if (!file_exists($path)) {
-        error_response(503, 'Data write module is unavailable. Upload backend/scripts/DataInserter.php to the server.');
+    if (file_exists($path)) {
+        require_once $path;
+        $loaded = true;
+        return;
     }
 
-    require_once $path;
+    // Fallback for deployments where scripts/DataInserter.php is missing.
+    require_once __DIR__ . '/../config/database.php';
+    if (!class_exists('DataInserter', false)) {
+        class DataInserter
+        {
+            public static function insert(string $table, array $data, array $jsonColumns = []): array
+            {
+                $pdo = Database::connection();
+                $allowed = [];
+                $params = [];
+
+                foreach ($data as $column => $value) {
+                    if ($value === null) {
+                        $allowed[$column] = 'NULL';
+                        continue;
+                    }
+                    if (in_array($column, $jsonColumns, true) && is_array($value)) {
+                        $value = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    }
+                    $allowed[$column] = ':' . $column;
+                    $params[$column] = $value;
+                }
+
+                $timestamp = now();
+                $params['created_at'] = $timestamp;
+                $params['updated_at'] = $timestamp;
+                $allowed['created_at'] = ':created_at';
+                $allowed['updated_at'] = ':updated_at';
+
+                $sql = sprintf(
+                    'INSERT INTO %s (%s) VALUES (%s)',
+                    $table,
+                    implode(', ', array_keys($allowed)),
+                    implode(', ', $allowed)
+                );
+
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute(array_filter($params, fn($value) => $value !== null, ARRAY_FILTER_USE_BOTH));
+
+                $id = (int) $pdo->lastInsertId();
+                $stmt = $pdo->query(sprintf('SELECT * FROM %s WHERE id = %d', $table, $id));
+                $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+                foreach ($jsonColumns as $column) {
+                    if (isset($row[$column])) {
+                        $decoded = json_decode($row[$column], true);
+                        $row[$column] = json_last_error() === JSON_ERROR_NONE ? $decoded : $row[$column];
+                    }
+                }
+
+                return $row;
+            }
+        }
+    }
+
     $loaded = true;
+}
+
+function normalize_model_image_urls(array $data, array $imageFields): array
+{
+    // CHANGE: Transform image filenames/paths to full URLs for frontend compatibility
+    // WHY: Handle various formats: filename, relative path, /uploads/path, uploads/path
+    foreach ($imageFields as $field) {
+        $value = $data[$field] ?? '';
+        if (!$value) continue;
+        
+        // Already a complete URL path
+        if (str_starts_with($value, '/')) {
+            $data[$field] = $value;
+        } elseif (str_contains($value, 'uploads/')) {
+            // Path already contains uploads but missing leading /
+            $data[$field] = '/' . $value;
+        } else {
+            // Just a filename, needs full path
+            $data[$field] = '/uploads/' . $value;
+        }
+    }
+    return $data;
 }

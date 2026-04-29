@@ -6,6 +6,7 @@ abstract class BaseModel
 {
     protected static string $table = '';
     protected static array $jsonColumns = [];
+    protected static array $imageColumns = [];
 
     protected static function getConnection(): PDO
     {
@@ -19,6 +20,15 @@ abstract class BaseModel
                 $decoded = json_decode($row[$column], true);
                 $row[$column] = json_last_error() === JSON_ERROR_NONE ? $decoded : $row[$column];
             }
+        }
+        return static::normalizeImages($row);
+    }
+
+    protected static function normalizeImages(array $row): array
+    {
+        // CHANGE: Normalize image URLs for all models
+        if (!empty(static::$imageColumns)) {
+            $row = normalize_model_image_urls($row, static::$imageColumns);
         }
         return $row;
     }

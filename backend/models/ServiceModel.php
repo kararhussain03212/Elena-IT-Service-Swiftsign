@@ -4,6 +4,7 @@ require_once __DIR__ . '/BaseModel.php';
 class ServiceModel extends BaseModel
 {
     protected static string $table = 'services';
+    protected static array $imageColumns = ['image', 'image1', 'detail_image'];
 
     private static ?bool $extrasTablesReady = null;
     private static ?bool $extrasColumnsReady = null;

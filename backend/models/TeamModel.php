@@ -5,6 +5,7 @@ class TeamModel extends BaseModel
 {
     protected static string $table = 'team_members';
     protected static array $jsonColumns = ['skills', 'education', 'social_links'];
+    protected static array $imageColumns = ['image'];
     private const DEFAULT_SOCIAL_PLATFORMS = ['facebook', 'instagram', 'linkedin'];
 
     private static ?bool $socialLinksTableReady = null;

@@ -84,7 +84,7 @@ const Blogs = () => {
                 className="block overflow-hidden"
               >
                 <img
-                  src={resolveImage(blog.coverImage)}
+                  src={resolveImage(blog.cover_image || blog.coverImage)}
                   alt={blog.title}
                   className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:brightness-90"
                 />

@@ -5,6 +5,7 @@ class SectionContentModel extends BaseModel
 {
     protected static string $table = 'section_contents';
     protected static array $jsonColumns = ['content'];
+    protected static array $imageColumns = ['image'];
 
     public static function list(string $page = '', bool $includeInactive = false): array
     {

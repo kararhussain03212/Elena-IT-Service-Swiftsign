@@ -5,6 +5,7 @@ class BlogModel extends BaseModel
 {
     protected static string $table = 'blogs';
     protected static array $jsonColumns = ['tags'];
+    protected static array $imageColumns = ['cover_image'];
 
     public static function list(bool $includeUnpublished = false): array
     {

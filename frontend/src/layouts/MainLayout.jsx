@@ -18,7 +18,7 @@ const MainLayout = () => {
   return (
     <>
       <Navbar content={sections.navbar} />
-      <main>
+      <main className="w-full overflow-x-hidden">
         <Outlet /> {/* This is where page content renders */}
       </main>
       <Footer content={sections.footer} />

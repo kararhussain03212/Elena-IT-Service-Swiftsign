@@ -76,12 +76,15 @@ const Blogs = () => {
             : "--";
           const month = monthLabel ? monthLabel.toUpperCase() : "---";
 
+          // CHANGE: Use cover_image from API (snake_case from database)
+          const coverImageField = item.cover_image || item.coverImage || '';
+
           return {
             id: item._id,
             title: item.title,
             excerpt: item.excerpt,
             category: item.category || "General",
-            image: resolveImage(item.coverImage),
+            image: resolveImage(coverImageField),
             link: "/blog/" + (item.slug || item._id),
             adminName: item.author || "Admin",
             adminRole: "Author",

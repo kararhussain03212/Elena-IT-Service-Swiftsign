@@ -6,6 +6,7 @@ class UserModel extends BaseModel
 {
     protected static string $table = 'users';
     protected static array $jsonColumns = ['permissions', 'activity'];
+    protected static array $imageColumns = ['avatar'];
 
     public static function findByEmail(string $email, bool $withPassword = false): ?array
     {

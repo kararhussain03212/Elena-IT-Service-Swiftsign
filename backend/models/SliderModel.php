@@ -4,6 +4,7 @@ require_once __DIR__ . '/BaseModel.php';
 class SliderModel extends BaseModel
 {
     protected static string $table = 'sliders';
+    protected static array $imageColumns = ['image', 'video'];
 
     public static function list(bool $includeInactive = false): array
     {

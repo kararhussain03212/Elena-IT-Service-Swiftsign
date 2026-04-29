@@ -139,7 +139,7 @@ const ProjectDetails = () => {
             <div className="relative z-10 overflow-hidden rounded-[22px] bg-[linear-gradient(145deg,#2a2a3d,#1a1a2e)] shadow-[0_40px_100px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.06),inset_0_1px_0_rgba(255,255,255,0.1)]">
               <div className="relative overflow-hidden group after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[30%] after:bg-[linear-gradient(to_top,rgba(15,13,29,0.5),transparent)] after:pointer-events-none">
                 <img
-                  src={resolveImage(project.coverImage)}
+                  src={resolveImage(project.cover_image || project.coverImage)}
                   alt={project.title}
                   className="block w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02] h-[240px] sm:h-[320px] md:h-[450px] lg:h-[600px]"
                 />
