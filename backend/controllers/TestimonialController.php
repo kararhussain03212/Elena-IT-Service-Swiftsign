@@ -4,6 +4,34 @@ require_once __DIR__ . '/../utils/helpers.php';
 
 class TestimonialController
 {
+    private static function ensureUniqueSlug(string $preferredSlug, ?int $ignoreId = null): string
+    {
+        $base = slugify($preferredSlug);
+        if ($base === '') {
+            $base = 'testimonial';
+        }
+        if (!table_has_column('testimonials', 'slug')) {
+            return $base;
+        }
+
+        $candidate = $base;
+        $suffix = 2;
+        while (true) {
+            $existing = TestimonialModel::findBySlug($candidate, true);
+            if (!$existing) {
+                return $candidate;
+            }
+
+            $existingId = (int) ($existing['id'] ?? $existing['_id'] ?? 0);
+            if ($ignoreId !== null && $existingId === $ignoreId) {
+                return $candidate;
+            }
+
+            $candidate = $base . '-' . $suffix;
+            $suffix++;
+        }
+    }
+
     public static function list(array $context): array
     {
         $includeAll = ($context['query']['all'] ?? '') === '1';
@@ -14,6 +42,17 @@ class TestimonialController
     {
         $id = (int) ($context['params']['id'] ?? 0);
         $item = TestimonialModel::findById($id);
+        if (!$item) {
+            error_response(404, 'Testimonial not found.');
+        }
+        return $item;
+    }
+
+    public static function showBySlug(array $context): array
+    {
+        $slug = sanitize_string($context['params']['slug'] ?? '');
+        $includeAll = ($context['query']['all'] ?? '') === '1';
+        $item = TestimonialModel::findBySlug($slug, $includeAll);
         if (!$item) {
             error_response(404, 'Testimonial not found.');
         }
@@ -33,6 +72,12 @@ class TestimonialController
             'sort_order' => parse_integer($body['order'] ?? 0),
             'is_active' => parse_boolean($body['isActive'] ?? '', true) ? 1 : 0,
         ];
+        if (table_has_column('testimonials', 'slug')) {
+            $payload['slug'] = self::ensureUniqueSlug((string) ($body['slug'] ?? $body['name'] ?? ''));
+        }
+        if (table_has_column('testimonials', 'avatar_alt')) {
+            $payload['avatar_alt'] = sanitize_string($body['avatarAlt'] ?? $body['name'] ?? '');
+        }
         $upload = handle_file_upload('avatar');
         if ($upload) {
             $payload['avatar'] = $upload['path'];
@@ -50,6 +95,13 @@ class TestimonialController
             if (array_key_exists($field, $body)) {
                 $payload[$field] = sanitize_string($body[$field]);
             }
+        }
+        if (array_key_exists('avatarAlt', $body) && table_has_column('testimonials', 'avatar_alt')) {
+            $payload['avatar_alt'] = sanitize_string($body['avatarAlt']);
+        }
+        if ((array_key_exists('slug', $body) || array_key_exists('name', $body)) && table_has_column('testimonials', 'slug')) {
+            $preferredSlug = (string) ($body['slug'] ?? $body['name'] ?? '');
+            $payload['slug'] = self::ensureUniqueSlug($preferredSlug, $id);
         }
         if (array_key_exists('rating', $body)) {
             $payload['rating'] = parse_integer($body['rating'], 5);

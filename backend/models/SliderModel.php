@@ -16,6 +16,19 @@ class SliderModel extends BaseModel
         return self::fetchAll($where, $params, 'CASE WHEN sort_order IS NULL OR sort_order <= 0 THEN 1 ELSE 0 END, sort_order ASC, created_at ASC, id ASC');
     }
 
+    public static function findBySlug(string $slug, bool $includeInactive = false): ?array
+    {
+        $where = 'slug = :slug';
+        $params = ['slug' => $slug];
+
+        if (!$includeInactive) {
+            $where .= ' AND (is_active = 1 OR is_active IS NULL)';
+        }
+
+        $rows = self::fetchAll($where, $params, 'id ASC');
+        return $rows[0] ?? null;
+    }
+
     public static function toggleActive(int $id): ?array
     {
         $current = self::findById($id);

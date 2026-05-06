@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import swiftLogo from "../assets/images/logo/swift.png";
+import { convertImageFileToWebp } from "../utils/webpUpload";
 
 const ImageUpload = ({
   value = "",
@@ -19,19 +20,26 @@ const ImageUpload = ({
     };
   }, [objectUrl]);
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    let nextFile = file;
+    try {
+      nextFile = (await convertImageFileToWebp(file)) || file;
+    } catch (error) {
+      console.error("Image WebP conversion failed; using original file.", error);
+    }
+
     if (objectUrl) URL.revokeObjectURL(objectUrl);
 
-    const nextUrl = URL.createObjectURL(file);
+    const nextUrl = URL.createObjectURL(nextFile);
     setObjectUrl(nextUrl);
 
     // 
     // parent form needs file for FormData submit to backend
     if (typeof onFileSelect === "function") {
-      onFileSelect(file);
+      onFileSelect(nextFile);
     }
   };
 

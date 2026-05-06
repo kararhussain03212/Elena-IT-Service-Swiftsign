@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSubService, getSubService, updateSubService } from "../../api/subServiceApi";
+import { convertImageFileToWebp } from "../../utils/webpUpload";
 
 export default function SubServiceForm() {
   const { id } = useParams();
@@ -13,8 +14,10 @@ export default function SubServiceForm() {
 
   const [form, setForm] = useState({
     title: "",
+    slug: "",
     description: "",
     icon: "",
+    iconAlt: "",
     iconFile: null,
     order: 0,
     isActive: true,
@@ -37,8 +40,25 @@ export default function SubServiceForm() {
     return "";
   };
 
+  const toSlug = (value) =>
+    String(value || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
+
   const setField = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm((prev) => {
+      const next = { ...prev, [key]: value };
+      if (key === "title" && !isEditMode && !prev.slug) {
+        next.slug = toSlug(value);
+      }
+      if (key === "title" && !prev.iconAlt) {
+        next.iconAlt = value;
+      }
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -50,8 +70,10 @@ export default function SubServiceForm() {
         const item = res.data;
         setForm({
           title: item.title || "",
+          slug: item.slug || "",
           description: item.description || "",
           icon: item.icon || "",
+          iconAlt: item.iconAlt || "",
           iconFile: null,
           order: Number(item.order || 0),
           isActive: Boolean(item.isActive ?? true),
@@ -73,12 +95,20 @@ export default function SubServiceForm() {
     };
   }, [iconFilePreview]);
 
-  const handleIconFileChange = (event) => {
+  const handleIconFileChange = async (event) => {
     const file = event.target.files?.[0] || null;
-    setField("iconFile", file);
+    let nextFile = file;
+    if (file) {
+      try {
+        nextFile = (await convertImageFileToWebp(file)) || file;
+      } catch (error) {
+        console.error("Icon conversion failed; using original file.", error);
+      }
+    }
+    setField("iconFile", nextFile);
 
     if (iconFilePreview) URL.revokeObjectURL(iconFilePreview);
-    setIconFilePreview(file ? URL.createObjectURL(file) : "");
+    setIconFilePreview(nextFile ? URL.createObjectURL(nextFile) : "");
   };
 
   const handleSubmit = async (event) => {
@@ -90,8 +120,10 @@ export default function SubServiceForm() {
 
       const normalized = {
         title: String(form.title || "").trim(),
+        slug: String(form.slug || "").trim(),
         description: String(form.description || "").trim(),
         icon: String(form.icon || "").trim(),
+        iconAlt: String(form.iconAlt || "").trim(),
         order: Number(form.order) || 0,
         isActive: Boolean(form.isActive),
       };
@@ -100,8 +132,10 @@ export default function SubServiceForm() {
         ? (() => {
             const formData = new FormData();
             formData.append("title", normalized.title);
+            formData.append("slug", normalized.slug);
             formData.append("description", normalized.description);
             formData.append("icon", normalized.icon);
+            formData.append("iconAlt", normalized.iconAlt);
             formData.append("order", String(normalized.order));
             formData.append("isActive", String(normalized.isActive));
             formData.append("iconFile", form.iconFile);
@@ -166,11 +200,31 @@ export default function SubServiceForm() {
         </div>
 
         <div>
+          <label className="mb-1 block text-sm text-white/80">Slug</label>
+          <input
+            value={form.slug}
+            onChange={(event) => setField("slug", event.target.value)}
+            required
+            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+          />
+        </div>
+
+        <div>
           <label className="mb-1 block text-sm text-white/80">Icon URL / Path</label>
           <input
             value={form.icon}
             onChange={(event) => setField("icon", event.target.value)}
             placeholder="https://... or uploads/icon.png"
+            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm text-white/80">Icon Alt Text</label>
+          <input
+            value={form.iconAlt}
+            onChange={(event) => setField("iconAlt", event.target.value)}
+            placeholder="Describe the icon image"
             className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
           />
         </div>

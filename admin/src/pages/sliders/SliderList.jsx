@@ -64,7 +64,7 @@ export default function SliderList() {
       return (
         <img
           src={imageSrc}
-          alt={slider.title || "Slider"}
+          alt={slider.imageAlt || slider.title || "Slider"}
           className="h-full w-full object-cover"
         />
       );
@@ -73,7 +73,7 @@ export default function SliderList() {
     return (
       <img
         src={FALLBACK_IMAGE}
-        alt={slider.title || "Slider"}
+        alt={slider.imageAlt || slider.title || "Slider"}
         className="h-full w-full object-cover"
       />
     );

@@ -127,8 +127,141 @@ function resolve_unique_upload_filename(string $subFolder, string $fileName): st
     }
 }
 
+function detect_uploaded_image_type(string $tmpFile): ?string
+{
+    if (!is_file($tmpFile)) {
+        return null;
+    }
+
+    if (function_exists('exif_imagetype')) {
+        $imageType = @exif_imagetype($tmpFile);
+        if ($imageType === IMAGETYPE_JPEG) {
+            return 'jpeg';
+        }
+        if ($imageType === IMAGETYPE_PNG) {
+            return 'png';
+        }
+    }
+
+    $imageInfo = @getimagesize($tmpFile);
+    $mimeFromImageSize = strtolower((string) ($imageInfo['mime'] ?? ''));
+    if ($mimeFromImageSize === 'image/jpeg') {
+        return 'jpeg';
+    }
+    if ($mimeFromImageSize === 'image/png') {
+        return 'png';
+    }
+
+    $finfo = @finfo_open(FILEINFO_MIME_TYPE);
+    if ($finfo !== false) {
+        $mime = (string) @finfo_file($finfo, $tmpFile);
+        @finfo_close($finfo);
+        if ($mime === 'image/jpeg') {
+            return 'jpeg';
+        }
+        if ($mime === 'image/png') {
+            return 'png';
+        }
+        if ($mime === 'image/webp') {
+            return 'webp';
+        }
+    }
+
+    return null;
+}
+
+function convert_image_to_webp(string $source, string $destination, string $sourceType, int $quality = 80): bool
+{
+    $quality = max(1, min(100, $quality));
+
+    if (class_exists('Imagick')) {
+        try {
+            $imagick = new Imagick();
+            $imagick->readImage($source);
+            if ($imagick->getNumberImages() > 1) {
+                $imagick = $imagick->coalesceImages();
+            }
+            $imagick->setImageFormat('webp');
+            $imagick->setImageCompressionQuality($quality);
+            $result = $imagick->writeImage($destination);
+            $imagick->clear();
+            $imagick->destroy();
+            if ($result && file_exists($destination) && filesize($destination) > 0) {
+                return true;
+            }
+        } catch (Throwable $e) {
+            // Fall back to GD when Imagick fails.
+        }
+    }
+
+    if (!function_exists('imagewebp')) {
+        return false;
+    }
+
+    $image = null;
+    if ($sourceType === 'jpeg' && function_exists('imagecreatefromjpeg')) {
+        $image = @imagecreatefromjpeg($source);
+    } elseif ($sourceType === 'png' && function_exists('imagecreatefrompng')) {
+        $image = @imagecreatefrompng($source);
+        if ($image) {
+            imagepalettetotruecolor($image);
+            imagealphablending($image, true);
+            imagesavealpha($image, true);
+        }
+    }
+
+    if (!$image) {
+        return false;
+    }
+
+    $result = @imagewebp($image, $destination, $quality);
+    imagedestroy($image);
+    return $result && file_exists($destination) && filesize($destination) > 0;
+}
+
+function get_webp_capability_report(): array
+{
+    $gdLoaded = extension_loaded('gd');
+    $gdInfo = $gdLoaded && function_exists('gd_info') ? gd_info() : [];
+    $gdWebpSupport = (bool) ($gdInfo['WebP Support'] ?? false);
+    $gdCanEncode = $gdLoaded && function_exists('imagewebp') && $gdWebpSupport;
+
+    $imagickLoaded = extension_loaded('imagick') && class_exists('Imagick');
+    $imagickWebpSupport = false;
+    if ($imagickLoaded) {
+        try {
+            $formats = array_map('strtoupper', Imagick::queryFormats('WEBP'));
+            $imagickWebpSupport = in_array('WEBP', $formats, true);
+        } catch (Throwable $e) {
+            $imagickWebpSupport = false;
+        }
+    }
+
+    $canConvert = $gdCanEncode || $imagickWebpSupport;
+
+    return [
+        'canConvert' => $canConvert,
+        'phpVersion' => PHP_VERSION,
+        'engines' => [
+            'gd' => [
+                'loaded' => $gdLoaded,
+                'webpSupport' => $gdWebpSupport,
+                'canEncode' => $gdCanEncode,
+            ],
+            'imagick' => [
+                'loaded' => $imagickLoaded,
+                'webpSupport' => $imagickWebpSupport,
+                'canEncode' => $imagickWebpSupport,
+            ],
+        ],
+    ];
+}
+
 function handle_file_upload(string $field, string $subFolder = 'uploads'): ?array
 {
+    $maxBytes = 8 * 1024 * 1024; // 8 MB
+    $webpQuality = 80;
+
     if (empty($_FILES[$field])) {
         return null;
     }
@@ -150,13 +283,66 @@ function handle_file_upload(string $field, string $subFolder = 'uploads'): ?arra
         error_response(400, $message, ['field' => $field, 'code' => $errorCode]);
     }
 
+    $tmpFile = (string) ($_FILES[$field]['tmp_name'] ?? '');
+    $fileSize = (int) ($_FILES[$field]['size'] ?? 0);
+    if ($tmpFile === '' || !is_uploaded_file($tmpFile)) {
+        error_response(400, 'Uploaded file is invalid.', ['field' => $field]);
+    }
+    if ($fileSize <= 0) {
+        error_response(400, 'Uploaded file is empty.', ['field' => $field]);
+    }
+    if ($fileSize > $maxBytes) {
+        error_response(400, 'Uploaded file exceeds the maximum size of 8 MB.', ['field' => $field]);
+    }
+
     $originalName = (string) ($_FILES[$field]['name'] ?? '');
-    $filename = sanitize_upload_filename($originalName);
-    $filename = resolve_unique_upload_filename($subFolder, $filename);
+    $sanitized = sanitize_upload_filename($originalName);
+    $imageType = detect_uploaded_image_type($tmpFile);
+    $expectsImage = (bool) preg_match('/image|avatar|cover|icon|logo|photo|thumbnail/i', $field);
+
+    if ($expectsImage && !in_array($imageType, ['jpeg', 'png', 'webp'], true)) {
+        error_response(400, 'Only JPG, JPEG, PNG, and WebP images are allowed.', ['field' => $field]);
+    }
+
+    // Image uploads: enforce JPG/PNG and require WebP conversion.
+    if (in_array($imageType, ['jpeg', 'png', 'webp'], true)) {
+        $base = pathinfo($sanitized, PATHINFO_FILENAME);
+        if ($imageType === 'webp') {
+            $webpFilename = resolve_unique_upload_filename($subFolder, $base . '.webp');
+            $webpRelative = trim($subFolder, '/') . '/' . $webpFilename;
+            $webpDestination = ensure_uploaded_directory($webpRelative);
+            if (!move_uploaded_file($tmpFile, $webpDestination)) {
+                error_response(500, 'Uploaded image could not be saved.', ['field' => $field]);
+            }
+            return [
+                'filename' => $webpFilename,
+                'original_name' => $originalName,
+                'path' => $webpRelative,
+                'url' => '/' . $webpRelative,
+            ];
+        }
+
+        $webpFilename = resolve_unique_upload_filename($subFolder, $base . '.webp');
+        $webpRelative = trim($subFolder, '/') . '/' . $webpFilename;
+        $webpDestination = ensure_uploaded_directory($webpRelative);
+
+        if (convert_image_to_webp($tmpFile, $webpDestination, (string) $imageType, $webpQuality)) {
+            return [
+                'filename' => $webpFilename,
+                'original_name' => $originalName,
+                'path' => $webpRelative,
+                'url' => '/' . $webpRelative,
+            ];
+        }
+
+        error_response(500, 'WebP conversion failed. Enable GD (with WebP) or Imagick on the server.', ['field' => $field]);
+    }
+
+    // Non-image uploads: preserve previous behavior.
+    $filename = resolve_unique_upload_filename($subFolder, $sanitized);
     $relative = trim($subFolder, '/') . '/' . $filename;
     $destination = ensure_uploaded_directory($relative);
-
-    if (!move_uploaded_file($_FILES[$field]['tmp_name'], $destination)) {
+    if (!move_uploaded_file($tmpFile, $destination)) {
         error_response(500, 'Uploaded file could not be moved into uploads directory.', ['field' => $field]);
     }
 
@@ -270,6 +456,12 @@ function transform_api_response($payload)
         'last_login' => 'lastLogin',
         'button_text' => 'buttonText',
         'button_link' => 'buttonLink',
+        'image_alt' => 'imageAlt',
+        'image1_alt' => 'image1Alt',
+        'detail_image_alt' => 'detailImageAlt',
+        'avatar_alt' => 'avatarAlt',
+        'icon_alt' => 'iconAlt',
+        'cover_alt' => 'coverAlt',
         'is_active' => 'isActive',
         'cover_image' => 'coverImage',
         'short_description' => 'shortDescription',
@@ -430,4 +622,40 @@ function normalize_model_image_urls(array $data, array $imageFields): array
         }
     }
     return $data;
+}
+
+function table_has_column(string $table, string $column): bool
+{
+    static $cache = [];
+    $key = $table . '.' . $column;
+    if (array_key_exists($key, $cache)) {
+        return $cache[$key];
+    }
+
+    try {
+        $safeTable = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+        if ($safeTable !== '') {
+            $stmt = Database::connection()->prepare("SHOW COLUMNS FROM `{$safeTable}` LIKE :column");
+            $stmt->execute(['column' => $column]);
+            $found = (bool) $stmt->fetch();
+            $cache[$key] = $found;
+            if ($found) {
+                return true;
+            }
+        }
+    } catch (Throwable $e) {
+        // Fall through to information_schema check.
+    }
+
+    try {
+        $stmt = Database::connection()->prepare(
+            'SELECT 1 FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = :table AND column_name = :column LIMIT 1'
+        );
+        $stmt->execute(['table' => $table, 'column' => $column]);
+        $cache[$key] = (bool) $stmt->fetchColumn();
+    } catch (Throwable $e) {
+        $cache[$key] = false;
+    }
+
+    return $cache[$key];
 }

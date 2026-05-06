@@ -39,7 +39,10 @@ const createDefaultContentByKey = (key) => {
     case "global.footer":
       return {
         brandDescription: "",
+        itSolutionsTitle: "IT Solution",
         itSolutions: [{ name: "", href: "/services" }],
+        itSolutionsSecondTitle: "IT Solution",
+        itSolutionsSecond: [{ name: "", href: "/services" }],
         quickLinks: [{ name: "", href: "" }],
         socials: [{ name: "", href: "" }],
         locations: [{ text: "", href: "" }],
@@ -1137,9 +1140,28 @@ const SectionContentEditor = ({
           })
           .filter(Boolean)
       : [];
+    const normalizedItSolutionsSecond = Array.isArray(data.itSolutionsSecond)
+      ? data.itSolutionsSecond
+          .map((item) => {
+            if (typeof item === "string") {
+              return { name: item, href: "/services" };
+            }
+
+            if (item && typeof item === "object") {
+              return {
+                name: getTextValue(item.name),
+                href: getTextValue(item.href || "/services"),
+              };
+            }
+
+            return null;
+          })
+          .filter(Boolean)
+      : [];
 
     return (
       <div className="space-y-4">
+        
         <section className={SUBSECTION_CLASS}>
           <TextAreaInput
             label="Brand Description"
@@ -1150,11 +1172,49 @@ const SectionContentEditor = ({
             }
           />
         </section>
+        <section className={SUBSECTION_CLASS}>
+          <TextInput
+            label="First Column Title"
+            value={data.itSolutionsTitle}
+            onChange={(value) =>
+              setContent({ ...data, itSolutionsTitle: value })
+            }
+          />
+        </section>
 
         <ObjectListEditor
           title="IT Solutions"
           items={normalizedItSolutions}
           onChange={(itSolutions) => setContent({ ...data, itSolutions })}
+          createItem={() => ({ name: "", href: "/services" })}
+          fields={[
+            { key: "name", label: "Service Name" },
+            {
+              key: "href",
+              label: "Link (e.g. /services or https://example.com)",
+            },
+          ]}
+        />
+        
+
+        
+
+        <section className={SUBSECTION_CLASS}>
+          <TextInput
+            label="Second Column Title"
+            value={data.itSolutionsSecondTitle}
+            onChange={(value) =>
+              setContent({ ...data, itSolutionsSecondTitle: value })
+            }
+          />
+        </section>
+
+        <ObjectListEditor
+          title="IT Solutions (Second Column)"
+          items={normalizedItSolutionsSecond}
+          onChange={(itSolutionsSecond) =>
+            setContent({ ...data, itSolutionsSecond })
+          }
           createItem={() => ({ name: "", href: "/services" })}
           fields={[
             { key: "name", label: "Service Name" },

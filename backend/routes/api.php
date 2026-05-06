@@ -16,6 +16,18 @@ require_once __DIR__ . '/../controllers/UserController.php';
 
 $router = new Router();
 
+// WebP capability health check
+$router->add('GET', '/api/health/webp', function () {
+    $report = get_webp_capability_report();
+    return [
+        'status' => 200,
+        'data' => [
+            'ok' => true,
+            'webp' => $report,
+        ],
+    ];
+});
+
 // Auth
 $router->add('POST', '/api/auth/register', [AuthController::class, 'register']);
 $router->add('POST', '/api/auth/login', [AuthController::class, 'login']);
@@ -46,6 +58,7 @@ $router->add('POST', '/api/auth/me/password', function ($context) {
 
 // Sliders
 $router->add('GET', '/api/sliders', [SliderController::class, 'list']);
+$router->add('GET', '/api/sliders/slug/:slug', [SliderController::class, 'showBySlug']);
 $router->add('GET', '/api/sliders/:id', [SliderController::class, 'show']);
 $router->add('POST', '/api/sliders', function ($context) {
     AuthMiddleware::protect();
@@ -119,6 +132,7 @@ $router->add('DELETE', '/api/projects/:id', function ($context) {
 
 // Testimonials
 $router->add('GET', '/api/testimonials', [TestimonialController::class, 'list']);
+$router->add('GET', '/api/testimonials/slug/:slug', [TestimonialController::class, 'showBySlug']);
 $router->add('GET', '/api/testimonials/:id', [TestimonialController::class, 'show']);
 $router->add('POST', '/api/testimonials', function ($context) {
     AuthMiddleware::protect();
@@ -143,6 +157,7 @@ $router->add('DELETE', '/api/testimonials/:id', function ($context) {
 
 // Sub services
 $router->add('GET', '/api/sub-services', [SubServiceController::class, 'list']);
+$router->add('GET', '/api/sub-services/slug/:slug', [SubServiceController::class, 'showBySlug']);
 $router->add('GET', '/api/sub-services/:id', [SubServiceController::class, 'show']);
 $router->add('POST', '/api/sub-services', function ($context) {
     AuthMiddleware::protect();

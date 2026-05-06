@@ -29,6 +29,7 @@ export default function ProjectForm() {
     isActive: true,
     coverImageFile: null,
     coverImagePreview: "",
+    coverAlt: "",
   });
 
   const apiRoot = useMemo(() => {
@@ -83,6 +84,7 @@ export default function ProjectForm() {
           isActive: Boolean(item.isActive ?? true),
           coverImageFile: null,
           coverImagePreview: toImageUrl(item.coverImage || ""),
+          coverAlt: item.coverAlt || "",
         });
       } catch (err) {
         console.error(err);
@@ -115,6 +117,7 @@ export default function ProjectForm() {
       payload.append("url", form.url.trim());
       payload.append("overview", form.overview.trim());
       payload.append("challenge", form.challenge.trim());
+      payload.append("coverAlt", form.coverAlt.trim());
       payload.append("order", String(form.order || 0));
       payload.append("isActive", String(form.isActive));
 
@@ -291,6 +294,15 @@ export default function ProjectForm() {
           label="Upload Cover Image"
           helperText="Main image used in project cards and detail header"
         />
+        <div>
+          <label className="mb-1 block text-sm text-white/80">Cover Image Alt Text</label>
+          <input
+            value={form.coverAlt}
+            onChange={(e) => setField("coverAlt", e.target.value)}
+            placeholder="Describe the project cover image for SEO"
+            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+          />
+        </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>

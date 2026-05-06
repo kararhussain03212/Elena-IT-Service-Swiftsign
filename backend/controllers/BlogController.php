@@ -79,6 +79,9 @@ class BlogController
             'tags' => parse_tags($body['tags'] ?? []),
             'published' => parse_boolean($body['published'] ?? '', false) ? 1 : 0,
         ];
+        if (table_has_column('blogs', 'cover_alt')) {
+            $payload['cover_alt'] = sanitize_string($body['coverAlt'] ?? $body['title'] ?? '');
+        }
         $coverImage = self::resolveCoverImage($body);
         if ($coverImage !== null) {
             $payload['cover_image'] = $coverImage;
@@ -97,6 +100,9 @@ class BlogController
                 $column = strtolower(preg_replace('/([A-Z])/', '_$1', $field));
                 $payload[$column] = sanitize_string($body[$field]);
             }
+        }
+        if (array_key_exists('coverAlt', $body) && table_has_column('blogs', 'cover_alt')) {
+            $payload['cover_alt'] = sanitize_string($body['coverAlt'] ?? '');
         }
         if (array_key_exists('tags', $body)) {
             $payload['tags'] = parse_tags($body['tags']);

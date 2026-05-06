@@ -5,6 +5,7 @@ import {
   getSlider,
   updateSlider,
 } from "../../api/sliderApi";
+import { convertImageFileToWebp } from "../../utils/webpUpload";
 
 export default function SliderForm() {
   const { id } = useParams();
@@ -16,7 +17,10 @@ export default function SliderForm() {
 
   const [heading, setHeading] = useState("");
   const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
   const [subtitle, setSubtitle] = useState("");
+  const [imageAlt, setImageAlt] = useState("");
   const [buttonText, setButtonText] = useState("Get Started");
   const [buttonLink, setButtonLink] = useState("/services");
   const [image, setImage] = useState(null);
@@ -49,6 +53,13 @@ export default function SliderForm() {
   }, [existingVideo, apiRoot]);
 
   const resolvePreviewUrl = (file) => (file ? URL.createObjectURL(file) : "");
+  const toSlug = (value) =>
+    String(value || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
 
   useEffect(() => {
     if (!isEditing) return;
@@ -63,7 +74,10 @@ export default function SliderForm() {
 
         setHeading(slider.heading || "");
         setTitle(slider.title || "");
+        setSlug(slider.slug || "");
+        setSlugTouched(true);
         setSubtitle(slider.subtitle || "");
+        setImageAlt(slider.imageAlt || "");
         setButtonText(slider.buttonText || "Get Started");
         setButtonLink(slider.buttonLink || "/services");
         setExistingImage(slider.image || "");
@@ -91,11 +105,19 @@ export default function SliderForm() {
     return () => window.removeEventListener("keydown", handleShortcut);
   }, []);
 
-  const onFileChange = (event) => {
+  const onFileChange = async (event) => {
     const file = event.target.files?.[0] || null;
-    setImage(file);
+    let nextFile = file;
+    if (file) {
+      try {
+        nextFile = (await convertImageFileToWebp(file)) || file;
+      } catch (error) {
+        console.error("Slider image conversion failed; using original file.", error);
+      }
+    }
+    setImage(nextFile);
     setStatus("");
-    if (file) setRemoveImage(false);
+    if (nextFile) setRemoveImage(false);
   };
 
   const onVideoChange = (event) => {
@@ -172,7 +194,9 @@ export default function SliderForm() {
     const formData = new FormData();
     formData.append("heading", heading);
     formData.append("title", title);
+    formData.append("slug", slug);
     formData.append("subtitle", subtitle);
+    formData.append("imageAlt", imageAlt);
     formData.append("buttonText", buttonText);
     formData.append("buttonLink", buttonLink);
 
@@ -241,7 +265,32 @@ export default function SliderForm() {
           <input
             type="text"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              const nextTitle = e.target.value;
+              setTitle(nextTitle);
+              if (!isEditing && !slugTouched) {
+                setSlug(toSlug(nextTitle));
+              }
+              if (!imageAlt) {
+                setImageAlt(nextTitle);
+              }
+            }}
+            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-white/90">
+            Slug
+          </label>
+          <input
+            type="text"
+            value={slug}
+            onChange={(e) => {
+              setSlug(e.target.value);
+              setSlugTouched(true);
+            }}
             className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
             required
           />
@@ -286,6 +335,19 @@ export default function SliderForm() {
           <p className="mt-1 text-xs text-white/55">
             Use an internal route like /services or /contact.
           </p>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-white/90">
+            Image Alt Text
+          </label>
+          <input
+            type="text"
+            value={imageAlt}
+            onChange={(e) => setImageAlt(e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            placeholder="Describe the slider image"
+          />
         </div>
 
         <div>

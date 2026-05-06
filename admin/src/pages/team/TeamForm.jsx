@@ -110,6 +110,7 @@ const createInitialForm = () => ({
   slug: "",
   role: "",
   bio: "",
+  imageAlt: "",
   order: 0,
   imageFile: null,
   imagePreview: "",
@@ -390,6 +391,7 @@ export default function TeamForm() {
           slug: member.slug || "",
           role: member.role || "",
           bio: member.bio || "",
+          imageAlt: member.imageAlt || "",
           order: Number(member.order || 0),
           imageFile: null,
           imagePreview,
@@ -465,6 +467,7 @@ export default function TeamForm() {
       payload.append("slug", form.slug.trim());
       payload.append("role", form.role.trim());
       payload.append("bio", form.bio.trim());
+      payload.append("imageAlt", form.imageAlt.trim());
       payload.append("order", String(form.order || 0));
       payload.append("skills", JSON.stringify(cleanedSkills));
       payload.append("education", JSON.stringify(cleanedEducation));
@@ -576,6 +579,15 @@ export default function TeamForm() {
           label="Upload Team Image"
           helperText="PNG, JPG, JPEG - used in frontend Team section"
         />
+        <div>
+          <label className="mb-2 block text-sm text-white/80">Image Alt Text</label>
+          <input
+            value={form.imageAlt}
+            onChange={(e) => setField("imageAlt", e.target.value)}
+            placeholder="Describe the team member image for SEO"
+            className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+          />
+        </div>
 
         <div>
           <label className="mb-2 block text-sm text-white/80">

@@ -91,7 +91,7 @@ export default function TestimonialList() {
             <div className="grid md:grid-cols-[130px_1fr]">
               <img
                 src={resolveImage(item.avatar)}
-                alt={item.name}
+                alt={item.avatarAlt || item.name}
                 className="h-32 w-full object-cover"
               />
               <div className="p-4">

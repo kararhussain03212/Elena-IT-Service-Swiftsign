@@ -110,6 +110,15 @@ class ServiceController
             'sort_order' => parse_integer($body['order'] ?? 0),
             'is_active' => parse_boolean($body['isActive'] ?? '', true) ? 1 : 0,
         ];
+        if (table_has_column('services', 'image_alt')) {
+            $payload['image_alt'] = sanitize_string($body['imageAlt'] ?? $body['title'] ?? '');
+        }
+        if (table_has_column('services', 'image1_alt')) {
+            $payload['image1_alt'] = sanitize_string($body['image1Alt'] ?? '');
+        }
+        if (table_has_column('services', 'detail_image_alt')) {
+            $payload['detail_image_alt'] = sanitize_string($body['detailImageAlt'] ?? $body['image1Alt'] ?? '');
+        }
         $upload = handle_file_upload('image');
         if ($upload) {
             $payload['image'] = $upload['path'];
@@ -167,6 +176,24 @@ class ServiceController
                 $column = strtolower(preg_replace('/([A-Z])/', '_$1', $key));
                 $payload[$column] = sanitize_string($body[$key] ?? '');
             }
+        }
+        if (array_key_exists('imageAlt', $body) && table_has_column('services', 'image_alt')) {
+            $payload['image_alt'] = sanitize_string($body['imageAlt'] ?? '');
+        }
+        if (array_key_exists('image1Alt', $body) && table_has_column('services', 'image1_alt')) {
+            $payload['image1_alt'] = sanitize_string($body['image1Alt'] ?? '');
+        }
+        if (array_key_exists('detailImageAlt', $body) && table_has_column('services', 'detail_image_alt')) {
+            $payload['detail_image_alt'] = sanitize_string($body['detailImageAlt'] ?? '');
+        }
+        if (!table_has_column('services', 'image_alt')) {
+            unset($payload['image_alt']);
+        }
+        if (!table_has_column('services', 'image1_alt')) {
+            unset($payload['image1_alt']);
+        }
+        if (!table_has_column('services', 'detail_image_alt')) {
+            unset($payload['detail_image_alt']);
         }
         if (array_key_exists('order', $body)) {
             $payload['sort_order'] = parse_integer($body['order'], 0);

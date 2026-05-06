@@ -92,7 +92,7 @@ export default function ProjectList() {
             <div className="grid md:grid-cols-[220px_1fr]">
               <img
                 src={resolveImage(project.coverImage)}
-                alt={project.title}
+                alt={project.coverAlt || project.title}
                 className="h-44 w-full object-cover"
               />
               <div className="p-4">

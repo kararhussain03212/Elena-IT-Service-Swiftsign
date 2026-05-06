@@ -91,7 +91,7 @@ export default function ServiceList() {
             <div className="grid md:grid-cols-[220px_1fr]">
               <img
                 src={resolveImage(service.image)}
-                alt={service.title}
+                alt={service.imageAlt || service.title}
                 className="h-44 w-full object-cover"
               />
               <div className="p-4">
@@ -112,7 +112,7 @@ export default function ServiceList() {
                     </span>
                     <img
                       src={resolveImage(service.image1 || service.detailImage)}
-                      alt={service.title + " image 1"}
+                      alt={service.image1Alt || service.detailImageAlt || (service.title + " image 1")}
                       className="h-16 w-24 rounded object-cover border border-white/10"
                     />
                   </div>

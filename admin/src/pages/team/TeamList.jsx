@@ -129,7 +129,7 @@ export default function TeamList() {
               <div className="h-72 sm:h-80 md:h-96 lg:h-104 xl:h-112 w-full overflow-hidden">
                 <img
                   src={resolveImage(member.image)}
-                  alt={member.name}
+                  alt={member.imageAlt || member.name}
                   className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
               </div>

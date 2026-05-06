@@ -5,6 +5,7 @@ import {
   getTestimonial,
   updateTestimonial,
 } from "../../api/testimonialApi";
+import { convertImageFileToWebp } from "../../utils/webpUpload";
 
 export default function TestimonialForm() {
   const { id } = useParams();
@@ -13,9 +14,11 @@ export default function TestimonialForm() {
 
   const [form, setForm] = useState({
     name: "",
+    slug: "",
     role: "",
     company: "",
     message: "",
+    avatarAlt: "",
     rating: 5,
     order: 0,
     isActive: true,
@@ -38,9 +41,11 @@ export default function TestimonialForm() {
         setForm((prev) => ({
           ...prev,
           name: data.name || "",
+          slug: data.slug || "",
           role: data.role || "",
           company: data.company || "",
           message: data.message || "",
+          avatarAlt: data.avatarAlt || "",
           rating: data.rating ?? 5,
           order: data.order ?? 0,
           isActive: data.isActive ?? true,
@@ -61,7 +66,7 @@ export default function TestimonialForm() {
     load();
   }, [id, isEdit, apiRoot]);
 
-  const onChange = (e) => {
+  const onChange = async (e) => {
     const { name, value, type, checked, files } = e.target;
 
     if (type === "checkbox") {
@@ -71,22 +76,56 @@ export default function TestimonialForm() {
 
     if (type === "file") {
       const file = files?.[0] || null;
-      setForm((prev) => ({ ...prev, avatar: file }));
-      if (file) setPreview(URL.createObjectURL(file));
+      if (!file) {
+        setForm((prev) => ({ ...prev, avatar: null }));
+        return;
+      }
+      let nextFile = file;
+      try {
+        nextFile = (await convertImageFileToWebp(file)) || file;
+      } catch (error) {
+        console.error("Avatar conversion failed; using original file.", error);
+      }
+      setForm((prev) => ({ ...prev, avatar: nextFile }));
+      setPreview(URL.createObjectURL(nextFile));
       return;
     }
 
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => {
+      const next = { ...prev, [name]: value };
+      if (name === "name" && !isEdit && !prev.slug) {
+        next.slug = String(value || "")
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-");
+      }
+      if (name === "name" && !prev.avatarAlt) {
+        next.avatarAlt = value;
+      }
+      return next;
+    });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    const fallbackSlug = String(form.name || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
+    const finalSlug = String(form.slug || "").trim() || fallbackSlug;
+
     const payload = new FormData();
     payload.append("name", form.name);
+    payload.append("slug", finalSlug);
     payload.append("role", form.role);
     payload.append("company", form.company);
     payload.append("message", form.message);
+    payload.append("avatarAlt", form.avatarAlt);
     payload.append("rating", String(form.rating));
     payload.append("order", String(form.order));
     payload.append("isActive", String(form.isActive));
@@ -143,6 +182,17 @@ export default function TestimonialForm() {
           </label>
 
           <label className="space-y-2">
+            <span className="text-sm text-white/70">Slug</span>
+            <input
+              required
+              name="slug"
+              value={form.slug}
+              onChange={onChange}
+              className="w-full rounded-lg border border-white/20 bg-transparent px-3 py-2 text-white outline-none"
+            />
+          </label>
+
+          <label className="space-y-2">
             <span className="text-sm text-white/70">Company</span>
             <input
               name="company"
@@ -160,6 +210,17 @@ export default function TestimonialForm() {
               name="avatar"
               onChange={onChange}
               className="w-full rounded-lg border border-white/20 bg-transparent px-3 py-2 text-white outline-none file:mr-4 file:rounded-md file:border-0 file:bg-[#3c72fc] file:px-3 file:py-1 file:text-white"
+            />
+          </label>
+
+          <label className="space-y-2">
+            <span className="text-sm text-white/70">Avatar Alt Text</span>
+            <input
+              name="avatarAlt"
+              value={form.avatarAlt}
+              onChange={onChange}
+              className="w-full rounded-lg border border-white/20 bg-transparent px-3 py-2 text-white outline-none"
+              placeholder="Describe the avatar image"
             />
           </label>
 

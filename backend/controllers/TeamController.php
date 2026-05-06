@@ -129,6 +129,9 @@ class TeamController
             'skills' => ensure_array($body['skills'] ?? []),
             'education' => ensure_array($body['education'] ?? []),
         ];
+        if (table_has_column('team_members', 'image_alt')) {
+            $payload['image_alt'] = sanitize_string($body['imageAlt'] ?? $body['name'] ?? '');
+        }
 
         if (TeamModel::shouldUseSocialLinksColumn()) {
             $payload['social_links'] = $socialLinksPayload;
@@ -168,6 +171,9 @@ class TeamController
                 $column = strtolower(preg_replace('/([A-Z])/', '_$1', $field));
                 $payload[$column] = sanitize_string($body[$field]);
             }
+        }
+        if (array_key_exists('imageAlt', $body) && table_has_column('team_members', 'image_alt')) {
+            $payload['image_alt'] = sanitize_string($body['imageAlt'] ?? '');
         }
         if (array_key_exists('order', $body)) {
             $payload['sort_order'] = parse_integer($body['order'], 0);

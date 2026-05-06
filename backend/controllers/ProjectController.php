@@ -43,6 +43,9 @@ class ProjectController
             'sort_order' => parse_integer($body['order'] ?? 0),
             'is_active' => parse_boolean($body['isActive'] ?? '', true) ? 1 : 0,
         ];
+        if (table_has_column('projects', 'cover_alt')) {
+            $payload['cover_alt'] = sanitize_string($body['coverAlt'] ?? $body['title'] ?? '');
+        }
         $upload = handle_file_upload('coverImage');
         if ($upload) {
             $payload['cover_image'] = $upload['path'];
@@ -76,6 +79,9 @@ class ProjectController
             if (array_key_exists($key, $body)) {
                 $payload[$column] = sanitize_string($body[$key]);
             }
+        }
+        if (array_key_exists('coverAlt', $body) && table_has_column('projects', 'cover_alt')) {
+            $payload['cover_alt'] = sanitize_string($body['coverAlt'] ?? '');
         }
         if (array_key_exists('tags', $body)) {
             $payload['tags'] = parse_tags($body['tags']);

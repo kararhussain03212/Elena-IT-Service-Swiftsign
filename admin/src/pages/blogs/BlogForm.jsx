@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { createBlog, getBlog, updateBlog } from "../../api/blog";
 import { Editor as PrimeEditor } from "primereact/editor";
+import { convertImageFileToWebp } from "../../utils/webpUpload";
 
 const INPUT_CLASS =
   "w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white outline-none placeholder:text-white/35 focus:border-[#5f8fff]";
@@ -34,6 +35,7 @@ export default function BlogForm() {
     tags: "",
     published: true,
     coverImage: null,
+    coverAlt: "",
   });
   const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(isEdit);
@@ -70,6 +72,7 @@ export default function BlogForm() {
           tags: Array.isArray(data.tags) ? data.tags.join(", ") : "",
           published: Boolean(data.published),
           coverImage: null,
+          coverAlt: data.coverAlt || "",
         }));
 
         if (!data.coverImage) {
@@ -102,7 +105,7 @@ export default function BlogForm() {
     [],
   );
 
-  const onChange = (e) => {
+  const onChange = async (e) => {
     const { name, value, type, checked, files } = e.target;
 
     if (type === "checkbox") {
@@ -114,11 +117,19 @@ export default function BlogForm() {
     if (type === "file") {
       setFormError("");
       const file = files?.[0] || null;
-      setForm((prev) => ({ ...prev, coverImage: file }));
+      let nextFile = file;
+      if (file) {
+        try {
+          nextFile = (await convertImageFileToWebp(file)) || file;
+        } catch (error) {
+          console.error("Cover image conversion failed; using original file.", error);
+        }
+      }
+      setForm((prev) => ({ ...prev, coverImage: nextFile }));
 
       clearPreviewObjectUrl();
-      if (file) {
-        const objectUrl = URL.createObjectURL(file);
+      if (nextFile) {
+        const objectUrl = URL.createObjectURL(nextFile);
         previewObjectUrlRef.current = objectUrl;
         setPreview(objectUrl);
       }
@@ -166,6 +177,7 @@ export default function BlogForm() {
       payload.append("category", form.category);
       payload.append("tags", form.tags);
       payload.append("published", String(form.published));
+      payload.append("coverAlt", form.coverAlt);
       if (form.coverImage) payload.append("coverImage", form.coverImage);
 
       if (isEdit) await updateBlog(id, payload);
@@ -361,12 +373,22 @@ export default function BlogForm() {
               />
               Choose Cover Image
             </label>
+            <label className="mt-3 block space-y-2">
+              <span className="text-sm text-white/70">Cover Image Alt Text</span>
+              <input
+                name="coverAlt"
+                value={form.coverAlt}
+                onChange={onChange}
+                placeholder="Describe the blog cover image for SEO"
+                className={INPUT_CLASS}
+              />
+            </label>
 
             <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-[#111124]">
               {preview ? (
                 <img
                   src={preview}
-                  alt="Preview"
+                  alt={form.coverAlt || "Preview"}
                   className="h-56 w-full object-cover"
                 />
               ) : (

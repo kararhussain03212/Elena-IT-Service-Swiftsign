@@ -22,6 +22,9 @@ export default function ServiceForm() {
     benefits: [],
     faqs: [],
     icon: "",
+    imageAlt: "",
+    image1Alt: "",
+    detailImageAlt: "",
     image1: "",
     detailImage: "",
     order: 0,
@@ -76,6 +79,9 @@ export default function ServiceForm() {
           benefits: Array.isArray(item.benefits) ? item.benefits : [],
           faqs: Array.isArray(item.faqs) ? item.faqs : [],
           icon: item.icon || "",
+          imageAlt: item.imageAlt || "",
+          image1Alt: item.image1Alt || "",
+          detailImageAlt: item.detailImageAlt || "",
           image1: item.image1 || item.detailImage || "",
           detailImage: item.detailImage || "",
           order: Number(item.order || 0),
@@ -113,6 +119,9 @@ export default function ServiceForm() {
       payload.append("benefits", JSON.stringify(form.benefits || []));
       payload.append("faqs", JSON.stringify(form.faqs || []));
       payload.append("icon", form.icon.trim());
+      payload.append("imageAlt", form.imageAlt.trim());
+      payload.append("image1Alt", form.image1Alt.trim());
+      payload.append("detailImageAlt", form.detailImageAlt.trim());
       if (form.image1File) payload.append("image1", form.image1File);
       else payload.append("image1", form.image1.trim());
 
@@ -209,6 +218,15 @@ export default function ServiceForm() {
           label="Upload Main Service Image"
           helperText="Optional image for cards and detail top section"
         />
+        <div>
+          <label className="mb-1 block text-sm text-white/80">Main Image Alt Text</label>
+          <input
+            value={form.imageAlt}
+            onChange={(e) => setField("imageAlt", e.target.value)}
+            placeholder="Describe the main service image for SEO"
+            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+          />
+        </div>
 
         <h3 className="flex justify-center text-2xl font-bold pt-2">
           Service Details
@@ -389,6 +407,26 @@ export default function ServiceForm() {
           label="Upload Service Detail Image"
           helperText="This is the second image (shown on service details)."
         />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-sm text-white/80">Detail Image Alt Text</label>
+            <input
+              value={form.image1Alt}
+              onChange={(e) => setField("image1Alt", e.target.value)}
+              placeholder="Describe the detail image for SEO"
+              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm text-white/80">Detail Top Image Alt Text</label>
+            <input
+              value={form.detailImageAlt}
+              onChange={(e) => setField("detailImageAlt", e.target.value)}
+              placeholder="Describe the top detail image for SEO"
+              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            />
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>

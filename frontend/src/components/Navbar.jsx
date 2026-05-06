@@ -98,6 +98,7 @@ const DesktopMenu = ({ menuLinks, isActive, sticky, isHashActive }) => (
 
 const NavInner = ({
   sticky = false,
+  isDesktopViewport,
   isActive,
   isHashActive,
   openMobileGroups,
@@ -124,14 +125,16 @@ const NavInner = ({
           ) : null}
         </Link>
 
-        <DesktopMenu
-          menuLinks={menuLinks}
-          isActive={isActive}
-          sticky={sticky}
-          isHashActive={isHashActive}
-        />
+        {isDesktopViewport ? (
+          <DesktopMenu
+            menuLinks={menuLinks}
+            isActive={isActive}
+            sticky={sticky}
+            isHashActive={isHashActive}
+          />
+        ) : null}
 
-        {hasDesktopActions ? (
+        {isDesktopViewport && hasDesktopActions ? (
           <div className="hidden xl:flex items-center gap-4">
             {cta?.text && cta?.to ? (
               <Button variant="quote" text={cta.text} to={cta.to} />
@@ -150,7 +153,7 @@ const NavInner = ({
           </div>
         ) : null}
 
-        {!isMobileMenuOpen ? (
+        {!isDesktopViewport && !isMobileMenuOpen ? (
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="lg:hidden relative z-1051 w-10 h-10 flex items-center justify-center transition-transform duration-200 active:scale-90"
@@ -169,6 +172,9 @@ const Navbar = ({ content = {} }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openMobileGroups, setOpenMobileGroups] = useState({});
+  const [isDesktopViewport, setIsDesktopViewport] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth >= 1024 : false,
+  );
   const { pathname, hash } = useLocation();
 
   const navLinks = Array.isArray(content.navLinks)
@@ -247,6 +253,22 @@ const Navbar = ({ content = {} }) => {
     if (normalized.includes("linkedin")) return Linkedin;
     return Facebook;
   };
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsDesktopViewport(window.innerWidth >= 1024);
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
+    onResize();
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    if (!isDesktopViewport) return;
+    setIsMobileMenuOpen(false);
+    setOpenMobileGroups({});
+  }, [isDesktopViewport]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -375,6 +397,7 @@ const Navbar = ({ content = {} }) => {
 
       <nav className="relative w-full bg-[#0f0d1d]">
         <NavInner
+          isDesktopViewport={isDesktopViewport}
           isActive={isActive}
           isHashActive={isHashActive}
           openMobileGroups={openMobileGroups}
@@ -388,47 +411,49 @@ const Navbar = ({ content = {} }) => {
         />
       </nav>
 
-      <nav
-        className={`fixed top-0 inset-x-0 z-1000 w-full transition-all duration-500 ${
-          isScrolled
-            ? "translate-y-0 opacity-100 shadow-[0_4px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl border-b border-white/10"
-            : "-translate-y-full opacity-0 pointer-events-none"
-        }`}
-        style={{
-          background: "linear-gradient(270deg, #3c72fc 6.32%, #00060c 216.42%)",
-        }}
-      >
-        <NavInner
-          sticky
-          isActive={isActive}
-          isHashActive={isHashActive}
-          openMobileGroups={openMobileGroups}
-          toggleMobileGroup={toggleMobileGroup}
-          isMobileMenuOpen={isMobileMenuOpen}
-          setIsMobileMenuOpen={setIsMobileMenuOpen}
-          menuLinks={menuLinks}
-          cta={cta}
-          whatsappHref={content.whatsappHref}
-          logoSrc={logoSrc}
-        />
-      </nav>
+      {isDesktopViewport && isScrolled ? (
+        <nav
+          className="fixed top-0 inset-x-0 z-1000 w-full transition-all duration-500 translate-y-0 opacity-100 shadow-[0_4px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl border-b border-white/10"
+          style={{
+            background: "linear-gradient(270deg, #3c72fc 6.32%, #00060c 216.42%)",
+          }}
+        >
+          <NavInner
+            sticky
+            isDesktopViewport={isDesktopViewport}
+            isActive={isActive}
+            isHashActive={isHashActive}
+            openMobileGroups={openMobileGroups}
+            toggleMobileGroup={toggleMobileGroup}
+            isMobileMenuOpen={isMobileMenuOpen}
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+            menuLinks={menuLinks}
+            cta={cta}
+            whatsappHref={content.whatsappHref}
+            logoSrc={logoSrc}
+          />
+        </nav>
+      ) : null}
 
-      <div
-        className={`fixed inset-0 z-1049 bg-black/60 lg:hidden transition-opacity duration-300 ${
-          isMobileMenuOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setIsMobileMenuOpen(false)}
-        aria-hidden="true"
-      />
-
-      <div
-        className={`fixed top-0 right-0 bottom-0 z-1050 w-full max-w-85 bg-[#07060e] shadow-2xl lg:hidden
-          flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out ${
-            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+      {!isDesktopViewport ? (
+        <div
+          className={`fixed inset-0 z-1049 bg-black/60 lg:hidden transition-opacity duration-300 ${
+            isMobileMenuOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
           }`}
-      >
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      ) : null}
+
+      {!isDesktopViewport ? (
+        <div
+          className={`fixed top-0 right-0 bottom-0 z-1050 w-full max-w-85 bg-[#07060e] shadow-2xl lg:hidden
+            flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out ${
+              isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+        >
         <div className="flex h-22 shrink-0 items-center justify-between border-b border-white/10 px-6">
           <Link
             to="/"
@@ -586,7 +611,8 @@ const Navbar = ({ content = {} }) => {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      ) : null}
     </>
   );
 };

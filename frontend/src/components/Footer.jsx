@@ -94,6 +94,7 @@ const Footer = ({ content = {} }) => {
   const topShapeRef = useScrollReveal({ threshold: 0.05, once: false });
   const brandColRef = useScrollReveal({ threshold: 0.08, once: false });
   const solutionColRef = useScrollReveal({ threshold: 0.08, once: false });
+  const solutionCol2Ref = useScrollReveal({ threshold: 0.08, once: false });
   const quickLinkColRef = useScrollReveal({ threshold: 0.08, once: false });
   const locationColRef = useScrollReveal({ threshold: 0.08, once: false });
   const bottomBarRef = useScrollReveal({ threshold: 0.05, once: false });
@@ -119,6 +120,38 @@ const Footer = ({ content = {} }) => {
           }
 
           return null;
+        })
+        .filter(Boolean)
+    : [];
+  const itSolutionsTitle = String(content.itSolutionsTitle || "IT Solution").trim();
+  const itSolutionsSecondTitle = String(
+    content.itSolutionsSecondTitle || content.extraColumnTitle || "IT Solution",
+  ).trim();
+  const itSolutionsSecond = Array.isArray(content.itSolutionsSecond)
+    ? content.itSolutionsSecond
+        .map((item) => {
+          if (typeof item === "string") {
+            const name = String(item || "").trim();
+            return name ? { name, href: "" } : null;
+          }
+
+          if (item && typeof item === "object") {
+            if (item.isActive === false) return null;
+            const name = String(item.name || "").trim();
+            const href = String(item.href || "").trim();
+            return name ? { name, href } : null;
+          }
+
+          return null;
+        })
+        .filter(Boolean)
+    : Array.isArray(content.extraColumnLinks)
+    ? content.extraColumnLinks
+        .map((item) => {
+          if (!item || typeof item !== "object") return null;
+          const name = String(item.name || "").trim();
+          const href = String(item.href || "").trim();
+          return name ? { name, href } : null;
         })
         .filter(Boolean)
     : [];
@@ -158,6 +191,7 @@ const Footer = ({ content = {} }) => {
   const hasFooterContent =
     Boolean(brandDescription || openingHours || phone || phoneHref) ||
     itSolutions.length > 0 ||
+    itSolutionsSecond.length > 0 ||
     quickLinks.length > 0 ||
     socials.length > 0 ||
     locations.length > 0 ||
@@ -190,8 +224,8 @@ const Footer = ({ content = {} }) => {
       </div>
 
       {/* ── Main footer body ── */}
-      <div className="relative z-10 mx-auto w-full max-w-[1320px] px-6 md:px-10 pt-24 pb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-12">
+      <div className="relative z-10 mx-auto w-full max-w-[1550px] px-6 md:px-10 pt-24 pb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-12">
           {/* Col 1 — Brand */}
           <div ref={brandColRef} className="sr-hidden sr-up">
             <Link to="/" className="inline-block mb-6">
@@ -217,11 +251,44 @@ const Footer = ({ content = {} }) => {
           {/* Col 2 — IT Solution */}
           <div ref={solutionColRef} className="sr-hidden sr-up">
             <h3 className="text-white font-bold text-xl mb-6 relative">
-              IT Solution
+              {itSolutionsTitle || "IT Solution"}
               <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-[#3c72fc]" />
             </h3>
             <ul className="space-y-4 mt-4">
               {itSolutions.map((item, index) => (
+                <li key={`${item.name}-${item.href}-${index}`} className="flex items-center gap-2 hover:translate-x-1 transition-transform duration-300">
+                  <Bullet />
+                  {!item.href ? (
+                    <span className="text-white/55 text-base">{item.name}</span>
+                  ) : isExternalHref(item.href) ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/55 text-base hover:text-[#3c72fc] transition-colors duration-300"
+                    >
+                      {item.name}
+                    </a>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className="text-white/55 text-base hover:text-[#3c72fc] transition-colors duration-300"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Col 3 - IT Solution */}
+          <div ref={solutionCol2Ref} className="sr-hidden sr-up">
+            <h3 className="text-white font-bold text-xl mb-6 relative">
+              {itSolutionsSecondTitle || "IT Solution"}
+              <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-[#3c72fc]" />
+            </h3>
+            <ul className="space-y-4 mt-4">
+              {itSolutionsSecond.map((item, index) => (
                 <li key={`${item.name}-${item.href}-${index}`} className="flex items-center gap-2 hover:translate-x-1 transition-transform duration-300">
                   <Bullet />
                   {!item.href ? (

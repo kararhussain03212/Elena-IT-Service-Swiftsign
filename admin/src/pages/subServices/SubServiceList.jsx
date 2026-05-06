@@ -95,7 +95,7 @@ export default function SubServiceList() {
               <div className="mb-3 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3c72fc]/20 text-[#9bb8ff]">
                   {iconUrl ? (
-                    <img src={iconUrl} alt={item.title + " icon"} className="h-6 w-6 object-contain" />
+                    <img src={iconUrl} alt={item.iconAlt || item.title + " icon"} className="h-6 w-6 object-contain" />
                   ) : (
                     <span className="text-xs font-bold">
                       {String(item.title || "S").charAt(0).toUpperCase()}

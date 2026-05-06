@@ -262,7 +262,7 @@ export default function BlogList() {
                 <div className="grid gap-0 lg:grid-cols-[280px_1fr]">
                   <img
                     src={coverSrc(item.coverImage)}
-                    alt={item.title}
+                    alt={item.coverAlt || item.title}
                     className="h-56 w-full object-cover lg:h-full"
                   />
                   <div className="p-4 sm:p-5">

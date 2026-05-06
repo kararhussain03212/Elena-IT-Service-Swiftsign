@@ -64,7 +64,9 @@ const Blogs = () => {
     const load = async () => {
       try {
         const { data } = await getBlogs();
-        const mapped = (Array.isArray(data) ? data : []).map((item, index) => {
+        const mapped = (Array.isArray(data) ? data : [])
+          .slice(0, 3)
+          .map((item, index) => {
           const created = item.createdAt ? new Date(item.createdAt) : null;
           const isValidDate =
             created instanceof Date && !Number.isNaN(created.getTime());
@@ -87,8 +89,6 @@ const Blogs = () => {
             image: resolveImage(coverImageField),
             link: "/blog/" + (item.slug || item._id),
             adminName: item.author || "Admin",
-            adminRole: "Author",
-            adminImage: "https://placehold.co/80x80/3c72fc/ffffff?text=A",
             date: { day, month },
             featured: index === 0,
           };
@@ -164,18 +164,14 @@ const Blogs = () => {
                 {/* Author + Read More */}
                 <div className="flex items-center justify-between mt-auto">
                   <div className="flex items-center gap-3">
-                    <img
-                      src={featured.adminImage}
-                      alt={featured.adminName}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-[#3c72fc]/40"
-                    />
+                    {/* <span
+                      aria-hidden="true"
+                      className="w-10 h-10 rounded-full border-2 border-[#3c72fc]/40 bg-[#3c72fc]"
+                    /> */}
                     <div>
-                      <span className="text-[#3c72fc] text-xs font-semibold">
+                      <span className="text-[#3c72fc] text-lg font-semibold">
                         By {featured.adminName}
                       </span>
-                      <p className="text-white/60 text-xs">
-                        {featured.adminRole}
-                      </p>
                     </div>
                   </div>
                   <Button text="Read More" to={featured.link} />
@@ -214,18 +210,14 @@ const Blogs = () => {
                   </h3>
                   {/* Author */}
                   <div className="flex items-center gap-2">
-                    <img
-                      src={blog.adminImage}
-                      alt={blog.adminName}
-                      className="w-7 h-7 rounded-full object-cover border border-[#3c72fc]/40"
-                    />
+                    {/* <span
+                      aria-hidden="true"
+                      className="w-7 h-7 rounded-full border border-[#3c72fc]/40 bg-[#3c72fc]"
+                    /> */}
                     <div>
-                      <span className="text-[#3c72fc] text-xs font-semibold">
+                      <span className="text-[#3c72fc] text-l font-semibold">
                         By {blog.adminName}
                       </span>
-                      <p className="text-white/50 text-xs leading-none">
-                        {blog.adminRole}
-                      </p>
                     </div>
                   </div>
                 </div>
