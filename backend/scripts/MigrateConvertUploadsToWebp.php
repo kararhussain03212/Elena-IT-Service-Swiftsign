@@ -4,6 +4,19 @@ require_once __DIR__ . '/../config/database.php';
 
 $args = $_SERVER['argv'] ?? [];
 $isDryRun = in_array('--dry-run', $args, true) || in_array('-n', $args, true);
+$memoryLimit = '768M';
+foreach ($args as $arg) {
+    if (preg_match('/^--memory-limit=(.+)$/i', (string) $arg, $matches)) {
+        $candidate = trim((string) ($matches[1] ?? ''));
+        if ($candidate !== '') {
+            $memoryLimit = $candidate;
+        }
+        break;
+    }
+}
+if (PHP_SAPI === 'cli') {
+    @ini_set('memory_limit', $memoryLimit);
+}
 
 function detect_image_type_for_conversion(string $path): ?string
 {
@@ -83,9 +96,14 @@ function convert_file_to_webp(string $source, string $destination, string $sourc
         return false;
     }
 
-    $ok = @imagewebp($image, $destination, $quality);
-    imagedestroy($image);
-    return $ok && file_exists($destination) && filesize($destination) > 0;
+    try {
+        $ok = @imagewebp($image, $destination, $quality);
+        return $ok && file_exists($destination) && filesize($destination) > 0;
+    } catch (Throwable $e) {
+        return false;
+    } finally {
+        imagedestroy($image);
+    }
 }
 
 function iter_image_files(array $directories): array
@@ -339,6 +357,7 @@ foreach ($columns as $columnMeta) {
 
 echo 'WebP conversion completed.' . PHP_EOL;
 echo 'Mode: ' . ($isDryRun ? 'DRY RUN (no writes)' : 'LIVE (writes enabled)') . PHP_EOL;
+echo 'Memory limit: ' . (ini_get('memory_limit') ?: 'unknown') . PHP_EOL;
 echo 'Found JPG/JPEG/PNG files: ' . count($sourceFiles) . PHP_EOL;
 echo 'Planned conversions: ' . $plannedConversions . PHP_EOL;
 echo 'Converted to WebP: ' . $converted . PHP_EOL;

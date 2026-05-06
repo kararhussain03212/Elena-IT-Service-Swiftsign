@@ -61,6 +61,7 @@ const sectionPathMap = new Map(sectionNavItems.map((item) => [item.path, item.la
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sectionsOpen, setSectionsOpen] = useState(true);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -92,8 +93,17 @@ export default function Layout({ children }) {
   const currentSectionLabel = sectionPathMap.get(location.pathname);
 
   const handleLogout = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutConfirm(false);
     logout();
     navigate("/login");
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutConfirm(false);
   };
 
   const handleGoBack = () => {
@@ -292,6 +302,31 @@ export default function Layout({ children }) {
         {/* Page Content */}
         <main className="flex-1 p-6 text-white">{children}</main>
       </div>
+
+      {showLogoutConfirm ? (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#111827] p-6 shadow-2xl">
+            <h2 className="text-lg font-semibold text-white">Confirm Logout</h2>
+            <p className="mt-2 text-sm text-white/75">Do you want to logout?</p>
+            <div className="mt-5 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={cancelLogout}
+                className="rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-white/90 hover:bg-white/10"
+              >
+                No
+              </button>
+              <button
+                type="button"
+                onClick={confirmLogout}
+                className="rounded-lg bg-[#dc2626] px-4 py-2 text-sm font-semibold text-white hover:bg-[#b91c1c]"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

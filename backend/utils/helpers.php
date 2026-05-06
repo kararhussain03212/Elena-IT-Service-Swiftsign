@@ -298,13 +298,14 @@ function handle_file_upload(string $field, string $subFolder = 'uploads'): ?arra
     $originalName = (string) ($_FILES[$field]['name'] ?? '');
     $sanitized = sanitize_upload_filename($originalName);
     $imageType = detect_uploaded_image_type($tmpFile);
-    $expectsImage = (bool) preg_match('/image|avatar|cover|icon|logo|photo|thumbnail/i', $field);
 
-    if ($expectsImage && !in_array($imageType, ['jpeg', 'png', 'webp'], true)) {
+    // Detect by real file content, not field name. This guarantees all uploaded images
+    // are normalized to WebP across all pages/endpoints.
+    if (in_array($imageType, ['jpeg', 'png', 'webp'], true) === false && str_starts_with((string) ($_FILES[$field]['type'] ?? ''), 'image/')) {
         error_response(400, 'Only JPG, JPEG, PNG, and WebP images are allowed.', ['field' => $field]);
     }
 
-    // Image uploads: enforce JPG/PNG and require WebP conversion.
+    // Image uploads: always convert/store as WebP.
     if (in_array($imageType, ['jpeg', 'png', 'webp'], true)) {
         $base = pathinfo($sanitized, PATHINFO_FILENAME);
         if ($imageType === 'webp') {
