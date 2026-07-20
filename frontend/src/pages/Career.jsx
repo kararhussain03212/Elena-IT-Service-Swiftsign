@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Banner from '@/components/Banner';
+import RecaptchaField from '@/components/RecaptchaField';
 import { getCareerPage, getCareerPrograms, submitProgramApplication, subscribeNewsletter } from '@/api/Apis';
 import {
   BookOpen,
@@ -25,9 +26,13 @@ export default function Career() {
     completedPrior: 'No'
   });
   const [applyState, setApplyState] = useState({ submitting: false, success: '', error: '' });
+  const [applyRecaptchaToken, setApplyRecaptchaToken] = useState('');
+  const applyRecaptchaRef = useRef(null);
 
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterState, setNewsletterState] = useState({ submitting: false, success: '', error: '' });
+  const [newsletterRecaptchaToken, setNewsletterRecaptchaToken] = useState('');
+  const newsletterRecaptchaRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -56,12 +61,18 @@ export default function Career() {
 
   const handleApplySubmit = async (e) => {
     e.preventDefault();
-    setApplyState({ submitting: true, success: '', error: '' });
 
     if (!program?.id && !program?._id) {
       setApplyState({ submitting: false, success: '', error: 'No active program is available to apply for right now.' });
       return;
     }
+
+    if (!applyRecaptchaToken) {
+      setApplyState({ submitting: false, success: '', error: 'Please complete the reCAPTCHA verification.' });
+      return;
+    }
+
+    setApplyState({ submitting: true, success: '', error: '' });
 
     try {
       const { data } = await submitProgramApplication({
@@ -70,27 +81,46 @@ export default function Career() {
         email: formData.email,
         contactNumber: formData.phone,
         hasBasicItKnowledge: formData.completedPrior === 'Yes',
+        recaptchaToken: applyRecaptchaToken,
       });
       setApplyState({ submitting: false, success: data?.message || 'Application submitted successfully.', error: '' });
       setFormData({ name: '', email: '', phone: '', completedPrior: 'No' });
+      applyRecaptchaRef.current?.reset();
+      setApplyRecaptchaToken('');
       setTimeout(() => setApplyState((prev) => ({ ...prev, success: '' })), 6000);
     } catch (error) {
       const message = error?.response?.data?.message || 'Failed to submit application. Please try again.';
+      applyRecaptchaRef.current?.reset();
+      setApplyRecaptchaToken('');
       setApplyState({ submitting: false, success: '', error: message });
     }
   };
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
+
+    if (!newsletterRecaptchaToken) {
+      setNewsletterState({ submitting: false, success: '', error: 'Please complete the reCAPTCHA verification.' });
+      return;
+    }
+
     setNewsletterState({ submitting: true, success: '', error: '' });
 
     try {
-      const { data } = await subscribeNewsletter({ email: newsletterEmail, sourcePage: 'career' });
+      const { data } = await subscribeNewsletter({
+        email: newsletterEmail,
+        sourcePage: 'career',
+        recaptchaToken: newsletterRecaptchaToken,
+      });
       setNewsletterState({ submitting: false, success: data?.message || 'Subscribed successfully.', error: '' });
       setNewsletterEmail('');
+      newsletterRecaptchaRef.current?.reset();
+      setNewsletterRecaptchaToken('');
       setTimeout(() => setNewsletterState((prev) => ({ ...prev, success: '' })), 6000);
     } catch (error) {
       const message = error?.response?.data?.message || 'Failed to subscribe. Please try again.';
+      newsletterRecaptchaRef.current?.reset();
+      setNewsletterRecaptchaToken('');
       setNewsletterState({ submitting: false, success: '', error: message });
     }
   };
@@ -325,6 +355,11 @@ export default function Career() {
                     </div>
                   </div>
 
+                  <RecaptchaField
+                    ref={applyRecaptchaRef}
+                    onChange={(token) => setApplyRecaptchaToken(token || '')}
+                  />
+
                   {applyState.error && (
                     <p className="text-rose-400 text-sm font-semibold text-center">{applyState.error}</p>
                   )}
@@ -409,22 +444,28 @@ export default function Career() {
             <p className="text-white/80 text-sm md:text-base">{pageContent?.newsletter_description}</p>
           </div>
 
-          <form onSubmit={handleNewsletterSubmit} className="w-full lg:w-auto flex flex-col sm:flex-row gap-3 min-w-[320px] sm:min-w-[450px]">
-            <input
-              type="email"
-              required
-              value={newsletterEmail}
-              onChange={(e) => setNewsletterEmail(e.target.value)}
-              placeholder="Your email address"
-              className="flex-grow bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-white/60 focus:outline-none focus:bg-white/20 transition-all font-[var(--kumbh)]"
+          <form onSubmit={handleNewsletterSubmit} className="w-full lg:w-auto flex flex-col gap-3 min-w-[320px] sm:min-w-[450px]">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                required
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                placeholder="Your email address"
+                className="flex-grow bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder-white/60 focus:outline-none focus:bg-white/20 transition-all font-[var(--kumbh)]"
+              />
+              <button
+                type="submit"
+                disabled={newsletterState.submitting}
+                className="py-4 px-8 bg-white text-[#3c72fc] hover:bg-white/95 font-bold rounded-xl cursor-pointer transition-all border-none font-[var(--kumbh)] shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {newsletterState.submitting ? 'Subscribing...' : 'Subscribe'}
+              </button>
+            </div>
+            <RecaptchaField
+              ref={newsletterRecaptchaRef}
+              onChange={(token) => setNewsletterRecaptchaToken(token || '')}
             />
-            <button
-              type="submit"
-              disabled={newsletterState.submitting}
-              className="py-4 px-8 bg-white text-[#3c72fc] hover:bg-white/95 font-bold rounded-xl cursor-pointer transition-all border-none font-[var(--kumbh)] shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {newsletterState.submitting ? 'Subscribing...' : 'Subscribe'}
-            </button>
           </form>
         </div>
         {(newsletterState.success || newsletterState.error) && (

@@ -15,6 +15,9 @@ const baseNavItems = [
   { path: "/team", label: "Team" },
   { path: "/testimonials", label: "Testimonials" },
   { path: "/blogs", label: "Blogs" },
+  { path: "/contact-messages", label: "Contact Messages", adminOnly: true },
+  { path: "/program-applications", label: "Program Applications" },
+  { path: "/newsletter-subscribers", label: "Newsletter Subscribers" },
   { path: "/settings", label: "Settings" },
 ];
 
@@ -49,11 +52,6 @@ const getSectionGroups = (isAdmin) => {
           { path: "/career-page-settings", label: "Career Page Settings" },
           { path: "/career-programs", label: "Career Programs" },
         ];
-        if (isAdmin) {
-          careerItems.push({ path: "/contact-messages", label: "Contact Messages" });
-          careerItems.push({ path: "/program-applications", label: "Program Applications" });
-          careerItems.push({ path: "/newsletter-subscribers", label: "Newsletter Subscribers" });
-        }
         careerItems.push(...items);
         items = careerItems;
       }
@@ -92,9 +90,8 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const isAdmin = normalizeUserRole(user?.role) === "admin";
   const sectionGroups = getSectionGroups(isAdmin);
-  const adminOnlyPaths = new Set(["/users", "/contact-messages"]);
   const visibleNavItems = navItems.filter(
-    (item) => !adminOnlyPaths.has(item.path) || isAdmin,
+    (item) => !item.adminOnly || isAdmin,
   );
   const apiRoot = (
     import.meta.env.VITE_API_URL || "http://localhost:5000/api"
@@ -203,12 +200,9 @@ export default function Layout({ children }) {
 
             const sectionRouteActive =
               isActivePath("/sections") ||
-              isActivePath("/contact-messages") ||
               isActivePath("/certifications") ||
               isActivePath("/career-page-settings") ||
-              isActivePath("/career-programs") ||
-              isActivePath("/program-applications") ||
-              isActivePath("/newsletter-subscribers");
+              isActivePath("/career-programs");
 
             return (
               <div key={item.path} className="mb-1">

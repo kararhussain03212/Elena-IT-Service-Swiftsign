@@ -3,6 +3,7 @@ require_once __DIR__ . '/../models/ProgramApplicationModel.php';
 require_once __DIR__ . '/../models/CareerProgramModel.php';
 require_once __DIR__ . '/../utils/helpers.php';
 require_once __DIR__ . '/../utils/email.php';
+require_once __DIR__ . '/../utils/recaptcha.php';
 
 class ProgramApplicationController
 {
@@ -26,6 +27,9 @@ class ProgramApplicationController
         }
         if (!array_key_exists('hasBasicItKnowledge', $body) || $body['hasBasicItKnowledge'] === '' || $body['hasBasicItKnowledge'] === null) {
             error_response(400, 'Please indicate whether you have basic IT/Programming knowledge.');
+        }
+        if (!verify_recaptcha((string) ($body['recaptchaToken'] ?? ''))) {
+            error_response(400, 'reCAPTCHA verification failed. Please try again.');
         }
         $program = CareerProgramModel::findById($programId);
         if (!$program) {

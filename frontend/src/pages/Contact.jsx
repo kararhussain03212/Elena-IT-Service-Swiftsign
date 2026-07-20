@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Banner from "@/components/Banner";
+import RecaptchaField from "@/components/RecaptchaField";
 import {
   Mail,
   MapPin,
@@ -152,6 +153,8 @@ const Contact = () => {
     success: "",
   });
   const [openFaq, setOpenFaq] = useState(firstFaqId);
+  const [recaptchaToken, setRecaptchaToken] = useState("");
+  const recaptchaRef = useRef(null);
 
   useEffect(() => {
     setOpenFaq(firstFaqId);
@@ -170,6 +173,15 @@ const Contact = () => {
 
     if (submitState.loading) return;
 
+    if (!recaptchaToken) {
+      setSubmitState({
+        loading: false,
+        error: "Please complete the reCAPTCHA verification.",
+        success: "",
+      });
+      return;
+    }
+
     setSubmitState({ loading: true, error: "", success: "" });
 
     try {
@@ -177,6 +189,7 @@ const Contact = () => {
         name: formData.name,
         email: formData.email,
         message: formData.message,
+        recaptchaToken,
       });
 
       setSubmitState({
@@ -188,6 +201,8 @@ const Contact = () => {
             : "Thank you! Your message has been sent.",
       });
       setFormData({ name: "", email: "", message: "" });
+      recaptchaRef.current?.reset();
+      setRecaptchaToken("");
     } catch (error) {
       const details =
         (typeof error?.response?.data?.message === "string" &&
@@ -195,6 +210,8 @@ const Contact = () => {
         (typeof error?.message === "string" && error.message.trim()) ||
         "";
 
+      recaptchaRef.current?.reset();
+      setRecaptchaToken("");
       setSubmitState({
         loading: false,
         error: details || CONTACT_SEND_FAILED,
@@ -519,6 +536,10 @@ const Contact = () => {
                         className="w-full rounded-md border border-white/20 bg-transparent px-4 py-3 text-base text-white placeholder:text-white/50 focus:outline-none focus:border-[#3c72fc]"
                       />
                     </div>
+                    <RecaptchaField
+                      ref={recaptchaRef}
+                      onChange={(token) => setRecaptchaToken(token || "")}
+                    />
                     <Button
                       type="submit"
                       disabled={submitState.loading}
