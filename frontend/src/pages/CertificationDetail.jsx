@@ -74,6 +74,19 @@ export default function CertificationDetail() {
     }
   };
 
+  const renderApplyDescription = () => {
+    const template = certData.applyDescription
+      || 'Admissions are actively open for the {batch} Batch. Seats are highly limited. Scan the QR code or click below to submit your application form.';
+    const parts = template.split('{batch}');
+    if (parts.length === 1) return template;
+    return parts.map((part, idx) => (
+      <React.Fragment key={idx}>
+        {part}
+        {idx < parts.length - 1 && <strong>{certData.dates}</strong>}
+      </React.Fragment>
+    ));
+  };
+
   const handleInquiry = () => {
     if (!certData || !certData.applicationLink) return;
     setInquireStatus('Preparing inquiry form...');
@@ -334,12 +347,12 @@ export default function CertificationDetail() {
                 <div className="p-8 bg-[#151327] border border-emerald-500/20 rounded-2xl flex flex-col gap-4 shadow-md bg-gradient-to-br from-[#10b981]/5 to-transparent">
                   <h3 className="text-xl font-bold text-white flex items-center gap-2 border-l-3 border-emerald-400 pl-3 font-[var(--kumbh)]">
                     <Mail size={18} className="text-emerald-400" />
-                    Apply Online
+                    {certData.applyTitle || 'Apply Online'}
                   </h3>
-                  
+
                   <div className="text-center flex flex-col items-center gap-5 mt-2">
                     <p className="text-sm text-white/70 leading-relaxed text-left">
-                      Admissions are actively open for the <strong>July–August 2026 Batch</strong>. Seats are highly limited. Scan the QR code or click below to submit your application form.
+                      {renderApplyDescription()}
                     </p>
 
                     {certData.qrCodeUrl && (

@@ -7,6 +7,46 @@ class Certification extends BaseModel
     protected static array $jsonColumns = ['audience', 'modules', 'benefits', 'fees'];
 
     /**
+     * Decode a row and compute any fee rows marked isComputed from
+     * the tuition amountValue and scholarshipPercent, so the final
+     * fee can never drift out of sync with tuition/scholarship edits.
+     */
+    protected static function decodeRow(array $row): array
+    {
+        $row = parent::decodeRow($row);
+        if (!empty($row['fees']) && is_array($row['fees'])) {
+            $row['fees'] = self::computeFees($row['fees']);
+        }
+        return $row;
+    }
+
+    private static function computeFees(array $fees): array
+    {
+        $tuitionValue = null;
+        $scholarshipPercent = null;
+
+        foreach ($fees as $fee) {
+            if (isset($fee['amountValue']) && is_numeric($fee['amountValue'])) {
+                $tuitionValue = (float) $fee['amountValue'];
+            }
+            if (isset($fee['scholarshipPercent']) && is_numeric($fee['scholarshipPercent'])) {
+                $scholarshipPercent = (float) $fee['scholarshipPercent'];
+            }
+        }
+
+        foreach ($fees as &$fee) {
+            if (!empty($fee['isComputed'])) {
+                $fee['amount'] = ($tuitionValue !== null && $scholarshipPercent !== null)
+                    ? 'PKR ' . number_format($tuitionValue * (1 - $scholarshipPercent / 100), 0)
+                    : 'To be confirmed';
+            }
+        }
+        unset($fee);
+
+        return $fees;
+    }
+
+    /**
      * Retrieve all certifications (auto-seeding if empty)
      */
     public static function getAll(): array
@@ -145,14 +185,16 @@ class Certification extends BaseModel
                 'outcome' => 'SSCC-F establishes a solid technical baseline. Graduates earn the SSCC-F Foundation Certification, preparing them with the baseline credentials required to join security teams or progress directly to SSCC-A.',
                 'fees' => [
                     ['item' => 'Admission / Application Fee (Non-Refundable)', 'amount' => 'PKR 1,000'],
-                    ['item' => 'Program Tuition Fee', 'amount' => 'PKR 40,000'],
-                    ['item' => 'SSCC University Referral Scholarship', 'amount' => '50% Tuition Fee Waiver'],
-                    ['item' => 'Tuition Fee After Scholarship', 'amount' => 'PKR 20,000']
+                    ['item' => 'Program Tuition Fee', 'amount' => 'PKR 40,000', 'amountValue' => 40000],
+                    ['item' => 'SSCC University Referral Scholarship', 'amount' => '50% Tuition Fee Waiver', 'scholarshipPercent' => 50],
+                    ['item' => 'Tuition Fee After Scholarship', 'amount' => 'PKR 20,000', 'isComputed' => true]
                 ],
                 'feeFootnote' => 'Eligible students recommended by recognized universities may receive the SSCC University Referral Scholarship (50% waiver on tuition, subject to verification and approval). Terms & Conditions apply.',
                 'applicationLink' => 'https://forms.gle/XWwDHQJGpn5Dgs448',
                 'qrCodeUrl' => 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://forms.gle/XWwDHQJGpn5Dgs448',
-                'footerCta' => 'Register today and begin your journey toward becoming a cybersecurity professional.'
+                'footerCta' => 'Register today and begin your journey toward becoming a cybersecurity professional.',
+                'applyTitle' => 'Apply Online',
+                'applyDescription' => 'Admissions are actively open for the {batch} Batch. Seats are highly limited. Scan the QR code or click below to submit your application form.'
             ],
             [
                 'code' => 'SSCC-A',
@@ -198,10 +240,12 @@ class Certification extends BaseModel
                     ['item' => 'Admission / Application Fee (Non-Refundable)', 'amount' => 'To be confirmed'],
                     ['item' => 'Program Tuition Fee', 'amount' => 'To be confirmed'],
                     ['item' => 'SSCC University Referral Scholarship Available', 'amount' => 'Recommended 50% waiver'],
-                    ['item' => 'Tuition Fee After Scholarship', 'amount' => 'To be confirmed']
+                    ['item' => 'Tuition Fee After Scholarship', 'amount' => 'To be confirmed', 'isComputed' => true]
                 ],
                 'feeFootnote' => 'Scholarship structure is recommended to follow the same referral waiver as SSCC-F for consistency once pricing is finalized.',
-                'footerCta' => 'Register your interest today and be notified when Admissions open for the Associate level.'
+                'footerCta' => 'Register your interest today and be notified when Admissions open for the Associate level.',
+                'applyTitle' => 'Apply Online',
+                'applyDescription' => 'Admissions are actively open for the {batch} Batch. Seats are highly limited. Scan the QR code or click below to submit your application form.'
             ],
             [
                 'code' => 'SSCC-P',
@@ -245,10 +289,12 @@ class Certification extends BaseModel
                 'fees' => [
                     ['item' => 'Admission / Application Fee (Non-Refundable)', 'amount' => 'To be confirmed'],
                     ['item' => 'Program Tuition Fee', 'amount' => 'To be confirmed'],
-                    ['item' => 'Tuition Fee After Scholarship', 'amount' => 'To be confirmed']
+                    ['item' => 'Tuition Fee After Scholarship', 'amount' => 'To be confirmed', 'isComputed' => true]
                 ],
                 'feeFootnote' => 'Pricing and referral packages will be announced when admissions approach.',
-                'footerCta' => 'Register your interest today and be notified when Admissions open for the Professional level.'
+                'footerCta' => 'Register your interest today and be notified when Admissions open for the Professional level.',
+                'applyTitle' => 'Apply Online',
+                'applyDescription' => 'Admissions are actively open for the {batch} Batch. Seats are highly limited. Scan the QR code or click below to submit your application form.'
             ],
             [
                 'code' => 'SSCC-E',
@@ -292,10 +338,12 @@ class Certification extends BaseModel
                 'fees' => [
                     ['item' => 'Admission / Application Fee (Non-Refundable)', 'amount' => 'To be confirmed'],
                     ['item' => 'Program Tuition Fee', 'amount' => 'To be confirmed'],
-                    ['item' => 'Tuition Fee After Scholarship', 'amount' => 'To be confirmed']
+                    ['item' => 'Tuition Fee After Scholarship', 'amount' => 'To be confirmed', 'isComputed' => true]
                 ],
                 'feeFootnote' => 'Dedicated career placement is assurance-aligned. Contact advisors for detailed pricing.',
-                'footerCta' => 'Register your interest today and be notified when Admissions open for the Expert level.'
+                'footerCta' => 'Register your interest today and be notified when Admissions open for the Expert level.',
+                'applyTitle' => 'Apply Online',
+                'applyDescription' => 'Admissions are actively open for the {batch} Batch. Seats are highly limited. Scan the QR code or click below to submit your application form.'
             ]
         ];
 

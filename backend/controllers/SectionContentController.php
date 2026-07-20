@@ -9,12 +9,12 @@ class SectionContentController
         if (is_string($content)) {
             $decoded = json_decode($content, true);
             if (json_last_error() === JSON_ERROR_NONE) {
-                return $decoded;
+                return deep_trim_strings($decoded);
             }
             return [];
         }
         if (is_array($content)) {
-            return $content;
+            return deep_trim_strings($content);
         }
         return [];
     }

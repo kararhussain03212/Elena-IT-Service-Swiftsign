@@ -38,3 +38,9 @@ export const getSectionByKey = (key, params = {}) =>
 // Certifications API
 export const getCertifications = () => API.get("/certifications");
 export const getCertificationByCode = (code) => API.get("/certifications/" + code);
+
+// Career API
+export const getCareerPage = () => API.get("/career-page", fresh());
+export const getCareerPrograms = () => API.get("/career-programs", fresh());
+export const submitProgramApplication = (payload) => API.post("/program-applications", payload);
+export const subscribeNewsletter = (payload) => API.post("/newsletter-subscribers", payload);

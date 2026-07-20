@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { QRCodeSVG } from "qrcode.react";
 import logoLight from "@/assets/images/logo/swift.png";
 import iconLeft from "@/assets/images/shape/footer-solid-left.png";
 import iconRight from "@/assets/images/shape/footer-solid-right.png";
@@ -234,8 +235,23 @@ const Footer = ({ content = {} }) => {
             <p className="text-white/55 text-base leading-relaxed mb-8 max-w-[260px] text-justify">
               {brandDescription}
             </p>
+
+            {/* QR Code */}
+            <div className="mt-8 mb-6">
+              <p className="text-white/70 text-sm font-semibold mb-3">Scan to Connect</p>
+              <div className="p-4 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 inline-flex items-center justify-center border border-white/10">
+                <QRCodeSVG
+                  value={content.qrCodeUrl || window.location.origin}
+                  size={120}
+                  level="H"
+                  includeMargin={true}
+                  quietZone={10}
+                />
+              </div>
+            </div>
+
             {/* Social icons */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mt-6">
               {socials.map((social) => (
                 <SocialBtn
                   key={`${social?.name || "social"}-${social?.href || ""}`}

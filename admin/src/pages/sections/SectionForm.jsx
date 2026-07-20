@@ -49,6 +49,7 @@ const createDefaultContentByKey = (key) => {
         openingHours: "",
         phone: "",
         phoneHref: "",
+        qrCodeUrl: "",
         policies: [{ name: "Privacy Policy", href: "/contact" }],
       };
     case "home.about":
@@ -1370,6 +1371,13 @@ const SectionContentEditor = ({
             onChange={(value) =>
               setContent({ ...data, brandDescription: value })
             }
+          />
+        </section>
+        <section className={SUBSECTION_CLASS}>
+          <TextInput
+            label={'QR Code Link ("Scan to Connect" — defaults to the site homepage if left blank)'}
+            value={data.qrCodeUrl}
+            onChange={(value) => setContent({ ...data, qrCodeUrl: value })}
           />
         </section>
         <section className={SUBSECTION_CLASS}>

@@ -27,10 +27,28 @@ try {
       applicationLink VARCHAR(1024) DEFAULT NULL,
       qrCodeUrl VARCHAR(1024) DEFAULT NULL,
       footerCta VARCHAR(500) DEFAULT NULL,
+      applyTitle VARCHAR(120) DEFAULT NULL,
+      applyDescription TEXT DEFAULT NULL,
+      image VARCHAR(1024) DEFAULT NULL,
       created_at DATETIME NOT NULL,
       updated_at DATETIME NOT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
     echo "Table 'certifications' checked/created.\n";
+
+    // Add columns if migrating an existing table
+    $existingColumns = $pdo->query("SHOW COLUMNS FROM certifications")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('applyTitle', $existingColumns, true)) {
+        $pdo->exec("ALTER TABLE certifications ADD COLUMN applyTitle VARCHAR(120) DEFAULT NULL AFTER footerCta");
+        echo "Column 'applyTitle' added.\n";
+    }
+    if (!in_array('applyDescription', $existingColumns, true)) {
+        $pdo->exec("ALTER TABLE certifications ADD COLUMN applyDescription TEXT DEFAULT NULL AFTER applyTitle");
+        echo "Column 'applyDescription' added.\n";
+    }
+    if (!in_array('image', $existingColumns, true)) {
+        $pdo->exec("ALTER TABLE certifications ADD COLUMN image VARCHAR(1024) DEFAULT NULL AFTER applyDescription");
+        echo "Column 'image' added.\n";
+    }
 
     // 2. registrations table
     $pdo->exec("CREATE TABLE IF NOT EXISTS registrations (

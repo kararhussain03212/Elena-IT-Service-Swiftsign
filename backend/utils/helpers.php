@@ -394,6 +394,17 @@ function is_assoc_array(array $value): bool
     return array_keys($value) !== range(0, count($value) - 1);
 }
 
+function deep_trim_strings($value)
+{
+    if (is_string($value)) {
+        return trim($value);
+    }
+    if (is_array($value)) {
+        return array_map('deep_trim_strings', $value);
+    }
+    return $value;
+}
+
 function normalize_boolean_value($value): bool
 {
     if (is_bool($value)) {

@@ -32,6 +32,8 @@ export default function CertificationForm() {
     applicationLink: "",
     qrCodeUrl: "",
     footerCta: "",
+    applyTitle: "",
+    applyDescription: "",
     image: "",
   });
 
@@ -39,6 +41,7 @@ export default function CertificationForm() {
   const [modules, setModules] = useState([]);
   const [benefits, setBenefits] = useState([]);
   const [fees, setFees] = useState([]);
+  const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -77,6 +80,8 @@ export default function CertificationForm() {
             applicationLink: cert.applicationLink || "",
             qrCodeUrl: cert.qrCodeUrl || "",
             footerCta: cert.footerCta || "",
+            applyTitle: cert.applyTitle || "",
+            applyDescription: cert.applyDescription || "",
             image: cert.image || "",
           });
           setAudience(Array.isArray(cert.audience) ? cert.audience : []);
@@ -122,18 +127,40 @@ export default function CertificationForm() {
     setFees(fees.filter((_, idx) => idx !== index));
   };
 
+  const computeFinalAmount = (list) => {
+    let tuitionValue = null;
+    let percent = null;
+    list.forEach((f) => {
+      if (f.amountValue !== undefined && f.amountValue !== "" && !isNaN(parseFloat(f.amountValue))) {
+        tuitionValue = parseFloat(f.amountValue);
+      }
+      if (f.scholarshipPercent !== undefined && f.scholarshipPercent !== "" && !isNaN(parseFloat(f.scholarshipPercent))) {
+        percent = parseFloat(f.scholarshipPercent);
+      }
+    });
+    if (tuitionValue !== null && percent !== null) {
+      return "PKR " + Math.round(tuitionValue * (1 - percent / 100)).toLocaleString();
+    }
+    return "To be confirmed";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     setError("");
 
-    const payload = {
-      ...formData,
-      audience,
-      modules,
-      benefits,
-      fees,
-    };
+    const payload = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key === "image") return;
+      payload.append(key, key === "isOpen" ? (value ? "true" : "false") : value ?? "");
+    });
+    payload.append("audience", JSON.stringify(audience));
+    payload.append("modules", JSON.stringify(modules));
+    payload.append("benefits", JSON.stringify(benefits));
+    payload.append("fees", JSON.stringify(fees));
+    if (imageFile) {
+      payload.append("image", imageFile);
+    }
 
     try {
       if (isEdit) {
@@ -276,13 +303,7 @@ export default function CertificationForm() {
             <div>
               <ImageUpload
                 value={resolveImageUrl(formData.image)}
-                onFileSelect={(file) => {
-                  const reader = new FileReader();
-                  reader.onload = () => {
-                    setFormData((prev) => ({ ...prev, image: reader.result }));
-                  };
-                  reader.readAsDataURL(file);
-                }}
+                onFileSelect={(file) => setImageFile(file)}
                 label="Cover Image"
               />
             </div>
@@ -303,6 +324,28 @@ export default function CertificationForm() {
                   value={formData.qrCodeUrl}
                   onChange={(e) => setFormData({ ...formData, qrCodeUrl: e.target.value })}
                   className={INPUT_CLASS}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm text-white/80">Apply Panel Title (e.g. Apply Online)</label>
+                <input
+                  type="text"
+                  value={formData.applyTitle}
+                  onChange={(e) => setFormData({ ...formData, applyTitle: e.target.value })}
+                  className={INPUT_CLASS}
+                  placeholder="Apply Online"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm text-white/80">
+                  Apply Panel Description (use <code>{"{batch}"}</code> where the Batch Schedule date should appear, bolded)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.applyDescription}
+                  onChange={(e) => setFormData({ ...formData, applyDescription: e.target.value })}
+                  className={INPUT_CLASS}
+                  placeholder="Admissions are actively open for the {batch} Batch. Seats are highly limited. Scan the QR code or click below to submit your application form."
                 />
               </div>
             </div>
@@ -469,32 +512,66 @@ export default function CertificationForm() {
           </div>
           <div className="space-y-3">
             {fees.map((fee, idx) => (
-              <div key={idx} className="flex flex-wrap gap-2 items-center bg-black/10 p-2.5 rounded-lg border border-white/5">
-                <div className="flex-1 min-w-[200px]">
-                  <input
-                    type="text"
-                    value={fee.item}
-                    onChange={(e) => handleFeeChange(idx, "item", e.target.value)}
-                    className={INPUT_CLASS}
-                    placeholder="Fee item (e.g. Program Tuition Fee)"
-                  />
+              <div key={idx} className="flex flex-col gap-2 bg-black/10 p-2.5 rounded-lg border border-white/5">
+                <div className="flex flex-wrap gap-2 items-center">
+                  <div className="flex-1 min-w-[200px]">
+                    <input
+                      type="text"
+                      value={fee.item}
+                      onChange={(e) => handleFeeChange(idx, "item", e.target.value)}
+                      className={INPUT_CLASS}
+                      placeholder="Fee item (e.g. Program Tuition Fee)"
+                    />
+                  </div>
+                  <div className="w-48">
+                    <input
+                      type="text"
+                      value={fee.isComputed ? computeFinalAmount(fees) : fee.amount}
+                      disabled={!!fee.isComputed}
+                      onChange={(e) => handleFeeChange(idx, "amount", e.target.value)}
+                      className={INPUT_CLASS + (fee.isComputed ? " opacity-60 cursor-not-allowed" : "")}
+                      placeholder="Amount (e.g. PKR 40,000)"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeFeeItem(idx)}
+                    className="rounded-lg bg-red-500/15 border border-red-500/30 px-3 py-2 text-xs text-red-300 hover:bg-red-500/25 h-10"
+                  >
+                    Remove
+                  </button>
                 </div>
-                <div className="w-48">
-                  <input
-                    type="text"
-                    value={fee.amount}
-                    onChange={(e) => handleFeeChange(idx, "amount", e.target.value)}
-                    className={INPUT_CLASS}
-                    placeholder="Amount (e.g. PKR 40,000)"
-                  />
+                <div className="flex flex-wrap gap-3 items-center pl-1">
+                  <label className="flex items-center gap-2 text-xs text-white/70">
+                    <span>Amount Value (numeric, for tuition row)</span>
+                    <input
+                      type="number"
+                      value={fee.amountValue ?? ""}
+                      onChange={(e) => handleFeeChange(idx, "amountValue", e.target.value)}
+                      className="w-28 rounded-lg border border-white/20 bg-[#151327] px-2 py-1 text-white outline-none focus:border-[#3c72fc]"
+                      placeholder="40000"
+                    />
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-white/70">
+                    <span>Scholarship % (on the scholarship row)</span>
+                    <input
+                      type="number"
+                      value={fee.scholarshipPercent ?? ""}
+                      onChange={(e) => handleFeeChange(idx, "scholarshipPercent", e.target.value)}
+                      className="w-20 rounded-lg border border-white/20 bg-[#151327] px-2 py-1 text-white outline-none focus:border-[#3c72fc]"
+                      placeholder="50"
+                    />
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-white/80">
+                    <input
+                      type="checkbox"
+                      checked={!!fee.isComputed}
+                      onChange={(e) => handleFeeChange(idx, "isComputed", e.target.checked)}
+                      className="w-4 h-4 accent-[#3c72fc]"
+                    />
+                    <span>Auto-computed final total (Tuition × (1 − Scholarship %))</span>
+                  </label>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeFeeItem(idx)}
-                  className="rounded-lg bg-red-500/15 border border-red-500/30 px-3 py-2 text-xs text-red-300 hover:bg-red-500/25 h-10"
-                >
-                  Remove
-                </button>
               </div>
             ))}
             <div>

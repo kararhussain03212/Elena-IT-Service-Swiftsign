@@ -99,7 +99,9 @@ class CertController
             'feeFootnote' => $body['feeFootnote'] ?? '',
             'applicationLink' => sanitize_string($body['applicationLink'] ?? ''),
             'qrCodeUrl' => sanitize_string($body['qrCodeUrl'] ?? ''),
-            'footerCta' => sanitize_string($body['footerCta'] ?? '')
+            'footerCta' => sanitize_string($body['footerCta'] ?? ''),
+            'applyTitle' => sanitize_string($body['applyTitle'] ?? ''),
+            'applyDescription' => $body['applyDescription'] ?? ''
         ];
 
         $image = self::resolveCertImage($body);
@@ -128,10 +130,10 @@ class CertController
         
         $payload = [];
         $fields = [
-            'code', 'title', 'fullName', 'isOpen', 'tagline', 'duration', 
-            'dates', 'mode', 'prerequisite', 'aboutText', 'audience', 
-            'modules', 'benefits', 'outcome', 'fees', 'feeFootnote', 
-            'applicationLink', 'qrCodeUrl', 'footerCta'
+            'code', 'title', 'fullName', 'isOpen', 'tagline', 'duration',
+            'dates', 'mode', 'prerequisite', 'aboutText', 'audience',
+            'modules', 'benefits', 'outcome', 'fees', 'feeFootnote',
+            'applicationLink', 'qrCodeUrl', 'footerCta', 'applyTitle', 'applyDescription'
         ];
 
         foreach ($fields as $field) {

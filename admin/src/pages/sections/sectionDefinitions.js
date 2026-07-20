@@ -70,21 +70,6 @@ export const SECTION_PAGES = [
     path: "/sections/contact-main",
   },
   {
-    key: "career.info",
-    label: "Career Info Statement",
-    path: "/sections/career-info",
-  },
-  {
-    key: "career.modules",
-    label: "Career Program Modules",
-    path: "/sections/career-modules",
-  },
-  {
-    key: "career.team",
-    label: "Career Join Our Team",
-    path: "/sections/career-team",
-  },
-  {
     key: "certification.list",
     label: "Certifications List",
     path: "/sections/certifications-list",

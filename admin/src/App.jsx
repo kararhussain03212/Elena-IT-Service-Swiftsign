@@ -43,6 +43,13 @@ import { SECTION_PAGES } from "./pages/sections/sectionDefinitions";
 import CertificationList from "./pages/certifications/CertificationList";
 import CertificationForm from "./pages/certifications/CertificationForm";
 
+// Career
+import CareerPageSettings from "./pages/career/CareerPageSettings";
+import CareerProgramList from "./pages/career/CareerProgramList";
+import CareerProgramForm from "./pages/career/CareerProgramForm";
+import ProgramApplicationList from "./pages/career/ProgramApplicationList";
+import NewsletterSubscriberList from "./pages/career/NewsletterSubscriberList";
+
 export default function App() {
   const routerBase = (() => {
     const configuredBase = import.meta.env.BASE_URL || "/";
@@ -343,6 +350,67 @@ export default function App() {
               <ProtectedRoute>
                 <Layout>
                   <CertificationForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/career-page-settings"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CareerPageSettings />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/career-programs"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CareerProgramList />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/career-programs/new"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CareerProgramForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/career-programs/edit/:id"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CareerProgramForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/program-applications"
+            element={
+              <ProtectedRoute adminOnly>
+                <Layout>
+                  <ProgramApplicationList />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/newsletter-subscribers"
+            element={
+              <ProtectedRoute adminOnly>
+                <Layout>
+                  <NewsletterSubscriberList />
                 </Layout>
               </ProtectedRoute>
             }

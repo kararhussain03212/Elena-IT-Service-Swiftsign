@@ -45,9 +45,14 @@ const getSectionGroups = (isAdmin) => {
     .map((groupKey) => {
       let items = sectionNavItems.filter((item) => getSectionGroup(item.key) === groupKey);
       if (groupKey === "career") {
-        const careerItems = [];
+        const careerItems = [
+          { path: "/career-page-settings", label: "Career Page Settings" },
+          { path: "/career-programs", label: "Career Programs" },
+        ];
         if (isAdmin) {
           careerItems.push({ path: "/contact-messages", label: "Contact Messages" });
+          careerItems.push({ path: "/program-applications", label: "Program Applications" });
+          careerItems.push({ path: "/newsletter-subscribers", label: "Newsletter Subscribers" });
         }
         careerItems.push(...items);
         items = careerItems;
@@ -70,7 +75,12 @@ const navItems = [
 const sectionPathMap = new Map([
   ...sectionNavItems.map((item) => [item.path, item.label]),
   ["/contact-messages", "Contact Messages"],
-  ["/certifications/new", "Add Certification"]
+  ["/certifications/new", "Add Certification"],
+  ["/career-page-settings", "Career Page Settings"],
+  ["/career-programs", "Career Programs"],
+  ["/career-programs/new", "Add Career Program"],
+  ["/program-applications", "Program Applications"],
+  ["/newsletter-subscribers", "Newsletter Subscribers"],
 ]);
 
 export default function Layout({ children }) {
@@ -109,6 +119,9 @@ export default function Layout({ children }) {
   const currentSectionLabel = (() => {
     if (location.pathname.startsWith("/certifications/edit/")) {
       return "Edit Certification Details";
+    }
+    if (location.pathname.startsWith("/career-programs/edit/")) {
+      return "Manage Career Program";
     }
     return sectionPathMap.get(location.pathname);
   })();
@@ -191,7 +204,11 @@ export default function Layout({ children }) {
             const sectionRouteActive =
               isActivePath("/sections") ||
               isActivePath("/contact-messages") ||
-              isActivePath("/certifications");
+              isActivePath("/certifications") ||
+              isActivePath("/career-page-settings") ||
+              isActivePath("/career-programs") ||
+              isActivePath("/program-applications") ||
+              isActivePath("/newsletter-subscribers");
 
             return (
               <div key={item.path} className="mb-1">

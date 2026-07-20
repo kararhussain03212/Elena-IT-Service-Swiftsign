@@ -14,6 +14,10 @@ require_once __DIR__ . '/../controllers/SectionContentController.php';
 require_once __DIR__ . '/../controllers/ContactMessageController.php';
 require_once __DIR__ . '/../controllers/UserController.php';
 require_once __DIR__ . '/../controllers/CertController.php';
+require_once __DIR__ . '/../controllers/CareerProgramController.php';
+require_once __DIR__ . '/../controllers/CareerPageContentController.php';
+require_once __DIR__ . '/../controllers/ProgramApplicationController.php';
+require_once __DIR__ . '/../controllers/NewsletterSubscriberController.php';
 
 
 $router = new Router();
@@ -325,6 +329,83 @@ $router->add('DELETE', '/api/certifications/:id', function ($context) {
     return CertController::delete($context);
 });
 $router->add('POST', '/api/register', [CertController::class, 'registerInterest']);
+
+// Career page content (singleton)
+$router->add('GET', '/api/career-page', [CareerPageContentController::class, 'get']);
+$router->add('PATCH', '/api/career-page', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerPageContentController::update($context);
+});
+
+// Career programs (public)
+$router->add('GET', '/api/career-programs', [CareerProgramController::class, 'listPublic']);
+$router->add('GET', '/api/career-programs/:id', [CareerProgramController::class, 'getOne']);
+
+// Career programs (admin CRUD)
+$router->add('GET', '/api/admin/career-programs', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerProgramController::listAdmin($context);
+});
+$router->add('POST', '/api/career-programs', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerProgramController::create($context);
+});
+$router->add('PUT', '/api/career-programs/:id', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerProgramController::update($context);
+});
+$router->add('DELETE', '/api/career-programs/:id', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerProgramController::delete($context);
+});
+
+// Career program modules (admin CRUD, nested under program)
+$router->add('POST', '/api/career-programs/:id/modules', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerProgramController::addModule($context);
+});
+$router->add('PUT', '/api/career-programs/:id/modules/:moduleId', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerProgramController::updateModule($context);
+});
+$router->add('DELETE', '/api/career-programs/:id/modules/:moduleId', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerProgramController::deleteModule($context);
+});
+$router->add('PATCH', '/api/career-programs/:id/modules/reorder', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CareerProgramController::reorderModules($context);
+});
+
+// Program applications
+$router->add('POST', '/api/program-applications', [ProgramApplicationController::class, 'create']);
+$router->add('GET', '/api/program-applications', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return ProgramApplicationController::list($context);
+});
+$router->add('PATCH', '/api/program-applications/:id', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return ProgramApplicationController::updateStatus($context);
+});
+
+// Newsletter subscribers
+$router->add('POST', '/api/newsletter-subscribers', [NewsletterSubscriberController::class, 'create']);
+$router->add('GET', '/api/newsletter-subscribers', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return NewsletterSubscriberController::list($context);
+});
 
 return $router;
 
