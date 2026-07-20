@@ -34,3 +34,7 @@ export const submitContactMessage = (payload) => API.post("/contact-messages", p
 export const getSections = (params = {}) => API.get("/sections", { params });
 export const getSectionByKey = (key, params = {}) =>
 	API.get(`/sections/${encodeURIComponent(key)}`, { params });
+
+// Certifications API
+export const getCertifications = () => API.get("/certifications");
+export const getCertificationByCode = (code) => API.get("/certifications/" + code);

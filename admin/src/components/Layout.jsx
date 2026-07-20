@@ -15,7 +15,6 @@ const baseNavItems = [
   { path: "/team", label: "Team" },
   { path: "/testimonials", label: "Testimonials" },
   { path: "/blogs", label: "Blogs" },
-  { path: "/contact-messages", label: "Contact Messages" },
   { path: "/settings", label: "Settings" },
 ];
 
@@ -25,12 +24,14 @@ const sectionNavItems = SECTION_PAGES.map((item) => ({
   label: item.label,
 }));
 
-const sectionGroupOrder = ["global", "home", "about", "contact"];
+const sectionGroupOrder = ["global", "home", "about", "contact", "career", "certification"];
 const sectionGroupLabels = {
   global: "Global",
   home: "Home",
   about: "About",
   contact: "Contact",
+  career: "Career",
+  certification: "Certifications",
 };
 
 const getSectionGroup = (sectionKey) => {
@@ -39,16 +40,26 @@ const getSectionGroup = (sectionKey) => {
   return value.split(".")[0] || "other";
 };
 
-const sectionGroups = sectionGroupOrder
-  .map((groupKey) => {
-    const items = sectionNavItems.filter((item) => getSectionGroup(item.key) === groupKey);
-    return {
-      key: groupKey,
-      label: sectionGroupLabels[groupKey] || groupKey,
-      items,
-    };
-  })
-  .filter((group) => group.items.length > 0);
+const getSectionGroups = (isAdmin) => {
+  return sectionGroupOrder
+    .map((groupKey) => {
+      let items = sectionNavItems.filter((item) => getSectionGroup(item.key) === groupKey);
+      if (groupKey === "career") {
+        const careerItems = [];
+        if (isAdmin) {
+          careerItems.push({ path: "/contact-messages", label: "Contact Messages" });
+        }
+        careerItems.push(...items);
+        items = careerItems;
+      }
+      return {
+        key: groupKey,
+        label: sectionGroupLabels[groupKey] || groupKey,
+        items,
+      };
+    })
+    .filter((group) => group.items.length > 0);
+};
 
 const navItems = [
   ...baseNavItems.slice(0, 9),
@@ -56,7 +67,11 @@ const navItems = [
   ...baseNavItems.slice(9),
 ];
 
-const sectionPathMap = new Map(sectionNavItems.map((item) => [item.path, item.label]));
+const sectionPathMap = new Map([
+  ...sectionNavItems.map((item) => [item.path, item.label]),
+  ["/contact-messages", "Contact Messages"],
+  ["/certifications/new", "Add Certification"]
+]);
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -66,6 +81,7 @@ export default function Layout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const isAdmin = normalizeUserRole(user?.role) === "admin";
+  const sectionGroups = getSectionGroups(isAdmin);
   const adminOnlyPaths = new Set(["/users", "/contact-messages"]);
   const visibleNavItems = navItems.filter(
     (item) => !adminOnlyPaths.has(item.path) || isAdmin,
@@ -90,7 +106,12 @@ export default function Layout({ children }) {
 
   const showBackButton = /\/(new|edit\/[^/]+)$/.test(location.pathname);
   const currentNavItem = visibleNavItems.find((item) => item.path === location.pathname);
-  const currentSectionLabel = sectionPathMap.get(location.pathname);
+  const currentSectionLabel = (() => {
+    if (location.pathname.startsWith("/certifications/edit/")) {
+      return "Edit Certification Details";
+    }
+    return sectionPathMap.get(location.pathname);
+  })();
 
   const handleLogout = () => {
     setShowLogoutConfirm(true);
@@ -167,7 +188,10 @@ export default function Layout({ children }) {
               );
             }
 
-            const sectionRouteActive = isActivePath("/sections");
+            const sectionRouteActive =
+              isActivePath("/sections") ||
+              isActivePath("/contact-messages") ||
+              isActivePath("/certifications");
 
             return (
               <div key={item.path} className="mb-1">

@@ -39,6 +39,10 @@ import Login from "./pages/Login";
 import SectionKeyPage from "./pages/sections/SectionKeyPage";
 import { SECTION_PAGES } from "./pages/sections/sectionDefinitions";
 
+// Certifications
+import CertificationList from "./pages/certifications/CertificationList";
+import CertificationForm from "./pages/certifications/CertificationForm";
+
 export default function App() {
   const routerBase = (() => {
     const configuredBase = import.meta.env.BASE_URL || "/";
@@ -308,6 +312,37 @@ export default function App() {
               <ProtectedRoute adminOnly>
                 <Layout>
                   <ContactMessageList />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/sections/certifications-list"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CertificationList />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/certifications/new"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CertificationForm />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/certifications/edit/:id"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CertificationForm />
                 </Layout>
               </ProtectedRoute>
             }

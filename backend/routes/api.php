@@ -13,6 +13,8 @@ require_once __DIR__ . '/../controllers/BlogController.php';
 require_once __DIR__ . '/../controllers/SectionContentController.php';
 require_once __DIR__ . '/../controllers/ContactMessageController.php';
 require_once __DIR__ . '/../controllers/UserController.php';
+require_once __DIR__ . '/../controllers/CertController.php';
+
 
 $router = new Router();
 
@@ -300,4 +302,29 @@ $router->add('DELETE', '/api/users/:id', function ($context) {
     return UserController::delete($context);
 });
 
+// Certifications
+$router->add('GET', '/api/certifications', [CertController::class, 'getCertifications']);
+$router->add('GET', '/api/certifications/by-id/:id', function ($context) {
+    AuthMiddleware::protect();
+    return CertController::getCertificationById($context);
+});
+$router->add('GET', '/api/certifications/:id', [CertController::class, 'getCertification']);
+$router->add('POST', '/api/certifications', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CertController::create($context);
+});
+$router->add('PUT', '/api/certifications/:id', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CertController::update($context);
+});
+$router->add('DELETE', '/api/certifications/:id', function ($context) {
+    AuthMiddleware::protect();
+    PermissionMiddleware::requireAdmin();
+    return CertController::delete($context);
+});
+$router->add('POST', '/api/register', [CertController::class, 'registerInterest']);
+
 return $router;
+

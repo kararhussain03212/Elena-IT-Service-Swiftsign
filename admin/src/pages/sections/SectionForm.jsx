@@ -163,6 +163,48 @@ const createDefaultContentByKey = (key) => {
         formMessagePlaceholder: "Write Message",
         submitButtonText: "Send Message",
       };
+    case "career.info":
+      return {
+        heroBadge: "Applications Open",
+        statusBadge: "Join Swift Sign IT",
+        title: "Cybersecurity & IT Associates Program",
+        description: "Kickstart your technical career with our intensive learning pathway. We bridge the gap between academic knowledge and real-world business demands through structured mentorship.",
+        duration: "3-Month Program",
+        prerequisite: "Basic IT & Networking",
+        whoCanApply: [
+          "Undergraduates & Graduates",
+          "Computer Science & IT Students",
+          "Aspiring Security Professionals"
+        ],
+        whyChoose: [
+          "Industry-aligned Curriculum",
+          "Hands-on Sandbox Environment",
+          "Placement Assistance & Referrals"
+        ]
+      };
+    case "career.modules":
+      return {
+        modules: [
+          { num: "1", title: "IT Infrastructure & Support", desc: "Master hardware, operating systems (Windows/Linux hardening), network protocols, and troubleshooting workflows." },
+          { num: "2", title: "Full-Stack Web Technologies", desc: "Build modern, responsive web architectures using HTML, CSS, JavaScript, and advanced framework concepts." },
+          { num: "3", title: "Cybersecurity Fundamentals", desc: "Learn network security, encryption standards, PKI infrastructure, and vulnerability assessment methodologies." },
+          { num: "4", title: "App Development & UI/UX", desc: "Design elegant user interfaces and implement robust application logic using modern software design patterns." },
+          { num: "5", title: "Security Operations & GRC", desc: "Understand Security Operations Center (SOC) flows, log monitoring, and Governance, Risk & Compliance standards." },
+          { num: "6", title: "Capstone & Real-World Lab", desc: "Collaborate in teams on cross-functional business projects, staging environments, and production deployments." }
+        ]
+      };
+    case "career.team":
+      return {
+        formTitle: "Apply Online",
+        formSubtitle: "Submit your application to reserve a slot. Our admissions committee will review your profile within 48 hours.",
+        formPrereqQuestion: "Do you have basic IT/Programming knowledge?",
+        teamTitle: "Join Our Team",
+        teamDesc: "Looking for a full-time career? We are always on the lookout for passion-driven cybersecurity analysts, systems engineers, full-stack developers, and technology consultants who want to make an impact.",
+        teamSub: "Even if we don't have an active opening matching your profile, drop your credentials to get pre-evaluated for future roles in our global tech hubs.",
+        teamEmailSubject: "Job Application",
+        newsTitle: "Stay updated with Swift Sign IT",
+        newsSub: "Subscribe to receive program launch alerts, cyber insights, and internship announcements."
+      };
     default:
       return { title: "", description: "" };
   }
@@ -374,6 +416,164 @@ const SectionContentEditor = ({
   navbarLogoUploadError,
 }) => {
   const data = content || {};
+  if (sectionKey === "career.info") {
+    return (
+      <div className="space-y-4">
+        <section className={SUBSECTION_CLASS}>
+          <h4 className="text-md font-bold mb-3 text-white/90">Info Block Copy</h4>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TextInput
+              label="Hero Badge"
+              value={data.heroBadge}
+              onChange={(value) => setContent({ ...data, heroBadge: value })}
+            />
+            <TextInput
+              label="Status Badge"
+              value={data.statusBadge}
+              onChange={(value) => setContent({ ...data, statusBadge: value })}
+            />
+            <div className="md:col-span-2">
+              <TextInput
+                label="Program Title"
+                value={data.title}
+                onChange={(value) => setContent({ ...data, title: value })}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <TextAreaInput
+                label="Program Description"
+                value={data.description}
+                rows={4}
+                onChange={(value) => setContent({ ...data, description: value })}
+              />
+            </div>
+            <TextInput
+              label="Duration Info"
+              value={data.duration}
+              onChange={(value) => setContent({ ...data, duration: value })}
+            />
+            <TextInput
+              label="Prerequisite Info"
+              value={data.prerequisite}
+              onChange={(value) => setContent({ ...data, prerequisite: value })}
+            />
+          </div>
+        </section>
+
+        <StringListEditor
+          label="Who Can Apply"
+          values={data.whoCanApply}
+          onChange={(whoCanApply) => setContent({ ...data, whoCanApply })}
+          placeholder="Audience target"
+        />
+        <StringListEditor
+          label="Why Choose This Section"
+          values={data.whyChoose}
+          onChange={(whyChoose) => setContent({ ...data, whyChoose })}
+          placeholder="Benefit highlight"
+        />
+      </div>
+    );
+  }
+
+  if (sectionKey === "career.modules") {
+    return (
+      <div className="space-y-4">
+        <ObjectListEditor
+          title="Program Modules"
+          items={data.modules}
+          onChange={(modules) => setContent({ ...data, modules })}
+          createItem={() => ({ num: "", title: "", desc: "" })}
+          fields={[
+            { key: "num", label: "Badge/Number (e.g. 1)" },
+            { key: "title", label: "Module Title" },
+            { key: "desc", label: "Module Description", type: "textarea", rows: 3 }
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (sectionKey === "career.team") {
+    return (
+      <div className="space-y-4">
+        <section className={SUBSECTION_CLASS}>
+          <h4 className="text-md font-bold mb-3 text-white/90">Registration Form & Focus Area</h4>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TextInput
+              label="Form Title"
+              value={data.formTitle}
+              onChange={(value) => setContent({ ...data, formTitle: value })}
+            />
+            <TextInput
+              label="Prerequisite Question"
+              value={data.formPrereqQuestion}
+              onChange={(value) => setContent({ ...data, formPrereqQuestion: value })}
+            />
+            <div className="md:col-span-2">
+              <TextAreaInput
+                label="Form Subtitle"
+                value={data.formSubtitle}
+                rows={3}
+                onChange={(value) => setContent({ ...data, formSubtitle: value })}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className={SUBSECTION_CLASS}>
+          <h4 className="text-md font-bold mb-3 text-white/90">Join Our Team Section</h4>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TextInput
+              label="Section Title"
+              value={data.teamTitle}
+              onChange={(value) => setContent({ ...data, teamTitle: value })}
+            />
+            <TextInput
+              label="Email Subject for CV Submit"
+              value={data.teamEmailSubject}
+              onChange={(value) => setContent({ ...data, teamEmailSubject: value })}
+            />
+            <div className="md:col-span-2">
+              <TextAreaInput
+                label="Section Description"
+                value={data.teamDesc}
+                rows={3}
+                onChange={(value) => setContent({ ...data, teamDesc: value })}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <TextAreaInput
+                label="Sub-info / Alternate CTA text"
+                value={data.teamSub}
+                rows={3}
+                onChange={(value) => setContent({ ...data, teamSub: value })}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className={SUBSECTION_CLASS}>
+          <h4 className="text-md font-bold mb-3 text-white/90">Newsletter Section</h4>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TextInput
+              label="Newsletter Title"
+              value={data.newsTitle}
+              onChange={(value) => setContent({ ...data, newsTitle: value })}
+            />
+            <div className="md:col-span-2">
+              <TextAreaInput
+                label="Newsletter Subtitle"
+                value={data.newsSub}
+                rows={3}
+                onChange={(value) => setContent({ ...data, newsSub: value })}
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   if (sectionKey === "contact.supportHours") {
     return (

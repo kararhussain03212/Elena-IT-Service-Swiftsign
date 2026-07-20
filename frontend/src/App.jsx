@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 
 // Pages
@@ -15,6 +15,10 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound/NotFound";
 import OurTeam from "./pages/OurTeam";
 import TeamDetails from "./pages/TeamDetails";
+import Certification from "./pages/Certification";
+import CertificationDetail from "./pages/CertificationDetail";
+import Career from "./pages/Career";
+
 
 
 function App() {
@@ -35,7 +39,11 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetails />} />
           <Route path="/ourteam" element={<OurTeam />} />
+          <Route path="/certification" element={<Certification />} />
+          <Route path="/certification/:id" element={<CertificationDetail />} />
+          <Route path="/career" element={<Career />} />
           <Route path="/team/:slug" element={<TeamDetails />} />
+
           <Route path="/contact" element={<Contact />} />
         </Route>
 

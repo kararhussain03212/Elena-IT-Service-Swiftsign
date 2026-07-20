@@ -202,21 +202,50 @@ const Navbar = ({ content = {} }) => {
     return String(left?.name || "").localeCompare(String(right?.name || ""));
   });
 
-  const menuLinks = sortedNavLinks.map((link) => {
-    if (link?.href === "/about") {
-      return {
-        ...link,
+  const hasCertificationsLink = sortedNavLinks.some(
+    (link) => {
+      const href = String(link.href || "").trim().toLowerCase();
+      const name = String(link.name || "").trim().toLowerCase();
+      return href === "/certification" || name.includes("certificat");
+    }
+  );
+
+  const menuLinks = [];
+  sortedNavLinks.forEach((link) => {
+    let finalLink = { ...link };
+
+    const nameLower = String(finalLink.name || "").trim().toLowerCase();
+    if (nameLower === "career" || nameLower === "careers") {
+      finalLink.href = "/career";
+    }
+
+    if (finalLink.href === "/about") {
+      finalLink = {
+        ...finalLink,
         children: [],
+      };
+    } else {
+      const cmsChildren = normalizeChildLinks(finalLink?.children);
+      const autoChildren = normalizeChildLinks(AUTO_SECTION_DROPDOWNS[finalLink.href]);
+      finalLink = {
+        ...finalLink,
+        children: cmsChildren.length > 0 ? cmsChildren : autoChildren,
       };
     }
 
-    const cmsChildren = normalizeChildLinks(link?.children);
-    const autoChildren = normalizeChildLinks(AUTO_SECTION_DROPDOWNS[link.href]);
+    menuLinks.push(finalLink);
 
-    return {
-      ...link,
-      children: cmsChildren.length > 0 ? cmsChildren : autoChildren,
-    };
+    if (!hasCertificationsLink) {
+      const isBlogsLink = String(finalLink.href || "").trim().toLowerCase() === "/blog" ||
+                          String(finalLink.name || "").trim().toLowerCase() === "blogs";
+      if (isBlogsLink) {
+        menuLinks.push({
+          name: "Certifications",
+          href: "/certification",
+          children: [],
+        });
+      }
+    }
   });
 
   const cta = content.cta || {};
@@ -233,11 +262,11 @@ const Navbar = ({ content = {} }) => {
   const apiRoot = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
   const logoSrc = (() => {
     const raw = String(content.logoUrl || "").trim();
-    if (!raw) return "";
-    if (/^https?:\/\//i.test(raw)) return raw;
-    if (raw.startsWith("/uploads/")) return apiRoot + raw;
-    if (/^uploads\//i.test(raw)) return apiRoot + "/" + raw;
-    return raw;
+    const finalRaw = raw ? raw : "/swift.png";
+    if (/^https?:\/\//i.test(finalRaw)) return finalRaw;
+    if (finalRaw.startsWith("/uploads/")) return apiRoot + finalRaw;
+    if (/^uploads\//i.test(finalRaw)) return apiRoot + "/" + finalRaw;
+    return finalRaw;
   })();
 
   const topBar = content.topBar || {};
