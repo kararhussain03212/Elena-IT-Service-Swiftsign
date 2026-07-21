@@ -113,7 +113,7 @@ const NavInner = ({
   const hasDesktopActions = Boolean((cta?.text && cta?.to) || whatsappHref);
 
   return (
-    <div className="mx-auto w-full max-w-330 px-6 md:px-10">
+    <div className="mx-auto w-full max-w-430 px-6 md:px-10">
       <div className="flex h-25 items-center justify-between">
         <Link to="/" aria-label="Swift Sign IT - Home">
           {logoSrc ? (

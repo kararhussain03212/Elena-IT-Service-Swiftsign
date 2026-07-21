@@ -18,6 +18,8 @@ import TeamDetails from "./pages/TeamDetails";
 import Certification from "./pages/Certification";
 import CertificationDetail from "./pages/CertificationDetail";
 import Career from "./pages/Career";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 
 
@@ -43,6 +45,8 @@ function App() {
           <Route path="/certification/:id" element={<CertificationDetail />} />
           <Route path="/career" element={<Career />} />
           <Route path="/team/:slug" element={<TeamDetails />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
           <Route path="/contact" element={<Contact />} />
         </Route>

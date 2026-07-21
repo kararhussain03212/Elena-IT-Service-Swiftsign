@@ -90,15 +90,15 @@ const renderSocialIcon = (name) => {
 const isExternalHref = (href) => /^(https?:\/\/|mailto:|tel:)/i.test(String(href || "").trim());
 
 const Footer = ({ content = {} }) => {
-  const leftShapeRef = useScrollReveal({ threshold: 0.05, once: false });
-  const rightShapeRef = useScrollReveal({ threshold: 0.05, once: false });
-  const topShapeRef = useScrollReveal({ threshold: 0.05, once: false });
-  const brandColRef = useScrollReveal({ threshold: 0.08, once: false });
-  const solutionColRef = useScrollReveal({ threshold: 0.08, once: false });
-  const solutionCol2Ref = useScrollReveal({ threshold: 0.08, once: false });
-  const quickLinkColRef = useScrollReveal({ threshold: 0.08, once: false });
-  const locationColRef = useScrollReveal({ threshold: 0.08, once: false });
-  const bottomBarRef = useScrollReveal({ threshold: 0.05, once: false });
+  const leftShapeRef = useScrollReveal({ threshold: 0.05, once: true });
+  const rightShapeRef = useScrollReveal({ threshold: 0.05, once: true });
+  const topShapeRef = useScrollReveal({ threshold: 0.05, once: true });
+  const brandColRef = useScrollReveal({ threshold: 0.08, once: true });
+  const solutionColRef = useScrollReveal({ threshold: 0.08, once: true });
+  const solutionCol2Ref = useScrollReveal({ threshold: 0.08, once: true });
+  const quickLinkColRef = useScrollReveal({ threshold: 0.08, once: true });
+  const locationColRef = useScrollReveal({ threshold: 0.08, once: true });
+  const bottomBarRef = useScrollReveal({ threshold: 0.05, once: true });
 
   const brandDescription = String(content.brandDescription || "").trim();
   const openingHours = String(content.openingHours || "").trim();
@@ -180,14 +180,10 @@ const Footer = ({ content = {} }) => {
           String(location?.href || "").trim(),
       )
     : [];
-  const policies = Array.isArray(content.policies)
-    ? content.policies.filter(
-        (policy) =>
-          policy?.isActive !== false &&
-          String(policy?.name || "").trim() &&
-          String(policy?.href || "").trim(),
-      )
-    : [];
+  const policies = [
+    { name: "Privacy Policy", href: "/privacy-policy", isActive: true },
+    { name: "Terms of Service", href: "/terms-and-conditions", isActive: true },
+  ];
 
   const hasFooterContent =
     Boolean(brandDescription || openingHours || phone || phoneHref) ||

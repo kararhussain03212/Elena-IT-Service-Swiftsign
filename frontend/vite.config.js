@@ -31,6 +31,22 @@ export default defineConfig(({ mode }) => {
             outDir: "dist",
             assetsDir: "assets",
             emptyOutDir: true,
+            rollupOptions: {
+              output: {
+                assetFileNames: (assetInfo) => {
+                  const info = assetInfo.name.split(".");
+                  const ext = info[info.length - 1];
+                  if (/png|jpe?g|gif|tiff|bmp|ico|webp|svg/.test(ext)) {
+                    const pathMatch = assetInfo.name.match(/^.*[\\/](images[\\/].+?)$/);
+                    if (pathMatch) {
+                      return `assets/${pathMatch[1]}-[hash][extname]`;
+                    }
+                    return `assets/images/[name]-[hash][extname]`;
+                  }
+                  return `assets/[name]-[hash][extname]`;
+                },
+              },
+            },
           }
         : undefined,
     plugins: [react(), tailwindcss()],

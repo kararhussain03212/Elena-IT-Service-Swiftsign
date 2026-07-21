@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Banner from '@/components/Banner';
 import { getCertifications } from '@/api/Apis';
+import foundationImg from '@/assets/images/foundation.png';
+import associateImg from '@/assets/images/team/associate.png';
+import professionalImg from '@/assets/images/team/professional.png';
+import expertsImg from '@/assets/images/team/experts.png';
 
 export default function Certification() {
   const navigate = useNavigate();
@@ -11,28 +15,28 @@ export default function Certification() {
       code: 'SSCC-F',
       title: 'Foundation',
       isOpen: true,
-      image: '/foundation.png'
+      image: foundationImg
     },
     {
       id: 'sscc-a',
       code: 'SSCC-A',
       title: 'Associate',
       isOpen: false,
-      image: '/associate.png'
+      image: associateImg
     },
     {
       id: 'sscc-p',
       code: 'SSCC-P',
       title: 'Professional',
       isOpen: false,
-      image: '/professional.png'
+      image: professionalImg
     },
     {
       id: 'sscc-e',
       code: 'SSCC-E',
       title: 'Expert',
       isOpen: false,
-      image: '/experts.png'
+      image: expertsImg
     }
   ]);
 
@@ -54,11 +58,11 @@ export default function Certification() {
         const list = data?.data || data || [];
         if (Array.isArray(list) && list.length > 0) {
           const mapped = list.map((item) => {
-            const fallbackImage = 
-              item.code === 'SSCC-F' ? '/foundation.png' :
-              item.code === 'SSCC-A' ? '/associate.png' :
-              item.code === 'SSCC-P' ? '/professional.png' :
-              '/experts.png';
+            const fallbackImage =
+              item.code === 'SSCC-F' ? foundationImg :
+              item.code === 'SSCC-A' ? associateImg :
+              item.code === 'SSCC-P' ? professionalImg :
+              expertsImg;
             return {
               id: item.code.toLowerCase(),
               code: item.code,
