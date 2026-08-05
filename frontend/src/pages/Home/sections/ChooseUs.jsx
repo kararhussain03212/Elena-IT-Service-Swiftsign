@@ -32,8 +32,12 @@ const ChooseUs = ({ content = {} }) => {
   if (!hasContent) return null;
 
   return (
-    <section className="relative bg-[#16142c] py-20 md:py-28 overflow-hidden">
-      <img src={serviceItemShape} alt="icon" className="absolute left-0 bottom-0 pointer-events-none z-[-1]"/>
+    <section className="relative bg-white py-20 md:py-28 overflow-hidden">
+      <img
+        src={serviceItemShape}
+        alt="icon"
+        className="absolute left-0 bottom-0 pointer-events-none z-[-1] opacity-10"
+      />
       <div className=" mx-auto w-full max-w-[1320px] px-6 md:px-10 z-0 inset-0">
         {/*
           On desktop (lg+): left content takes ~53% width, and the image
@@ -41,9 +45,8 @@ const ChooseUs = ({ content = {} }) => {
           On mobile/tablet: stacked layout — content first, image below.
         */}
         <div ref={contentRef} className="sr-hidden sr-left lg:w-[53%] lg:pr-14">
-
           {/* Badge */}
-          <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc]">
+          <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#04B4D4]">
             <svg
               className="mr-1"
               width="20"
@@ -58,7 +61,7 @@ const ChooseUs = ({ content = {} }) => {
                 width="18.5"
                 height="10.5"
                 rx="5.25"
-                stroke="#3C72FC"
+                stroke="#0E70C4"
                 strokeWidth="1.5"
               />
               <mask id="ci-mask" fill="white">
@@ -66,7 +69,7 @@ const ChooseUs = ({ content = {} }) => {
               </mask>
               <path
                 d="M3 5.9978C3 2.96024 5.46243 0.497803 8.5 0.497803H11.5C14.5376 0.497803 17 2.96024 17 5.9978C17 4.61709 15.2091 3.4978 13 3.4978H7C4.79086 3.4978 3 4.61709 3 5.9978ZM17 5.9978C17 9.03537 14.5376 11.4978 11.5 11.4978H8.5C5.46243 11.4978 3 9.03537 3 5.9978C3 7.37851 4.79086 8.4978 7 8.4978H13C15.2091 8.4978 17 7.37851 17 5.9978ZM3 9.9978V1.9978V9.9978ZM17 1.9978V9.9978V1.9978Z"
-                fill="#3C72FC"
+                fill="#0E70C4"
                 mask="url(#ci-mask)"
               />
             </svg>
@@ -74,7 +77,7 @@ const ChooseUs = ({ content = {} }) => {
           </p>
 
           {/* Heading */}
-          <h2 className="mt-4 text-2xl font-bold leading-tight text-white sm:text-3xl md:text-[40px] md:leading-[1.15]">
+          <h2 className="mt-4 text-2xl font-bold leading-tight text-[#0B1B3A] sm:text-3xl md:text-[40px] md:leading-[1.15]">
             {heading}
           </h2>
 
@@ -87,9 +90,9 @@ const ChooseUs = ({ content = {} }) => {
               return (
                 <div
                   key={`${cardTitle}-${index}`}
-                  className="flex items-start gap-3 rounded-xl border border-white/10 p-4 sm:gap-4 sm:p-5"
+                  className="flex items-start gap-3 rounded-xl border border-black/10 bg-white p-4 shadow-sm sm:gap-4 sm:p-5"
                 >
-                  <div className="flex h-19 w-19 shrink-0 items-center justify-center bg-[#3c72fc]/20">
+                  <div className="flex h-19 w-19 shrink-0 items-center justify-center bg-white border border-black/15 rounded-full transition-colors hover:bg-black/5">
                     <img
                       src={iconSrc}
                       alt={cardTitle}
@@ -97,8 +100,10 @@ const ChooseUs = ({ content = {} }) => {
                     />
                   </div>
                   <div>
-                    <h3 className="text-[15px] font-semibold text-white">{cardTitle}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-white/60">
+                    <h3 className="text-[15px] font-semibold text-[#0B1B3A]">
+                      {cardTitle}
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-[#0B1B3A]/60">
                       {card?.description || ""}
                     </p>
                   </div>
@@ -115,14 +120,16 @@ const ChooseUs = ({ content = {} }) => {
               return (
                 <div key={`${bar?.label || "progress"}-${index}`}>
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm font-semibold text-white/90">
+                    <span className="text-sm font-semibold text-[#0B1B3A]/90">
                       {bar?.label || "Progress"}
                     </span>
-                    <span className="text-sm font-bold text-[#3c72fc]">{value}%</span>
+                    <span className="text-sm font-bold text-[#0E70C4]">
+                      {value}%
+                    </span>
                   </div>
-                  <div className="h-3 w-full overflow-hidden bg-white/10">
+                  <div className="h-3 w-full overflow-hidden bg-[#0B1B3A]/10">
                     <div
-                      className="h-full bg-[#3c72fc] transition-all duration-1000"
+                      className="h-full bg-[#0E70C4] transition-all duration-1000"
                       style={{ width: `${value}%` }}
                     />
                   </div>
@@ -130,7 +137,6 @@ const ChooseUs = ({ content = {} }) => {
               );
             })}
           </div>
-
         </div>
         {/* END left content */}
 
@@ -153,7 +159,7 @@ const ChooseUs = ({ content = {} }) => {
           />
 
           {/* Dark overlay */}
-          <div className="absolute inset-0 bg-[#0f0d1d]/40" />
+          <div className="absolute inset-0 bg-[#0F2350]/40" />
 
           {/* Play button — centred with video-pulse ripple rings */}
           <div className="absolute inset-0 flex items-center justify-center">
@@ -166,7 +172,7 @@ const ChooseUs = ({ content = {} }) => {
                 className={[
                   "video-pulse",
                   "group relative flex items-center justify-center rounded-full",
-                  "bg-[#3c72fc]",
+                  "bg-white hover:bg-black/10",
                   "transition-transform duration-300 hover:scale-110",
                   // responsive sizes
                   "w-[50px] h-[50px] text-[16px]",
@@ -178,12 +184,11 @@ const ChooseUs = ({ content = {} }) => {
               >
                 {/* Third pulse ring (::before and ::after cover rings 1 & 2) */}
                 <span className="pulse-ring" />
-                <FaPlay className="relative z-10 ml-1 text-white transition-transform duration-300 group-hover:scale-110" />
+                <FaPlay className="relative z-10 ml-1 text-black transition-transform duration-300 group-hover:scale-110" />
               </a>
             ) : null}
           </div>
         </div>
-
       </div>
     </section>
   );

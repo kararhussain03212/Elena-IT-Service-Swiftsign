@@ -85,20 +85,20 @@ export default function Certification() {
       <Banner title="Certifications" crumbs={[{ label: "Home", to: "/" }, { label: "Certifications" }]} />
 
       {/* Main Pathway Section using Tailwind */}
-      <section className="bg-[#0f0d1d] py-20 px-6 md:px-16">
+      <section className="bg-white py-20 px-6 md:px-16">
         <div className="max-w-[1320px] mx-auto w-full">
-          
+
           {/* Page Headers */}
           <div className="flex flex-col items-center justify-center mb-16 text-center">
-            <p className="mb-4 text-sm font-extrabold uppercase tracking-[0.08em] text-[#3c72fc] font-[var(--kumbh)]">SSCC PATHWAY</p>
-            <h2 className="text-3xl md:text-5xl font-black text-white font-[var(--kumbh)]">Swift Sign Cybersecurity Certification (SSCC)</h2>
+            <p className="mb-4 text-sm font-extrabold uppercase tracking-[0.08em] text-[#04B4D4] font-[var(--kumbh)]">SSCC PATHWAY</p>
+            <h2 className="text-3xl md:text-5xl font-black text-[#0B1B3A] font-[var(--kumbh)]">Elena Cybersecurity Certification (SSCC)</h2>
           </div>
 
           {/* 4-Step Grid using Tailwind grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
             {certificationLevels.map((cert) => (
-              <div 
-                className="relative w-full aspect-[3/4] overflow-hidden cursor-pointer group bg-[#151327] border border-white/5 shadow-lg" 
+              <div
+                className="relative w-full aspect-[3/4] overflow-hidden cursor-pointer group bg-white border border-black/10 shadow-lg"
                 key={cert.id}
                 onClick={() => navigate(`/certification/${cert.id}`)}
               >
@@ -131,12 +131,12 @@ export default function Certification() {
       </section>
 
       {/* Closing Strip */}
-      <section className="bg-[#0f0d1d] pb-16 px-6">
+      <section className="bg-white pb-16 px-6">
         <div className="max-w-[1320px] mx-auto w-full">
-          <div className="p-6 md:p-8 bg-gradient-to-r from-[#151327] to-[#0b0a1a] border border-white/5 text-center rounded-[var(--radius)] shadow-lg">
-            <p className="text-white/85 font-semibold text-base md:text-lg">
+          <div className="p-6 md:p-8 bg-[#F3F6FB] border border-black/10 text-center rounded-[var(--radius)] shadow-sm">
+            <p className="text-[#0B1B3A]/85 font-semibold text-base md:text-lg">
               Each level builds on the last —{' '}
-              <span className="text-[#3c72fc] font-bold">a credentialed path</span>, 
+              <span className="text-[#1C64EC] font-bold">a credentialed path</span>,
               not a one-off course. Start at Foundation, grow all the way to Expert.
             </p>
           </div>

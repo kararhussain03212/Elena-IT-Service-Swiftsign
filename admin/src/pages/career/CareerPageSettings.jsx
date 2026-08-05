@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { getCareerPage, updateCareerPage } from "../../api/careerApi";
 
 const INPUT_CLASS =
-  "w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]";
+  "w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]";
 const LABEL_CLASS = "text-xs font-semibold uppercase tracking-wider text-white/55 block mb-1.5";
-const SECTION_CLASS = "rounded-2xl border border-white/10 bg-[#0f0d1d] p-5 space-y-4";
+const SECTION_CLASS = "rounded-2xl border border-white/10 bg-[#0F2350] p-5 space-y-4";
 
 const FIELDS = [
   { section: "Hero", items: [
@@ -132,7 +132,7 @@ export default function CareerPageSettings() {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-[#3c72fc] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-60"
+          className="rounded-xl bg-[#0E70C4] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-60"
         >
           {saving ? "Saving..." : "Save Settings"}
         </button>

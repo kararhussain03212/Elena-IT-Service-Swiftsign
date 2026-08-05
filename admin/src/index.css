@@ -20,7 +20,7 @@ body {
 }
 
 .admin-theme .p-card {
-  background: #0f0d1d;
+  background: #0F2350;
   border: 1px solid rgb(255 255 255 / 0.1);
   color: #ffffff;
   box-shadow: none;
@@ -52,7 +52,7 @@ body {
 .admin-theme .p-inputtext:enabled:focus,
 .admin-theme .p-dropdown:not(.p-disabled).p-focus,
 .admin-theme .p-password input:enabled:focus {
-  border-color: #3c72fc;
+  border-color: #0E70C4;
   box-shadow: 0 0 0 3px rgb(60 114 252 / 0.22);
 }
 
@@ -73,8 +73,8 @@ body {
 }
 
 .admin-theme .p-button {
-  background: #3c72fc;
-  border-color: #3c72fc;
+  background: #0E70C4;
+  border-color: #0E70C4;
 }
 
 .admin-theme .p-button:not(:disabled):hover {
@@ -84,7 +84,7 @@ body {
 
 .admin-theme .p-button.p-button-outlined {
   color: #8eb2ff;
-  border-color: #3c72fc;
+  border-color: #0E70C4;
   background: transparent;
 }
 
@@ -95,7 +95,7 @@ body {
 }
 
 .admin-theme .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-  background: #3c72fc;
+  background: #0E70C4;
 }
 
 .admin-theme .p-tag {
@@ -110,7 +110,7 @@ body {
 }
 
 .blog-content-editor .p-editor-toolbar {
-  background: rgba(60, 114, 252, 0.14);
+  background: rgba(14, 112, 196, 0.14);
   border: 0;
   border-bottom: 1px solid rgb(255 255 255 / 0.12);
   padding: 0.5rem;
@@ -223,7 +223,7 @@ body {
 }
 
 .blog-list-filters select option {
-  background: #151327;
+  background: #0B1B3A;
   color: #f8fafc;
 }
 
@@ -299,7 +299,7 @@ body {
 .admin-modern-panel {
   border: 1px solid rgb(255 255 255 / 0.1);
   border-radius: 1rem;
-  background: #0f0d1d;
+  background: #0F2350;
   padding: 1.1rem;
 }
 
@@ -307,7 +307,7 @@ body {
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / 0.1);
   border-radius: 1rem;
-  background: #0f0d1d;
+  background: #0F2350;
 }
 
 .admin-modern-btn-primary,
@@ -328,7 +328,7 @@ body {
 }
 
 .admin-modern-btn-primary {
-  background: #3c72fc;
+  background: #0E70C4;
   color: #ffffff;
 }
 
@@ -426,7 +426,7 @@ body {
 .admin-modern-form input[type="checkbox"] {
   width: 1rem;
   height: 1rem;
-  accent-color: #3c72fc;
+  accent-color: #0E70C4;
 }
 
 .admin-modern-form label {

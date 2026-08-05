@@ -196,7 +196,7 @@ export default function BlogForm() {
   return (
     <section className="space-y-6">
       <header className="relative overflow-hidden rounded-2xl border border-[#5f8fff]/20 bg-linear-to-r from-[#182447] via-[#151832] to-[#100f22] p-5 sm:p-6">
-        <div className="pointer-events-none absolute -top-20 left-10 h-48 w-48 rounded-full bg-[#3c72fc]/25 blur-3xl" />
+        <div className="pointer-events-none absolute -top-20 left-10 h-48 w-48 rounded-full bg-[#0E70C4]/25 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-10 h-56 w-56 rounded-full bg-[#14b8a6]/20 blur-3xl" />
 
         <div className="relative flex flex-wrap items-start justify-between gap-3">
@@ -232,7 +232,7 @@ export default function BlogForm() {
         className="grid gap-5 xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,1fr)]"
       >
         <div className="space-y-5">
-          <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-5">
+          <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-5">
             <h2 className="text-base font-semibold text-white">
               Post Information
             </h2>
@@ -332,7 +332,7 @@ export default function BlogForm() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-5">
+          <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-5">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-base font-semibold text-white">Content</h2>
               <span className="text-xs text-white/50">
@@ -357,7 +357,7 @@ export default function BlogForm() {
         </div>
 
         <aside className="space-y-5 xl:sticky xl:top-4 xl:self-start">
-          <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-5">
+          <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-5">
             <h2 className="text-base font-semibold text-white">Cover Image</h2>
             <p className="mt-1 text-xs text-white/55">
               Upload a strong visual to improve engagement on list pages.
@@ -399,7 +399,7 @@ export default function BlogForm() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-5">
+          <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-5">
             <h2 className="text-base font-semibold text-white">
               Publish Settings
             </h2>
@@ -410,7 +410,7 @@ export default function BlogForm() {
                 name="published"
                 checked={form.published}
                 onChange={onChange}
-                className="h-4 w-4 accent-[#3c72fc]"
+                className="h-4 w-4 accent-[#0E70C4]"
               />
             </div>
 
@@ -439,7 +439,7 @@ export default function BlogForm() {
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded-xl bg-[#3c72fc] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-xl bg-[#0E70C4] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving ? "Saving..." : isEdit ? "Update Blog" : "Create Blog"}
               </button>

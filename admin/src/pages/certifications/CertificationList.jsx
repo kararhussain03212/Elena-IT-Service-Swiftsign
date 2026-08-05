@@ -16,7 +16,7 @@ export default function CertificationList() {
   }, []);
 
   const imageSrc = (value) => {
-    if (!value) return "https://placehold.co/600x800/151327/ffffff?text=SSCC";
+    if (!value) return "https://placehold.co/600x800/0B1B3A/ffffff?text=SSCC";
     if (value.startsWith("http")) return value;
     if (value.startsWith("/uploads/")) return apiRoot + value;
     if (/^uploads\//i.test(value)) return apiRoot + "/" + value;
@@ -85,13 +85,13 @@ export default function CertificationList() {
               event.preventDefault();
             }
           }}
-          className="rounded-xl bg-[#3c72fc] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1]"
+          className="rounded-xl bg-[#0E70C4] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1]"
         >
           + Add Certification
         </Link>
       </header>
 
-      <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4">
+      <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-4">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <label className="space-y-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-white/55">
@@ -125,7 +125,7 @@ export default function CertificationList() {
 
       <div className="space-y-4">
         {filteredItems.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-10 text-center text-sm text-white/60">
+          <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-10 text-center text-sm text-white/60">
             No certifications found with current search filters.
           </div>
         ) : (
@@ -133,7 +133,7 @@ export default function CertificationList() {
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                className="overflow-hidden rounded-2xl border border-white/10 bg-[#0f0d1d] flex flex-col justify-between"
+                className="overflow-hidden rounded-2xl border border-white/10 bg-[#0F2350] flex flex-col justify-between"
               >
                 <div>
                   <div className="aspect-[3/4] w-full overflow-hidden relative bg-white/2">
@@ -155,7 +155,7 @@ export default function CertificationList() {
 
                   <div className="p-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-[#3c72fc] tracking-wider uppercase">
+                      <span className="text-xs font-bold text-[#0E70C4] tracking-wider uppercase">
                         {item.code}
                       </span>
                     </div>

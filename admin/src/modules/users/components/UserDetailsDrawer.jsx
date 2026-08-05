@@ -17,7 +17,7 @@ export default function UserDetailsDrawer({ open, user, onClose }) {
       <div className="absolute inset-0 bg-black/65" onClick={onClose} />
 
       <aside
-        className={`absolute right-0 top-0 h-full w-full max-w-md border-l border-white/10 bg-[#0f0d1d] p-5 shadow-2xl shadow-black/70 transition-transform duration-300 ${
+        className={`absolute right-0 top-0 h-full w-full max-w-md border-l border-white/10 bg-[#0F2350] p-5 shadow-2xl shadow-black/70 transition-transform duration-300 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -49,7 +49,7 @@ export default function UserDetailsDrawer({ open, user, onClose }) {
         </div>
 
         <div className="space-y-4 overflow-y-auto pr-1 pb-8">
-          <section className="rounded-xl border border-white/10 bg-[#151327] p-4">
+          <section className="rounded-xl border border-white/10 bg-[#0B1B3A] p-4">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white/50">Profile</h4>
             <dl className="mt-3 space-y-2 text-sm">
               <div className="flex justify-between gap-2">
@@ -73,7 +73,7 @@ export default function UserDetailsDrawer({ open, user, onClose }) {
             </dl>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-[#151327] p-4">
+          <section className="rounded-xl border border-white/10 bg-[#0B1B3A] p-4">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white/50">
               Contact Details
             </h4>
@@ -93,7 +93,7 @@ export default function UserDetailsDrawer({ open, user, onClose }) {
             </dl>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-[#151327] p-4">
+          <section className="rounded-xl border border-white/10 bg-[#0B1B3A] p-4">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white/50">
               Role Permissions
             </h4>
@@ -113,7 +113,7 @@ export default function UserDetailsDrawer({ open, user, onClose }) {
             </div>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-[#151327] p-4">
+          <section className="rounded-xl border border-white/10 bg-[#0B1B3A] p-4">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white/50">Activity</h4>
             <ul className="mt-3 space-y-2">
               {(user.activity || []).length === 0 ? (

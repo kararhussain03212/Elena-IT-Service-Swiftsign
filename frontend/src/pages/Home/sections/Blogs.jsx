@@ -19,7 +19,7 @@ const LabelIcon = () => (
       width="18.5"
       height="10.5"
       rx="5.25"
-      stroke="#3C72FC"
+      stroke="#0E70C4"
       strokeWidth="1.5"
     />
     <mask id="blog-mask" fill="white">
@@ -27,7 +27,7 @@ const LabelIcon = () => (
     </mask>
     <path
       d="M3 5.9978C3 2.96024 5.46243 0.497803 8.5 0.497803H11.5C14.5376 0.497803 17 2.96024 17 5.9978C17 4.61709 15.2091 3.4978 13 3.4978H7C4.79086 3.4978 3 4.61709 3 5.9978ZM17 5.9978C17 9.03537 14.5376 11.4978 11.5 11.4978H8.5C5.46243 11.4978 3 9.03537 3 5.9978C3 7.37851 4.79086 8.4978 7 8.4978H13C15.2091 8.4978 17 7.37851 17 5.9978Z"
-      fill="#3C72FC"
+      fill="#0E70C4"
       mask="url(#blog-mask)"
     />
   </svg>
@@ -35,7 +35,7 @@ const LabelIcon = () => (
 
 /* ─── Date badge ─── */
 const DateBadge = ({ day, month }) => (
-  <div className="absolute top-4 left-4 flex flex-col items-center justify-center w-12 h-14 bg-[#3c72fc] text-white rounded z-10">
+  <div className="absolute top-4 left-4 flex flex-col items-center justify-center w-12 h-14 bg-[#0E70C4] text-white rounded z-10">
     <span className="text-xl font-bold leading-none">{day}</span>
     <span className="text-[10px] font-semibold uppercase tracking-wide leading-none mt-0.5">
       {month}
@@ -54,7 +54,7 @@ const Blogs = () => {
   }, []);
 
   const resolveImage = useCallback((value) => {
-    if (!value) return "https://placehold.co/1200x800/151327/ffffff?text=Blog";
+    if (!value) return "https://placehold.co/1200x800/0B1B3A/ffffff?text=Blog";
     if (value.startsWith("http")) return value;
     if (value.startsWith("/uploads/")) return apiRoot + value;
     return apiRoot + "/uploads/" + value;
@@ -107,16 +107,19 @@ const Blogs = () => {
   const side = blogs.filter((b) => !b.featured);
 
   return (
-    <section className="relative py-24 bg-[#0f0d1d] overflow-hidden">
+    <section className="relative py-24 bg-white overflow-hidden">
       <div className="mx-auto w-full max-w-[1320px] px-6 md:px-10">
         {/* ── Header row ── */}
-        <div ref={headingRef} className="sr-hidden sr-up flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-12">
+        <div
+          ref={headingRef}
+          className="sr-hidden sr-up flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-12"
+        >
           <div>
-            <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc] mb-3">
+            <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#04B4D4] mb-3">
               <LabelIcon />
               Blog &amp; News
             </p>
-            <h2 className="text-3xl md:text-[38px] font-bold text-white leading-snug">
+            <h2 className="text-3xl md:text-[38px] font-bold text-[#0B1B3A] leading-snug">
               Explore Blogs And News
             </h2>
           </div>
@@ -126,14 +129,16 @@ const Blogs = () => {
         </div>
 
         {/* ── Grid layout ── */}
-        <div ref={blogsRef} className="sr-hidden sr-up grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-stretch">
+        <div
+          ref={blogsRef}
+          className="sr-hidden sr-up grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-stretch"
+        >
           {/* Featured (large) card */}
           {featured && (
             <Link
               to={featured.link}
               id={`blog-featured-${featured.id}`}
-              className="group flex flex-col h-full border border-white/10 overflow-hidden hover:border-[#3c72fc]/50 transition-all duration-300"
-              style={{ background: "rgba(21,19,39,0.7)" }}
+              className="group flex flex-col h-full border border-black/10 bg-white shadow-sm overflow-hidden hover:border-[#0E70C4]/50 transition-all duration-300"
             >
               {/* Image */}
               <div className="relative overflow-hidden h-56 md:h-64">
@@ -150,14 +155,14 @@ const Blogs = () => {
 
               {/* Body */}
               <div className="flex flex-col flex-1 p-6">
-                <span className="text-[#3c72fc] text-xs font-semibold uppercase tracking-wider mb-3">
+                <span className="text-[#0E70C4] text-xs font-semibold uppercase tracking-wider mb-3">
                   {featured.category}
                 </span>
-                <h3 className="text-white font-bold text-xl leading-snug mb-3 group-hover:text-[#3c72fc] transition-colors duration-300">
+                <h3 className="text-[#0B1B3A] font-bold text-xl leading-snug mb-3 group-hover:text-[#0E70C4] transition-colors duration-300">
                   {featured.title}
                 </h3>
                 {featured.excerpt && (
-                  <p className="text-white/60 text-sm leading-relaxed mb-6 flex-1">
+                  <p className="text-[#0B1B3A]/60 text-sm leading-relaxed mb-6 flex-1">
                     {featured.excerpt}
                   </p>
                 )}
@@ -166,10 +171,10 @@ const Blogs = () => {
                   <div className="flex items-center gap-3">
                     {/* <span
                       aria-hidden="true"
-                      className="w-10 h-10 rounded-full border-2 border-[#3c72fc]/40 bg-[#3c72fc]"
+                      className="w-10 h-10 rounded-full border-2 border-[#0E70C4]/40 bg-[#0E70C4]"
                     /> */}
                     <div>
-                      <span className="text-[#3c72fc] text-lg font-semibold">
+                      <span className="text-[#0E70C4] text-lg font-semibold">
                         By {featured.adminName}
                       </span>
                     </div>
@@ -187,8 +192,7 @@ const Blogs = () => {
                 to={blog.link}
                 key={blog.id}
                 id={`blog-card-${blog.id}`}
-                className="group flex flex-1 items-center gap-5 border border-white/10 overflow-hidden p-6 hover:border-[#3c72fc]/50 transition-all duration-300"
-                style={{ background: "rgba(21,19,39,0.7)" }}
+                className="group flex flex-1 items-center gap-5 border border-black/10 bg-white shadow-sm overflow-hidden p-6 hover:border-[#0E70C4]/50 transition-all duration-300"
               >
                 {/* Thumbnail */}
                 <div className="relative shrink-0 w-35 h-35 overflow-hidden">
@@ -202,20 +206,20 @@ const Blogs = () => {
 
                 {/* Content */}
                 <div className="flex flex-col justify-center min-w-0">
-                  <span className="text-[#3c72fc] text-xs font-semibold uppercase tracking-wider mb-2">
+                  <span className="text-[#0E70C4] text-xs font-semibold uppercase tracking-wider mb-2">
                     {blog.category}
                   </span>
-                  <h3 className="text-white font-bold text-[15px] leading-snug mb-3 group-hover:text-[#3c72fc] transition-colors duration-300 line-clamp-2">
+                  <h3 className="text-[#0B1B3A] font-bold text-[15px] leading-snug mb-3 group-hover:text-[#0E70C4] transition-colors duration-300 line-clamp-2">
                     {blog.title}
                   </h3>
                   {/* Author */}
                   <div className="flex items-center gap-2">
                     {/* <span
                       aria-hidden="true"
-                      className="w-7 h-7 rounded-full border border-[#3c72fc]/40 bg-[#3c72fc]"
+                      className="w-7 h-7 rounded-full border border-[#0E70C4]/40 bg-[#0E70C4]"
                     /> */}
                     <div>
-                      <span className="text-[#3c72fc] text-l font-semibold">
+                      <span className="text-[#0E70C4] text-l font-semibold">
                         By {blog.adminName}
                       </span>
                     </div>

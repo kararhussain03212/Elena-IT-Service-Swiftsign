@@ -146,7 +146,7 @@ export default function Layout({ children }) {
   };
 
   return (
-    <div className="admin-theme flex min-h-screen bg-[#00060c]">
+    <div className="admin-theme flex min-h-screen bg-[#0B1B3A]">
       {/* Overlay */}
       {sidebarOpen && (
         <div
@@ -158,7 +158,7 @@ export default function Layout({ children }) {
       {/* Sidebar */}
       <aside
         className={`
-        fixed top-0 left-0 bottom-0 w-65 bg-[#0f0d1d]
+        fixed top-0 left-0 bottom-0 w-65 bg-[#0F2350]
         border-r border-white/6 flex flex-col z-[100]
         transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -168,7 +168,11 @@ export default function Layout({ children }) {
         {/* Logo */}
         <div className="px-6 py-7 border-b border-white/6">
           <div className="flex items-center gap-3">
-            <img src={swiftLogo} alt="Swift Sign IT" className="h-20 w-auto" />
+            <img src={swiftLogo} alt="Elena IT Services" className="h-11 w-auto" />
+            <span className="flex flex-col leading-none">
+              <span className="text-xl font-black tracking-tight text-white">elena</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#3EB6AC]">IT Services</span>
+            </span>
           </div>
         </div>
 
@@ -188,7 +192,7 @@ export default function Layout({ children }) {
                     flex items-center gap-3 px-3.5 py-2.5 rounded-xl mb-0.5 duration-200
                     ${
                       isActivePath(item.path)
-                        ? "bg-[#3c72fc]/15 text-white border "
+                        ? "bg-[#0E70C4]/15 text-white border "
                         : "text-white/70 hover:text-white"
                     }
                   `}
@@ -211,7 +215,7 @@ export default function Layout({ children }) {
                   onClick={() => setSectionsOpen((previous) => !previous)}
                   className={`w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl duration-200 ${
                     sectionRouteActive
-                      ? "bg-[#3c72fc]/15 text-white border"
+                      ? "bg-[#0E70C4]/15 text-white border"
                       : "text-white/70 hover:text-white"
                   }`}
                   aria-expanded={sectionsOpen}
@@ -240,7 +244,7 @@ export default function Layout({ children }) {
                                 onClick={() => setSidebarOpen(false)}
                                 className={`block rounded-lg px-2.5 py-2 text-sm transition-colors ${
                                   isCurrent
-                                    ? "bg-[#3c72fc]/20 text-white"
+                                    ? "bg-[#0E70C4]/20 text-white"
                                     : "text-white/75 hover:bg-white/5 hover:text-white"
                                 }`}
                               >
@@ -265,7 +269,7 @@ export default function Layout({ children }) {
             onClick={() => setSidebarOpen(false)}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/4 cursor-pointer"
           >
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-linear-to-br from-[#3c72fc] to-[#1f3f99] flex items-center justify-center text-xs font-bold text-white shrink-0">
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-linear-to-br from-[#0E70C4] to-[#1f3f99] flex items-center justify-center text-xs font-bold text-white shrink-0">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
@@ -301,7 +305,7 @@ export default function Layout({ children }) {
       {/* Main */}
       <div className="flex-1 lg:ml-65 flex flex-col min-w-0">
         {/* Topbar */}
-        <header className="sticky top-0 z-50 h-16 bg-[#0f0d1d] border-b border-white/6 flex items-center gap-4 px-6">
+        <header className="sticky top-0 z-50 h-16 bg-[#0F2350] border-b border-white/6 flex items-center gap-4 px-6">
           {!sidebarOpen ? (
             <button
               className="lg:hidden text-white/50 hover:text-white text-xl"

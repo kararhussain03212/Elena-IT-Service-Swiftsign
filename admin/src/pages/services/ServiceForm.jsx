@@ -185,7 +185,7 @@ export default function ServiceForm() {
                 if (!isEditMode) setField("slug", slugify(value));
               }}
               required
-              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             />
           </div>
 
@@ -195,7 +195,7 @@ export default function ServiceForm() {
               value={form.slug}
               onChange={(e) => setField("slug", e.target.value)}
               required
-              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             />
           </div>
         </div>
@@ -208,7 +208,7 @@ export default function ServiceForm() {
             rows={3}
             value={form.shortDescription}
             onChange={(e) => setField("shortDescription", e.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -224,7 +224,7 @@ export default function ServiceForm() {
             value={form.imageAlt}
             onChange={(e) => setField("imageAlt", e.target.value)}
             placeholder="Describe the main service image for SEO"
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -240,7 +240,7 @@ export default function ServiceForm() {
             rows={5}
             value={form.description1}
             onChange={(e) => setField("description1", e.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -252,11 +252,11 @@ export default function ServiceForm() {
             rows={3}
             value={form.description2}
             onChange={(e) => setField("description2", e.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-[#0f0d1d] p-4">
+        <div className="rounded-xl border border-white/10 bg-[#0F2350] p-4">
           <div className="flex items-center justify-between gap-3">
             <h4 className="text-lg font-semibold text-white">
               Benefits With Our Service
@@ -283,7 +283,7 @@ export default function ServiceForm() {
                     setField("benefits", next);
                   }}
                   placeholder={`Benefit ${idx + 1}`}
-                  className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+                  className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
                 />
                 <button
                   type="button"
@@ -306,7 +306,7 @@ export default function ServiceForm() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-[#0f0d1d] p-4">
+        <div className="rounded-xl border border-white/10 bg-[#0F2350] p-4">
           <div className="flex items-center justify-between gap-3">
             <h4 className="text-lg font-semibold text-white">
               Most Common Questions (FAQ)
@@ -326,7 +326,7 @@ export default function ServiceForm() {
             {(form.faqs || []).map((faq, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-white/10 bg-[#151327] p-3"
+                className="rounded-xl border border-white/10 bg-[#0B1B3A] p-3"
               >
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-semibold text-white/80">
@@ -357,7 +357,7 @@ export default function ServiceForm() {
                         next[idx] = { ...(next[idx] || {}), question: e.target.value };
                         setField("faqs", next);
                       }}
-                      className="w-full rounded-lg border border-white/20 bg-[#0f0d1d] px-3 py-2 text-white"
+                      className="w-full rounded-lg border border-white/20 bg-[#0F2350] px-3 py-2 text-white"
                       placeholder="Type your question"
                     />
                   </div>
@@ -374,7 +374,7 @@ export default function ServiceForm() {
                         next[idx] = { ...(next[idx] || {}), answer: e.target.value };
                         setField("faqs", next);
                       }}
-                      className="w-full rounded-lg border border-white/20 bg-[#0f0d1d] px-3 py-2 text-white"
+                      className="w-full rounded-lg border border-white/20 bg-[#0F2350] px-3 py-2 text-white"
                       placeholder="Type the answer"
                     />
                   </div>
@@ -397,7 +397,7 @@ export default function ServiceForm() {
             <input
               value={form.icon}
               onChange={(e) => setField("icon", e.target.value)}
-              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             />
           </div>
         </div>
@@ -414,7 +414,7 @@ export default function ServiceForm() {
               value={form.image1Alt}
               onChange={(e) => setField("image1Alt", e.target.value)}
               placeholder="Describe the detail image for SEO"
-              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             />
           </div>
           <div>
@@ -423,7 +423,7 @@ export default function ServiceForm() {
               value={form.detailImageAlt}
               onChange={(e) => setField("detailImageAlt", e.target.value)}
               placeholder="Describe the top detail image for SEO"
-              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             />
           </div>
         </div>
@@ -435,7 +435,7 @@ export default function ServiceForm() {
               type="number"
               value={form.order}
               onChange={(e) => setField("order", Number(e.target.value))}
-              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             />
           </div>
 

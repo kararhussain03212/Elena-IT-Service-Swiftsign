@@ -19,7 +19,7 @@ export default function ServiceList() {
 
   const resolveImage = (value) => {
     if (!value)
-      return "https://placehold.co/800x500/151327/ffffff?text=Service";
+      return "https://placehold.co/800x500/0B1B3A/ffffff?text=Service";
     if (value.startsWith("http")) return value;
     if (value.startsWith("/uploads/")) return apiRoot + value;
     return apiRoot + "/uploads/" + value;

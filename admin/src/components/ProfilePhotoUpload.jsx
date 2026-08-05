@@ -317,7 +317,7 @@ export default function ProfilePhotoUpload({
 
   return (
     <>
-      <div className="min-w-0 rounded-2xl border border-white/10 bg-[#151327] p-4 shadow-[0_16px_45px_rgba(6,9,20,0.45)]">
+      <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0B1B3A] p-4 shadow-[0_16px_45px_rgba(6,9,20,0.45)]">
         <input
           ref={fileInputRef}
           id={inputId}
@@ -349,7 +349,7 @@ export default function ProfilePhotoUpload({
             setIsDragging(false);
           }}
           onDrop={handleDrop}
-          className={`group relative overflow-hidden rounded-2xl border-2 border-dashed p-4 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f8fff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#151327] ${
+          className={`group relative overflow-hidden rounded-2xl border-2 border-dashed p-4 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f8fff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1B3A] ${
             isDragging
               ? "border-[#74a6ff] bg-[#122143]"
               : "border-white/15 bg-gradient-to-b from-[#1a1830] to-[#111124] hover:border-[#5f8fff]/70 hover:bg-[#182043]"
@@ -386,7 +386,7 @@ export default function ProfilePhotoUpload({
             type="button"
             onClick={openFilePicker}
             disabled={disabled || cropSaving}
-            className="inline-flex w-full items-center justify-center rounded-xl bg-[#3c72fc] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-[#0E70C4] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
           >
             Upload Photo
           </button>
@@ -421,7 +421,7 @@ export default function ProfilePhotoUpload({
           aria-label="Crop profile photo"
         >
           <div
-            className={`w-full max-w-5xl rounded-2xl border border-white/15 bg-[#0f0d1d] p-4 shadow-2xl transition-all duration-200 sm:p-5 ${
+            className={`w-full max-w-5xl rounded-2xl border border-white/15 bg-[#0F2350] p-4 shadow-2xl transition-all duration-200 sm:p-5 ${
               modalClosing ? "scale-[0.98] opacity-0" : "scale-100 opacity-100"
             }`}
           >
@@ -515,7 +515,7 @@ export default function ProfilePhotoUpload({
                 type="button"
                 onClick={handleCropSave}
                 disabled={cropSaving}
-                className="inline-flex items-center justify-center rounded-lg bg-[#3c72fc] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center justify-center rounded-lg bg-[#0E70C4] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {cropSaving ? (
                   <span className="inline-flex items-center gap-2">

@@ -529,7 +529,7 @@ export default function TeamForm() {
               value={form.name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+              className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
             />
           </div>
 
@@ -539,7 +539,7 @@ export default function TeamForm() {
               value={form.slug}
               onChange={(e) => setField("slug", e.target.value)}
               required
-              className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+              className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
             />
           </div>
 
@@ -548,7 +548,7 @@ export default function TeamForm() {
             <input
               value={form.role}
               onChange={(e) => setField("role", e.target.value)}
-              className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+              className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
             />
           </div>
 
@@ -558,7 +558,7 @@ export default function TeamForm() {
               type="number"
               value={form.order}
               onChange={(e) => setField("order", Number(e.target.value))}
-              className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+              className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
             />
           </div>
         </div>
@@ -569,7 +569,7 @@ export default function TeamForm() {
             rows={4}
             value={form.bio}
             onChange={(e) => setField("bio", e.target.value)}
-            className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+            className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
           />
         </div>
 
@@ -585,7 +585,7 @@ export default function TeamForm() {
             value={form.imageAlt}
             onChange={(e) => setField("imageAlt", e.target.value)}
             placeholder="Describe the team member image for SEO"
-            className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+            className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
           />
         </div>
 
@@ -602,7 +602,7 @@ export default function TeamForm() {
             {DEFAULT_SOCIAL_ACCOUNTS.map((account) => (
               <div
                 key={`social-${account.key}`}
-                className="rounded-lg border border-white/15 bg-[#151327] p-3"
+                className="rounded-lg border border-white/15 bg-[#0B1B3A] p-3"
               >
                 <label className="mb-2 block text-xs font-medium text-white/70">
                   {account.label}
@@ -613,7 +613,7 @@ export default function TeamForm() {
                   className={`w-full rounded-lg border bg-[#111022] px-3 py-2 text-sm text-white outline-none ${
                     fieldErrors.socialLinks?.[account.key]
                       ? "border-red-500/60 focus:border-red-500/60"
-                      : "border-white/15 focus:border-[#3c72fc]"
+                      : "border-white/15 focus:border-[#0E70C4]"
                   }`}
                   placeholder={`https://${account.key}.com/...`}
                 />
@@ -631,7 +631,7 @@ export default function TeamForm() {
           <label className="mb-2 block text-sm text-white/80">Skills</label>
           <div className="space-y-3">
             {form.skills.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-white/20 bg-[#151327] px-4 py-3 text-sm text-white/60">
+              <div className="rounded-lg border border-dashed border-white/20 bg-[#0B1B3A] px-4 py-3 text-sm text-white/60">
                 No skills added yet.
               </div>
             ) : null}
@@ -647,10 +647,10 @@ export default function TeamForm() {
                   <input
                     value={skill.name ?? ""}
                     onChange={(e) => updateSkill(index, "name", e.target.value)}
-                    className={`w-full rounded-lg border bg-[#151327] px-3 py-2 text-white outline-none ${
+                    className={`w-full rounded-lg border bg-[#0B1B3A] px-3 py-2 text-white outline-none ${
                       fieldErrors.skills?.[index]?.name
                         ? "border-red-500/60 focus:border-red-500/60"
-                        : "border-white/15 focus:border-[#3c72fc]"
+                        : "border-white/15 focus:border-[#0E70C4]"
                     }`}
                     placeholder="React"
                   />
@@ -667,10 +667,10 @@ export default function TeamForm() {
                     onChange={(e) =>
                       updateSkill(index, "value", e.target.value)
                     }
-                    className={`w-full rounded-lg border bg-[#151327] px-3 py-2 text-white outline-none ${
+                    className={`w-full rounded-lg border bg-[#0B1B3A] px-3 py-2 text-white outline-none ${
                       fieldErrors.skills?.[index]?.value
                         ? "border-red-500/60 focus:border-red-500/60"
-                        : "border-white/15 focus:border-[#3c72fc]"
+                        : "border-white/15 focus:border-[#0E70C4]"
                     }`}
                     placeholder="90"
                   />
@@ -701,7 +701,7 @@ export default function TeamForm() {
           <label className="mb-2 block text-sm text-white/80">Education</label>
           <div className="space-y-3">
             {form.education.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-white/20 bg-[#151327] px-4 py-3 text-sm text-white/60">
+              <div className="rounded-lg border border-dashed border-white/20 bg-[#0B1B3A] px-4 py-3 text-sm text-white/60">
                 No education added yet.
               </div>
             ) : null}
@@ -719,10 +719,10 @@ export default function TeamForm() {
                     onChange={(e) =>
                       updateEducation(index, "degree", e.target.value)
                     }
-                    className={`w-full rounded-lg border bg-[#151327] px-3 py-2 text-white outline-none ${
+                    className={`w-full rounded-lg border bg-[#0B1B3A] px-3 py-2 text-white outline-none ${
                       fieldErrors.education?.[index]?.degree
                         ? "border-red-500/60 focus:border-red-500/60"
-                        : "border-white/15 focus:border-[#3c72fc]"
+                        : "border-white/15 focus:border-[#0E70C4]"
                     }`}
                     placeholder="BS Computer Science"
                   />
@@ -737,10 +737,10 @@ export default function TeamForm() {
                     onChange={(e) =>
                       updateEducation(index, "year", e.target.value)
                     }
-                    className={`w-full rounded-lg border bg-[#151327] px-3 py-2 text-white outline-none ${
+                    className={`w-full rounded-lg border bg-[#0B1B3A] px-3 py-2 text-white outline-none ${
                       fieldErrors.education?.[index]?.year
                         ? "border-red-500/60 focus:border-red-500/60"
-                        : "border-white/15 focus:border-[#3c72fc]"
+                        : "border-white/15 focus:border-[#0E70C4]"
                     }`}
                     placeholder="2024"
                   />

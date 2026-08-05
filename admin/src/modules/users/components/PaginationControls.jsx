@@ -6,7 +6,7 @@ export default function PaginationControls({ pagination, onPageChange }) {
   const end = Math.min(page * limit, total);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#0f0d1d] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#0F2350] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm text-white/65">
         Showing <span className="font-semibold text-white">{start}</span> to{" "}
         <span className="font-semibold text-white">{end}</span> of{" "}

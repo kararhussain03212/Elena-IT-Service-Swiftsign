@@ -212,7 +212,7 @@ export default function Admin() {
       <div className="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <form
           onSubmit={onUpdateProfile}
-          className="min-w-0 rounded-2xl border border-white/10 bg-[#0f0d1d] p-4 sm:p-5"
+          className="min-w-0 rounded-2xl border border-white/10 bg-[#0F2350] p-4 sm:p-5"
         >
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -221,7 +221,7 @@ export default function Admin() {
                 Update your personal account details.
               </p>
             </div>
-            <span className="rounded-full border border-[#3c72fc]/35 bg-[#3c72fc]/15 px-3 py-1 text-xs font-semibold text-[#8eb1ff]">
+            <span className="rounded-full border border-[#0E70C4]/35 bg-[#0E70C4]/15 px-3 py-1 text-xs font-semibold text-[#8eb1ff]">
               {ROLE_LABELS[resolvedRole] || "User"}
             </span>
           </div>
@@ -242,7 +242,7 @@ export default function Admin() {
                   profileSubmitting ||
                   (!profile.avatarFile && !profile.removeAvatar)
                 }
-                className="w-full rounded-lg bg-[#3c72fc] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-lg bg-[#0E70C4] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {profileSubmitting ? "Saving Photo..." : "Save Photo"}
               </button>
@@ -259,7 +259,7 @@ export default function Admin() {
                       name: event.target.value,
                     }))
                   }
-                  className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+                  className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
                   required
                 />
               </label>
@@ -275,7 +275,7 @@ export default function Admin() {
                       email: event.target.value,
                     }))
                   }
-                  className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+                  className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
                   required
                 />
               </label>
@@ -290,7 +290,7 @@ export default function Admin() {
                       designation: event.target.value,
                     }))
                   }
-                  className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+                  className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
                   placeholder="Senior Editor"
                 />
               </label>
@@ -303,7 +303,7 @@ export default function Admin() {
                     setProfile((prev) => ({ ...prev, bio: event.target.value }))
                   }
                   rows={4}
-                  className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+                  className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
                   placeholder="Short professional intro..."
                 />
               </label>
@@ -311,7 +311,7 @@ export default function Admin() {
               <button
                 type="submit"
                 disabled={profileSubmitting}
-                className="rounded-lg bg-[#3c72fc] px-5 py-2 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-70"
+                className="rounded-lg bg-[#0E70C4] px-5 py-2 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {profileSubmitting ? "Saving..." : "Save Profile"}
               </button>
@@ -329,7 +329,7 @@ export default function Admin() {
         <div className="min-w-0 space-y-4">
           <form
             onSubmit={onChangePassword}
-            className="min-w-0 rounded-2xl border border-white/10 bg-[#0f0d1d] p-4 sm:p-5"
+            className="min-w-0 rounded-2xl border border-white/10 bg-[#0F2350] p-4 sm:p-5"
           >
             <h2 className="mb-4 text-lg font-semibold text-white">Security</h2>
 
@@ -345,7 +345,7 @@ export default function Admin() {
                       current: event.target.value,
                     }))
                   }
-                  className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+                  className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
                   required
                 />
               </label>
@@ -361,7 +361,7 @@ export default function Admin() {
                       next: event.target.value,
                     }))
                   }
-                  className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+                  className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
                   required
                 />
               </label>
@@ -379,7 +379,7 @@ export default function Admin() {
                       confirm: event.target.value,
                     }))
                   }
-                  className="w-full rounded-lg border border-white/15 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]"
+                  className="w-full rounded-lg border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]"
                   required
                 />
               </label>
@@ -388,7 +388,7 @@ export default function Admin() {
             <button
               type="submit"
               disabled={passwordSubmitting}
-              className="mt-4 rounded-lg bg-[#3c72fc] px-5 py-2 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-70"
+              className="mt-4 rounded-lg bg-[#0E70C4] px-5 py-2 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {passwordSubmitting ? "Updating..." : "Change Password"}
             </button>
@@ -401,7 +401,7 @@ export default function Admin() {
             ) : null}
           </form>
 
-          <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-5">
+          <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-5">
             <h3 className="mb-3 text-base font-semibold text-white">Account</h3>
             <div className="space-y-2 text-sm">
               <p className="text-white/70">

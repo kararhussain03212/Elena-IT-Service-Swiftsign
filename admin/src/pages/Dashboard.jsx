@@ -253,7 +253,7 @@ export default function Dashboard() {
   return (
     <section className="admin-modern-page">
       <header className="relative overflow-hidden rounded-2xl border border-[#5f8fff]/20 bg-linear-to-r from-[#182447] via-[#151832] to-[#100f22] p-5 sm:p-6">
-        <div className="pointer-events-none absolute -top-20 left-8 h-48 w-48 rounded-full bg-[#3c72fc]/25 blur-3xl" />
+        <div className="pointer-events-none absolute -top-20 left-8 h-48 w-48 rounded-full bg-[#0E70C4]/25 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 right-8 h-52 w-52 rounded-full bg-[#14b8a6]/20 blur-3xl" />
 
         <div className="relative flex flex-wrap items-start justify-between gap-3">

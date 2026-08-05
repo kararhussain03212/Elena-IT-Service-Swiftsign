@@ -185,7 +185,7 @@ export default function SubServiceForm() {
             value={form.title}
             onChange={(event) => setField("title", event.target.value)}
             required
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -195,7 +195,7 @@ export default function SubServiceForm() {
             rows={4}
             value={form.description}
             onChange={(event) => setField("description", event.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -205,7 +205,7 @@ export default function SubServiceForm() {
             value={form.slug}
             onChange={(event) => setField("slug", event.target.value)}
             required
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -215,7 +215,7 @@ export default function SubServiceForm() {
             value={form.icon}
             onChange={(event) => setField("icon", event.target.value)}
             placeholder="https://... or uploads/icon.png"
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -225,7 +225,7 @@ export default function SubServiceForm() {
             value={form.iconAlt}
             onChange={(event) => setField("iconAlt", event.target.value)}
             placeholder="Describe the icon image"
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -235,14 +235,14 @@ export default function SubServiceForm() {
             type="file"
             accept="image/*"
             onChange={handleIconFileChange}
-            className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white file:mr-3 file:rounded-md file:border-0 file:bg-[#3c72fc] file:px-3 file:py-2 file:text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white file:mr-3 file:rounded-md file:border-0 file:bg-[#0E70C4] file:px-3 file:py-2 file:text-white"
           />
           <p className="mt-1 text-xs text-white/50">If selected, uploaded file will override Icon URL/Path.</p>
           {iconFilePreview || resolveIconPreview(form.icon) ? (
             <img
               src={iconFilePreview || resolveIconPreview(form.icon)}
               alt="Icon preview"
-              className="mt-3 h-12 w-12 rounded object-contain border border-white/20 bg-[#0f0d1d]"
+              className="mt-3 h-12 w-12 rounded object-contain border border-white/20 bg-[#0F2350]"
             />
           ) : null}
         </div>
@@ -254,7 +254,7 @@ export default function SubServiceForm() {
               type="number"
               value={form.order}
               onChange={(event) => setField("order", Number(event.target.value))}
-              className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             />
           </div>
 

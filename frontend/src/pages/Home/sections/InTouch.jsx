@@ -16,13 +16,13 @@ const InTouch = ({ content = {} }) => {
   const hasContent = Boolean(badge || heading || (buttonText && buttonTo));
   if (!hasContent) return null;
   return (
-    <section className="relative bg-[#0b0a1a] pb-0 ">
+    <section className="relative bg-white py-12 md:py-20">
       <div className="mx-auto w-full max-w-[1320px] px-6 md:px-10">
         <div
-          className="relative z-10 flex flex-col flex-wrap sm:flex-row items-center justify-between gap-6 px-8 md:px-12 py-15 overflow-hidden"
+          className="relative z-10 flex flex-col flex-wrap sm:flex-row items-center justify-between gap-6 px-8 md:px-14 py-12 md:py-16 rounded-none shadow-xl overflow-hidden"
           style={{
             background:
-              "linear-gradient(100deg, #3c72fc 0%, #1a45c7 60%, #0f2a9e 100%)",
+              "linear-gradient(100deg, #1C64EC 0%, #107CE0 60%, #04B4D4 100%)",
           }}
         >
           <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none select-none">

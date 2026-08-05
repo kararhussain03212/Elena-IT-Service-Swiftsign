@@ -12,7 +12,7 @@ import { PRESET_KEYS } from "./sectionDefinitions";
 
 const STRUCTURED_KEYS = new Set(PRESET_KEYS);
 const INPUT_CLASS =
-  "w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white";
+  "w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white";
 const SUBSECTION_CLASS = "rounded-lg border border-white/12 p-4";
 
 const getPageFromKey = (key) => String(key || "").split(".")[0] || "home";
@@ -38,18 +38,26 @@ const createDefaultContentByKey = (key) => {
       };
     case "global.footer":
       return {
+        brandName: "ELENA",
+        brandSymbol: "©",
         brandDescription: "",
-        itSolutionsTitle: "IT Solution",
+        qrCodeTitle: "Scan to Connect",
+        qrCodeSubtitle: "Quick mobile access",
+        quickLinksTitle: "Quick Links",
+        itSolutionsTitle: "Core Services",
         itSolutions: [{ name: "", href: "/services" }],
-        itSolutionsSecondTitle: "IT Solution",
-        itSolutionsSecond: [{ name: "", href: "/services" }],
+        securitySolutionsTitle: "Security Solutions",
+        securitySolutions: [{ name: "", href: "/services" }],
         quickLinks: [{ name: "", href: "" }],
+        supportTitle: "Support & Info",
+        socialsTitle: "Social Media",
         socials: [{ name: "", href: "" }],
         locations: [{ text: "", href: "" }],
         openingHours: "",
         phone: "",
         phoneHref: "",
         qrCodeUrl: "",
+        copyrightText: "",
         policies: [{ name: "Privacy Policy", href: "/contact" }],
       };
     case "home.about":
@@ -124,7 +132,7 @@ const createDefaultContentByKey = (key) => {
             description: "",
             value: "",
             href: "",
-            color: "#3c72fc",
+            color: "#0E70C4",
           },
         ],
       };
@@ -167,7 +175,7 @@ const createDefaultContentByKey = (key) => {
     case "career.info":
       return {
         heroBadge: "Applications Open",
-        statusBadge: "Join Swift Sign IT",
+        statusBadge: "Join Elena IT Services",
         title: "Cybersecurity & IT Associates Program",
         description: "Kickstart your technical career with our intensive learning pathway. We bridge the gap between academic knowledge and real-world business demands through structured mentorship.",
         duration: "3-Month Program",
@@ -203,7 +211,7 @@ const createDefaultContentByKey = (key) => {
         teamDesc: "Looking for a full-time career? We are always on the lookout for passion-driven cybersecurity analysts, systems engineers, full-stack developers, and technology consultants who want to make an impact.",
         teamSub: "Even if we don't have an active opening matching your profile, drop your credentials to get pre-evaluated for future roles in our global tech hubs.",
         teamEmailSubject: "Job Application",
-        newsTitle: "Stay updated with Swift Sign IT",
+        newsTitle: "Stay updated with Elena IT Services",
         newsSub: "Subscribe to receive program launch alerts, cyber insights, and internship announcements."
       };
     default:
@@ -634,7 +642,7 @@ const SectionContentEditor = ({
             description: "",
             value: "",
             href: "",
-            color: "#3c72fc",
+            color: "#0E70C4",
           })}
           fields={[
             { key: "icon", label: "Icon (PhoneCall / MessageCircle / Mail)" },
@@ -1341,8 +1349,8 @@ const SectionContentEditor = ({
           })
           .filter(Boolean)
       : [];
-    const normalizedItSolutionsSecond = Array.isArray(data.itSolutionsSecond)
-      ? data.itSolutionsSecond
+    const normalizedSecuritySolutions = Array.isArray(data.securitySolutions)
+      ? data.securitySolutions
           .map((item) => {
             if (typeof item === "string") {
               return { name: item, href: "/services" };
@@ -1362,7 +1370,20 @@ const SectionContentEditor = ({
 
     return (
       <div className="space-y-4">
-        
+        <section className={SUBSECTION_CLASS}>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TextInput
+              label="Brand Name"
+              value={data.brandName}
+              onChange={(value) => setContent({ ...data, brandName: value })}
+            />
+            <TextInput
+              label="Brand Symbol (e.g. ©)"
+              value={data.brandSymbol}
+              onChange={(value) => setContent({ ...data, brandSymbol: value })}
+            />
+          </div>
+        </section>
         <section className={SUBSECTION_CLASS}>
           <TextAreaInput
             label="Brand Description"
@@ -1374,64 +1395,36 @@ const SectionContentEditor = ({
           />
         </section>
         <section className={SUBSECTION_CLASS}>
-          <TextInput
-            label={'QR Code Link ("Scan to Connect" — defaults to the site homepage if left blank)'}
-            value={data.qrCodeUrl}
-            onChange={(value) => setContent({ ...data, qrCodeUrl: value })}
-          />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TextInput
+              label={'QR Code Link ("Scan to Connect" — defaults to the site homepage if left blank)'}
+              value={data.qrCodeUrl}
+              onChange={(value) => setContent({ ...data, qrCodeUrl: value })}
+            />
+            <TextInput
+              label="QR Code Title"
+              value={data.qrCodeTitle}
+              onChange={(value) => setContent({ ...data, qrCodeTitle: value })}
+            />
+            <TextInput
+              label="QR Code Subtitle"
+              value={data.qrCodeSubtitle}
+              onChange={(value) =>
+                setContent({ ...data, qrCodeSubtitle: value })
+              }
+            />
+          </div>
         </section>
-        <section className={SUBSECTION_CLASS}>
-          <TextInput
-            label="First Column Title"
-            value={data.itSolutionsTitle}
-            onChange={(value) =>
-              setContent({ ...data, itSolutionsTitle: value })
-            }
-          />
-        </section>
-
-        <ObjectListEditor
-          title="IT Solutions"
-          items={normalizedItSolutions}
-          onChange={(itSolutions) => setContent({ ...data, itSolutions })}
-          createItem={() => ({ name: "", href: "/services" })}
-          fields={[
-            { key: "name", label: "Service Name" },
-            {
-              key: "href",
-              label: "Link (e.g. /services or https://example.com)",
-            },
-          ]}
-        />
-        
-
-        
 
         <section className={SUBSECTION_CLASS}>
           <TextInput
-            label="Second Column Title"
-            value={data.itSolutionsSecondTitle}
+            label="Quick Links Column Title"
+            value={data.quickLinksTitle}
             onChange={(value) =>
-              setContent({ ...data, itSolutionsSecondTitle: value })
+              setContent({ ...data, quickLinksTitle: value })
             }
           />
         </section>
-
-        <ObjectListEditor
-          title="IT Solutions (Second Column)"
-          items={normalizedItSolutionsSecond}
-          onChange={(itSolutionsSecond) =>
-            setContent({ ...data, itSolutionsSecond })
-          }
-          createItem={() => ({ name: "", href: "/services" })}
-          fields={[
-            { key: "name", label: "Service Name" },
-            {
-              key: "href",
-              label: "Link (e.g. /services or https://example.com)",
-            },
-          ]}
-        />
 
         <ObjectListEditor
           title="Quick Links"
@@ -1443,6 +1436,71 @@ const SectionContentEditor = ({
             { key: "href", label: "Href" },
           ]}
         />
+
+        <section className={SUBSECTION_CLASS}>
+          <TextInput
+            label="Core Services Column Title"
+            value={data.itSolutionsTitle}
+            onChange={(value) =>
+              setContent({ ...data, itSolutionsTitle: value })
+            }
+          />
+        </section>
+
+        <ObjectListEditor
+          title="Core Services"
+          items={normalizedItSolutions}
+          onChange={(itSolutions) => setContent({ ...data, itSolutions })}
+          createItem={() => ({ name: "", href: "/services" })}
+          fields={[
+            { key: "name", label: "Service Name" },
+            {
+              key: "href",
+              label: "Link (e.g. /services or https://example.com)",
+            },
+          ]}
+        />
+
+        <section className={SUBSECTION_CLASS}>
+          <TextInput
+            label="Security Solutions Column Title"
+            value={data.securitySolutionsTitle}
+            onChange={(value) =>
+              setContent({ ...data, securitySolutionsTitle: value })
+            }
+          />
+        </section>
+
+        <ObjectListEditor
+          title="Security Solutions"
+          items={normalizedSecuritySolutions}
+          onChange={(securitySolutions) =>
+            setContent({ ...data, securitySolutions })
+          }
+          createItem={() => ({ name: "", href: "/services" })}
+          fields={[
+            { key: "name", label: "Service Name" },
+            {
+              key: "href",
+              label: "Link (e.g. /services or https://example.com)",
+            },
+          ]}
+        />
+
+        <section className={SUBSECTION_CLASS}>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TextInput
+              label="Support Column Title"
+              value={data.supportTitle}
+              onChange={(value) => setContent({ ...data, supportTitle: value })}
+            />
+            <TextInput
+              label="Social Media Row Title"
+              value={data.socialsTitle}
+              onChange={(value) => setContent({ ...data, socialsTitle: value })}
+            />
+          </div>
+        </section>
 
         <ObjectListEditor
           title="Socials"
@@ -1484,6 +1542,14 @@ const SectionContentEditor = ({
               onChange={(value) => setContent({ ...data, phoneHref: value })}
             />
           </div>
+        </section>
+
+        <section className={SUBSECTION_CLASS}>
+          <TextInput
+            label="Copyright Text"
+            value={data.copyrightText}
+            onChange={(value) => setContent({ ...data, copyrightText: value })}
+          />
         </section>
 
         <ObjectListEditor
@@ -1871,7 +1937,7 @@ export default function SectionForm({
               <select
                 value={form.page}
                 onChange={(event) => setField("page", event.target.value)}
-                className="w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white"
+                className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
                 required
               >
                 <option value="global">global</option>

@@ -25,7 +25,7 @@ export default function BlogList() {
   }, []);
 
   const coverSrc = (value) => {
-    if (!value) return "https://placehold.co/1200x800/151327/ffffff?text=Blog";
+    if (!value) return "https://placehold.co/1200x800/0B1B3A/ffffff?text=Blog";
     if (value.startsWith("http")) return value;
     if (value.startsWith("/uploads/")) return apiRoot + value;
     if (/^uploads\//i.test(value))
@@ -175,13 +175,13 @@ export default function BlogList() {
               event.preventDefault();
             }
           }}
-          className="rounded-xl bg-[#3c72fc] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1]"
+          className="rounded-xl bg-[#0E70C4] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1]"
         >
           + Add New Blog
         </Link>
       </header>
 
-      <div className="blog-list-filters rounded-2xl border border-white/10 bg-[#0f0d1d] p-4">
+      <div className="blog-list-filters rounded-2xl border border-white/10 bg-[#0F2350] p-4">
         <div className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-[1.35fr_1fr_1fr_1fr]">
           <label className="space-y-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-white/55">
@@ -250,14 +250,14 @@ export default function BlogList() {
       <div className="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <div className="space-y-4">
           {filteredItems.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-10 text-center text-sm text-white/60">
+            <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-10 text-center text-sm text-white/60">
               No blog entries found with current filters.
             </div>
           ) : (
             filteredItems.map((item) => (
               <article
                 key={item._id}
-                className="overflow-hidden rounded-2xl border border-white/10 bg-[#0f0d1d]"
+                className="overflow-hidden rounded-2xl border border-white/10 bg-[#0F2350]"
               >
                 <div className="grid gap-0 lg:grid-cols-[280px_1fr]">
                   <img
@@ -348,7 +348,7 @@ export default function BlogList() {
             ))
           )}
 
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#0f0d1d] px-4 py-3 text-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#0F2350] px-4 py-3 text-sm">
             <p className="text-white/65">
               Showing {filteredItems.length === 0 ? 0 : 1} to{" "}
               {filteredItems.length} of {items.length} entries
@@ -376,7 +376,7 @@ export default function BlogList() {
         </div>
 
         <aside className="space-y-4">
-          <section className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4">
+          <section className="rounded-2xl border border-white/10 bg-[#0F2350] p-4">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-white/65">
               Categories
             </h3>
@@ -401,7 +401,7 @@ export default function BlogList() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4">
+          <section className="rounded-2xl border border-white/10 bg-[#0F2350] p-4">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-white/65">
               Archive
             </h3>
@@ -424,7 +424,7 @@ export default function BlogList() {
             </ul>
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4">
+          <section className="rounded-2xl border border-white/10 bg-[#0F2350] p-4">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-white/65">
               Popular Posts
             </h3>
@@ -446,7 +446,7 @@ export default function BlogList() {
             </ul>
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4">
+          <section className="rounded-2xl border border-white/10 bg-[#0F2350] p-4">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-white/65">
               Tags
             </h3>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { FaArrowUp } from "react-icons/fa";
+import { FaArrowUp, FaWhatsapp } from "react-icons/fa";
 
-const FloatingButtons = () => {
+const FloatingButtons = ({ whatsappNumber = "+1234567890" }) => {
   const [scrollVisible, setScrollVisible] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -26,14 +26,31 @@ const FloatingButtons = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const cleanNumber = (whatsappNumber || "").replace(/[^0-9]/g, "");
+  const whatsappUrl = cleanNumber
+    ? `https://wa.me/${cleanNumber}`
+    : "https://wa.me/";
+
   return (
     <div
-      className="fixed right-6 bottom-6 z-[999] flex flex-col items-center gap-3"
+      className="fixed right-7 bottom-7 z-[999] flex flex-col items-center gap-3.5"
       style={{ pointerEvents: "none" }}
     >
+      {/* Floating WhatsApp button */}
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Contact us on WhatsApp"
+        className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_12px_28px_rgba(37,211,102,0.45)] transition-all duration-300 hover:bg-[#20ba5a] hover:scale-110 active:scale-95"
+        style={{ pointerEvents: "auto" }}
+      >
+        <FaWhatsapp size={30} />
+      </a>
+
       {/* Scroll to top button */}
       <button
-        className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border-none bg-[rgba(10,10,30,0.65)] shadow-[0_14px_30px_rgba(0,0,0,0.35)] transition-all duration-400 ${
+        className={`flex h-[42px] w-[42px] items-center justify-center rounded-full border-none bg-[rgba(10,10,30,0.75)] shadow-[0_12px_24px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-400 ${
           scrollVisible
             ? "translate-y-0 opacity-100 visible"
             : "translate-y-5 opacity-0 invisible"
@@ -44,35 +61,23 @@ const FloatingButtons = () => {
       >
         <svg
           className="absolute inset-0 h-full w-full -rotate-90"
-          viewBox="0 0 48 48"
+          viewBox="0 0 42 42"
         >
-          <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" />
+          <circle cx="21" cy="21" r="18" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" />
           <circle
-            cx="24"
-            cy="24"
-            r="20"
+            cx="21"
+            cy="21"
+            r="18"
             fill="none"
-            stroke="#3c72fc"
+            stroke="#1C64EC"
             strokeWidth="2"
-            strokeDasharray={2 * Math.PI * 20}
-            strokeDashoffset={2 * Math.PI * 20 * (1 - progress)}
+            strokeDasharray={2 * Math.PI * 18}
+            strokeDashoffset={2 * Math.PI * 18 * (1 - progress)}
             style={{ transition: "stroke-dashoffset 0.2s ease" }}
           />
         </svg>
-        <FaArrowUp size={14} className="relative z-10 text-[#3c72fc] transition-colors duration-300" />
+        <FaArrowUp size={13} className="relative z-10 text-[#1C64EC] transition-colors duration-300" />
       </button>
-
-      {/* WhatsApp button */}
-      <a
-        href="https://wa.me/923158399446"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp"
-        className="inline-flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_8px_20px_rgba(37,211,102,0.35)] transition-transform duration-300 hover:scale-110"
-        style={{ pointerEvents: "auto" }}
-      >
-        <i className="fa-brands fa-whatsapp text-[32px]" />
-      </a>
     </div>
   );
 };

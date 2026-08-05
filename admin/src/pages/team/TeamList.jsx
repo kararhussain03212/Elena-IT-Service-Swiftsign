@@ -7,7 +7,7 @@ import {
 } from "../../api/teamApi";
 import usePermissionGuard from "../../hooks/usePermissionGuard";
 
-const FALLBACK_IMAGE = "https://placehold.co/600x800/151327/ffffff?text=Team";
+const FALLBACK_IMAGE = "https://placehold.co/600x800/0B1B3A/ffffff?text=Team";
 
 export default function TeamList() {
   const [members, setMembers] = useState([]);
@@ -116,7 +116,7 @@ export default function TeamList() {
       ) : null}
 
       {members.length === 0 ? (
-        <div className="rounded-xl border border-white/10 bg-[#0f0d1d] p-6 text-white/70">
+        <div className="rounded-xl border border-white/10 bg-[#0F2350] p-6 text-white/70">
           No team members found.
         </div>
       ) : (
@@ -124,7 +124,7 @@ export default function TeamList() {
           {members.map((member) => (
             <article
               key={member._id}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#151327] shadow-[0_12px_30px_rgba(0,0,0,0.28)]"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0B1B3A] shadow-[0_12px_30px_rgba(0,0,0,0.28)]"
             >
               <div className="h-72 sm:h-80 md:h-96 lg:h-104 xl:h-112 w-full overflow-hidden">
                 <img

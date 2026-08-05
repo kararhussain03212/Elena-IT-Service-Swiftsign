@@ -64,7 +64,7 @@ const TeamDetails = () => {
   }, []);
 
   const imageUrl = (img) => {
-    if (!img) return "https://placehold.co/900x1200/151327/ffffff?text=Team";
+    if (!img) return "https://placehold.co/900x1200/0B1B3A/ffffff?text=Team";
     if (img.startsWith("http")) return img;
     if (img.startsWith("/uploads/")) return apiRoot + img;
     return apiRoot + "/uploads/" + img;
@@ -85,11 +85,11 @@ const TeamDetails = () => {
     load();
   }, [slug]);
 
-  if (loading) return <div className="p-8 text-white">Loading...</div>;
+  if (loading) return <div className="p-8 text-[#0B1B3A]">Loading...</div>;
 
   if (!member) {
     return (
-      <section className="bg-[#0f0d1d]">
+      <section className="bg-white">
         <Banner
           title="Team Details"
           crumbs={[
@@ -97,14 +97,14 @@ const TeamDetails = () => {
             { label: "Our Team", to: "/ourteam" },
           ]}
         />
-        <div className="mx-auto w-full max-w-[900px] px-6 py-20 text-white md:px-10">
+        <div className="mx-auto w-full max-w-[900px] px-6 py-20 text-[#0B1B3A] md:px-10">
           <h2 className="text-2xl font-bold">Team member not found</h2>
-          <p className="mt-3 text-white/70">
+          <p className="mt-3 text-[#0B1B3A]/70">
             The team member you are looking for does not exist.
           </p>
           <Link
             to="/ourteam"
-            className="mt-6 inline-flex items-center gap-2 text-[#3c72fc] transition-colors hover:text-white"
+            className="mt-6 inline-flex items-center gap-2 text-[#0E70C4] transition-colors hover:text-[#0B1B3A]"
           >
             Back to Our Team
           </Link>
@@ -118,7 +118,7 @@ const TeamDetails = () => {
   const socialLinks = normalizeSocialLinks(member.social_links ?? member.socialLinks);
 
   return (
-    <main className="bg-[#0f0d1d]">
+    <main className="bg-white">
       <Banner
         title="Team Details"
         crumbs={[
@@ -132,7 +132,7 @@ const TeamDetails = () => {
         <div className="mx-auto w-full max-w-[1200px] px-6 md:px-10">
           <div className="grid gap-10 lg:grid-cols-[340px_1fr] xl:grid-cols-[380px_1fr]">
             <div className="relative w-full md:mx-auto md:max-w-[520px] lg:mx-0 lg:max-w-none">
-              <div className="overflow-hidden bg-[#151327] shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+              <div className="overflow-hidden bg-white border border-black/10 shadow-[0_20px_60px_rgba(11,27,58,0.15)]">
                 <img
                   src={imageUrl(member.image)}
                   alt={member.name}
@@ -151,7 +151,7 @@ const TeamDetails = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={link.platform}
-                        className="flex h-12 w-12 items-center justify-center border border-white text-white transition-colors hover:border-[#3c72fc] hover:bg-[#3c72fc]"
+                        className="flex h-12 w-12 items-center justify-center border border-white text-white transition-colors hover:border-[#0E70C4] hover:bg-[#0E70C4]"
                       >
                         {React.createElement(Icon, { size: 17 })}
                       </a>
@@ -161,30 +161,30 @@ const TeamDetails = () => {
               ) : null}
             </div>
 
-            <div className="bg-[#151327] p-6 md:p-8">
-              <h2 className="text-2xl font-bold text-white md:text-3xl">
+            <div className="bg-white border border-black/10 shadow-sm p-6 md:p-8">
+              <h2 className="text-2xl font-bold text-[#0B1B3A] md:text-3xl">
                 {member.name}
               </h2>
-              <p className="mt-2 text-[#3c72fc] font-semibold">{member.role}</p>
+              <p className="mt-2 text-[#0E70C4] font-semibold">{member.role}</p>
 
-              <div className="mt-6 border-t border-white pt-6">
-                <h3 className="mb-3 text-lg font-semibold text-white">
+              <div className="mt-6 border-t border-black/10 pt-6">
+                <h3 className="mb-3 text-lg font-semibold text-[#0B1B3A]">
                   About Me
                 </h3>
-                <p className="leading-relaxed text-white/70">{member.bio}</p>
+                <p className="leading-relaxed text-[#0B1B3A]/70">{member.bio}</p>
               </div>
 
               {skills.length > 0 && (
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
                   {skills.map((skill, i) => (
                     <div key={skill.name + i}>
-                      <div className="flex justify-between text-sm text-white/80 mb-2">
+                      <div className="flex justify-between text-sm text-[#0B1B3A]/75 mb-2">
                         <span>{skill.name}</span>
                         <span>{skill.value}%</span>
                       </div>
-                      <div className="h-2 w-full bg-white/10">
+                      <div className="h-2 w-full bg-black/10">
                         <div
-                          className="h-2 bg-[#3c72fc]"
+                          className="h-2 bg-[#0E70C4]"
                           style={{ width: String(skill.value || 0) + "%" }}
                         />
                       </div>
@@ -197,18 +197,18 @@ const TeamDetails = () => {
 
           {education.length > 0 && (
             <div className="mt-16">
-              <h3 className="mb-4 text-xl font-semibold text-white">
+              <h3 className="mb-4 text-xl font-semibold text-[#0B1B3A]">
                 Education Background
               </h3>
-              <div className="border-t border-white/10 pt-6">
-                <ul className="space-y-3 text-white/80">
+              <div className="border-t border-black/10 pt-6">
+                <ul className="space-y-3 text-[#0B1B3A]/75">
                   {education.map((item, index) => (
                     <li key={`${item.degree}-${index}`}>
-                      <span className="font-semibold text-[#3c72fc]">
+                      <span className="font-semibold text-[#0E70C4]">
                         {item.degree}
                       </span>
                       {item.year ? (
-                        <span className="text-white/60"> {item.year}</span>
+                        <span className="text-[#0B1B3A]/60"> {item.year}</span>
                       ) : null}
                     </li>
                   ))}
@@ -218,18 +218,18 @@ const TeamDetails = () => {
           )}
 
           <div className="mt-16">
-            <h3 className="mb-4 text-xl font-semibold text-white">
+            <h3 className="mb-4 text-xl font-semibold text-[#0B1B3A]">
               Contact Details
             </h3>
-            <div className="space-y-2 border-t border-white/10 pt-6 text-sm text-white/70">
+            <div className="space-y-2 border-t border-black/10 pt-6 text-sm text-[#0B1B3A]/70">
               <p>
-                Email: <span className="text-white">info@swift-signit.com</span>
+                Email: <span className="text-[#0B1B3A]">info@elenaitservices.com</span>
               </p>
               <p>
-                Phone: <span className="text-white">+92 315 8399446</span>
+                Phone: <span className="text-[#0B1B3A]">+971 52 321 6551</span>
               </p>
               <p>
-                WhatsApp: <span className="text-white">+92 315 8399446</span>
+                WhatsApp: <span className="text-[#0B1B3A]">+971 52 321 6551</span>
               </p>
             </div>
           </div>

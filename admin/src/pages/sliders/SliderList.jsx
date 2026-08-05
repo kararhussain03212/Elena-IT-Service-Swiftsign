@@ -8,7 +8,7 @@ import {
 import usePermissionGuard from "../../hooks/usePermissionGuard";
 
 const FALLBACK_IMAGE =
-  "https://placehold.co/1200x700/151327/ffffff?text=Slider";
+  "https://placehold.co/1200x700/0B1B3A/ffffff?text=Slider";
 
 export default function SliderList() {
   const [sliders, setSliders] = useState([]);

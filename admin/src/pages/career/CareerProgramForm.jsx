@@ -10,9 +10,9 @@ import {
 } from "../../api/careerApi";
 
 const INPUT_CLASS =
-  "w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]";
+  "w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]";
 const LABEL_CLASS = "text-xs font-semibold uppercase tracking-wider text-white/55 block mb-1.5";
-const SECTION_CLASS = "rounded-2xl border border-white/10 bg-[#0f0d1d] p-5 space-y-4";
+const SECTION_CLASS = "rounded-2xl border border-white/10 bg-[#0F2350] p-5 space-y-4";
 
 export default function CareerProgramForm() {
   const { id } = useParams();
@@ -170,7 +170,7 @@ export default function CareerProgramForm() {
                 className={INPUT_CLASS}
                 value={formData.joinBadge}
                 onChange={(e) => setFormData({ ...formData, joinBadge: e.target.value })}
-                placeholder="Join Swift Sign IT"
+                placeholder="Join Elena IT Services"
               />
             </label>
             <label className="md:col-span-2">
@@ -222,7 +222,7 @@ export default function CareerProgramForm() {
                 type="checkbox"
                 checked={formData.isActive}
                 onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                className="accent-[#3c72fc] w-4 h-4"
+                className="accent-[#0E70C4] w-4 h-4"
               />
               <span className="text-sm text-white/80">Active (visible on public site)</span>
             </label>
@@ -288,7 +288,7 @@ export default function CareerProgramForm() {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-[#3c72fc] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-60"
+          className="rounded-xl bg-[#0E70C4] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-60"
         >
           {saving ? "Saving..." : isEdit ? "Save All Changes" : "Create Program"}
         </button>
@@ -305,7 +305,7 @@ export default function CareerProgramForm() {
             {modules.map((mod) => (
               <div key={mod.id || `new-${Math.random()}`} className="rounded-xl border border-white/10 bg-white/2 p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#3c72fc] uppercase">
+                  <span className="text-xs font-bold text-[#0E70C4] uppercase">
                     {mod.id ? `Module ${mod.module_number}` : "NEW MODULE"}
                   </span>
                   <button
@@ -355,7 +355,7 @@ export default function CareerProgramForm() {
                 setModules([...modules, { ...newModule }]);
                 setNewModule({ title: "", description: "" });
               }}
-              className="rounded-lg bg-[#3c72fc] px-4 py-2 text-xs font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-60"
+              className="rounded-lg bg-[#0E70C4] px-4 py-2 text-xs font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-60"
             >
               + Add Module
             </button>

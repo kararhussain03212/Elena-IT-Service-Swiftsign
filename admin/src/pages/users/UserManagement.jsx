@@ -221,7 +221,7 @@ export default function UserManagement() {
           type="button"
           onClick={openCreateModal}
           disabled={!canCreateUsers}
-          className="rounded-xl bg-[#3c72fc] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-xl bg-[#0E70C4] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-50"
         >
           Add User
         </button>

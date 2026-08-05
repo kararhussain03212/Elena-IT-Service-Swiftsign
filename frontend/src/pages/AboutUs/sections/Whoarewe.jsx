@@ -50,7 +50,7 @@ const Whoarewe = ({ content = {} }) => {
   if (!hasVisibleContent) return null;
 
   return (
-    <section className="relative overflow-hidden bg-[#151327] py-20 md:py-28 lg:wrap">
+    <section className="relative overflow-hidden bg-white py-20 md:py-28 lg:wrap">
       <img
         src={aboutShape}
         alt=""
@@ -89,7 +89,7 @@ const Whoarewe = ({ content = {} }) => {
           </div>
 
           <div ref={contentRef} className="sr-hidden sr-right">
-            <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc]">
+            <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#04B4D4]">
               <svg
                 className="me-1"
                 width="20"
@@ -104,7 +104,7 @@ const Whoarewe = ({ content = {} }) => {
                   width="18.5"
                   height="10.5"
                   rx="5.25"
-                  stroke="#3C72FC"
+                  stroke="#0E70C4"
                   strokeWidth="1.5"
                 />
                 <mask id="path-2-inside-1_668_146" fill="white">
@@ -112,28 +112,28 @@ const Whoarewe = ({ content = {} }) => {
                 </mask>
                 <path
                   d="M3 6C3 2.96243 5.46243 0.5 8.5 0.5H11.5C14.5376 0.5 17 2.96243 17 6C17 4.61929 15.2091 3.5 13 3.5H7C4.79086 3.5 3 4.61929 3 6ZM17 6C17 9.03757 14.5376 11.5 11.5 11.5H8.5C5.46243 11.5 3 9.03757 3 6C3 7.38071 4.79086 8.5 7 8.5H13C15.2091 8.5 17 7.38071 17 6ZM3 10V2V10ZM17 2V10V2Z"
-                  fill="#3C72FC"
+                  fill="#0E70C4"
                   mask="url(#path-2-inside-1_668_146)"
                 />
               </svg>
               {badge}
             </p>
 
-            <h2 className="mt-5 text-4xl font-bold leading-tight text-white md:text-[40px] md:leading-[1.12]">
+            <h2 className="mt-5 text-4xl font-bold leading-tight text-[#0B1B3A] md:text-[40px] md:leading-[1.12]">
               {heading}
             </h2>
 
-            <p className="mt-7 max-w-xl text-base leading-relaxed text-white/75 md:text-[16px]">
+            <p className="mt-7 max-w-xl text-base leading-relaxed text-[#0B1B3A]/70 md:text-[16px]">
               {description}
             </p>
 
             <ul className="mt-8 grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2">
               {highlightItems.map((item) => (
                 <li key={item} className="flex items-center gap-3">
-                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#315BDF] text-xs text-white">
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#0E70C4] text-xs text-white">
                     <FaCheck />
                   </span>
-                  <span className="text-[15px] font-semibold text-white">
+                  <span className="text-[15px] font-semibold text-[#0B1B3A]">
                     {item}
                   </span>
                 </li>

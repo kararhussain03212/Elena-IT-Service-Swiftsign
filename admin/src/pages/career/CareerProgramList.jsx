@@ -56,7 +56,7 @@ export default function CareerProgramList() {
               event.preventDefault();
             }
           }}
-          className="rounded-xl bg-[#3c72fc] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1]"
+          className="rounded-xl bg-[#0E70C4] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1]"
         >
           + Add Program
         </Link>
@@ -64,14 +64,14 @@ export default function CareerProgramList() {
 
       <div className="space-y-4">
         {items.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-10 text-center text-sm text-white/60">
+          <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-10 text-center text-sm text-white/60">
             No career programs yet.
           </div>
         ) : (
           items.map((item) => (
             <article
               key={item.id}
-              className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-5"
+              className="rounded-2xl border border-white/10 bg-[#0F2350] p-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>

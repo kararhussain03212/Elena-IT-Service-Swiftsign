@@ -31,7 +31,7 @@ const QuoteMark = () => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 60 45"
     className="testimonial-quote-float absolute top-4 right-5 w-14 h-10 opacity-10"
-    fill="#3c72fc"
+    fill="#0E70C4"
   >
     <path d="M0 45V27C0 11.167 8.333 2 25 0l3 5C20.667 7 17 12.333 17 22h12v23H0zm33 0V27C33 11.167 41.333 2 58 0l3 5C53.667 7 50 12.333 50 22h10v23H33z" />
   </svg>
@@ -66,7 +66,7 @@ const Testimonials = () => {
 
   const imageSrc = useCallback(
     (value) => {
-      if (!value) return "https://placehold.co/100x100/151327/ffffff?text=User";
+      if (!value) return "https://placehold.co/100x100/0B1B3A/ffffff?text=User";
       if (value.startsWith("http")) return value;
       if (value.startsWith("/uploads/")) return apiRoot + value;
       return apiRoot + "/uploads/" + value;
@@ -125,13 +125,13 @@ const Testimonials = () => {
           }
         `}
       </style>
-      <section className="relative py-24 bg-[#151327] overflow-hidden">
+      <section className="relative py-24 bg-white overflow-hidden">
         {/* Subtle glow blobs */}
 
         <div className="mx-auto w-full max-w-[1320px] px-6 md:px-10">
           {/* ── Section heading ── */}
           <div ref={headingRef} className="sr-hidden sr-up text-center mb-14">
-            <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc] mb-4">
+            <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#04B4D4] mb-4">
               <svg
                 className="mr-1"
                 width="20"
@@ -146,7 +146,7 @@ const Testimonials = () => {
                   width="18.5"
                   height="10.5"
                   rx="5.25"
-                  stroke="#3C72FC"
+                  stroke="#0E70C4"
                   strokeWidth="1.5"
                 />
                 <mask id="faq-mask" fill="white">
@@ -154,14 +154,14 @@ const Testimonials = () => {
                 </mask>
                 <path
                   d="M3 5.9978C3 2.96024 5.46243 0.497803 8.5 0.497803H11.5C14.5376 0.497803 17 2.96024 17 5.9978C17 4.61709 15.2091 3.4978 13 3.4978H7C4.79086 3.4978 3 4.61709 3 5.9978ZM17 5.9978C17 9.03537 14.5376 11.4978 11.5 11.4978H8.5C5.46243 11.4978 3 9.03537 3 5.9978C3 7.37851 4.79086 8.4978 7 8.4978H13C15.2091 8.4978 17 7.37851 17 5.9978Z"
-                  fill="#3C72FC"
+                  fill="#0E70C4"
                   mask="url(#faq-mask)"
                 />
               </svg>
               Testimonials
             </p>
 
-            <h2 className="text-3xl md:text-[42px] font-bold text-white leading-snug">
+            <h2 className="text-3xl md:text-[42px] font-bold text-[#0B1B3A] leading-snug">
               What Our IT Clients Say About Us
             </h2>
           </div>
@@ -203,11 +203,8 @@ const Testimonials = () => {
             >
               {displayTestimonials.map((t) => (
                 <SwiperSlide key={t.id}>
-                  <div
-                    className="group relative h-full overflow-hidden border border-white/8 p-8 transition-all duration-500 hover:-translate-y-1.5 hover:border-[#3c72fc]/45 hover:shadow-[0_22px_45px_rgba(0,0,0,0.35)]"
-                    style={{ background: "#16142c" }}
-                  >
-                    <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_80%_0%,rgba(60,114,252,0.16),transparent_45%)]" />
+                  <div className="group relative h-full overflow-hidden border border-black/10 bg-white p-8 shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:border-[#0E70C4]/45 hover:shadow-[0_22px_45px_rgba(11,27,58,0.12)]">
+                    <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_80%_0%,rgba(14,112,196,0.1),transparent_45%)]" />
                     <QuoteMark />
 
                     {/* Stars */}
@@ -216,25 +213,27 @@ const Testimonials = () => {
                     </div>
 
                     {/* Text */}
-                    <p className="text-white/75 text-[15px] leading-relaxed mb-7">
+                    <p className="text-[#0B1B3A]/70 text-[15px] leading-relaxed mb-7">
                       {t.text}
                     </p>
 
                     {/* Divider */}
-                    <div className="h-px bg-white/10 mb-6 transition-colors duration-500 group-hover:bg-[#3c72fc]/35" />
+                    <div className="h-px bg-black/10 mb-6 transition-colors duration-500 group-hover:bg-[#0E70C4]/35" />
 
                     {/* Author */}
                     <div className="flex items-center gap-4">
                       <img
                         src={t.image}
                         alt={t.name}
-                        className="w-14 h-14 rounded-full object-cover object-top border-2 border-[#3c72fc]/40 transition-transform duration-500 group-hover:scale-105"
+                        className="w-14 h-14 rounded-full object-cover object-top border-2 border-[#0E70C4]/40 transition-transform duration-500 group-hover:scale-105"
                       />
                       <div>
-                        <h4 className="text-white font-bold text-[16px] leading-tight">
+                        <h4 className="text-[#0B1B3A] font-bold text-[16px] leading-tight">
                           {t.name}
                         </h4>
-                        <p className="text-white/50 text-sm mt-0.5">{t.role}</p>
+                        <p className="text-[#0B1B3A]/50 text-sm mt-0.5">
+                          {t.role}
+                        </p>
                       </div>
                     </div>
                   </div>

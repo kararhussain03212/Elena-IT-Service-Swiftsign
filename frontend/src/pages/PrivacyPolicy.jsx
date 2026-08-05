@@ -90,13 +90,13 @@ const PrivacyPolicy = () => {
     <section className="w-full overflow-x-hidden">
       <Banner title="Privacy Policy" />
 
-      <div className="bg-[#151327] py-16 sm:py-20 md:py-28">
+      <div className="bg-white py-16 sm:py-20 md:py-28">
         <div
           ref={contentRef}
           className="sr-hidden sr-up mx-auto w-full max-w-[900px] px-6 md:px-10"
         >
-          <div className="prose prose-invert max-w-none">
-            <p className="text-base text-white/70 mb-8">
+          <div className="prose max-w-none">
+            <p className="text-base text-[#0B1B3A]/70 mb-8">
               Last updated: {new Date().toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
@@ -107,11 +107,11 @@ const PrivacyPolicy = () => {
             <div className="space-y-8">
               {sections.map((section, index) => (
                 <div key={index} className="space-y-4">
-                  <h2 className="text-2xl font-bold text-white relative">
+                  <h2 className="text-2xl font-bold text-[#0B1B3A] relative">
                     {section.title}
-                    <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-[#3c72fc]" />
+                    <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-[#0E70C4]" />
                   </h2>
-                  <p className="text-base text-white/70 leading-relaxed pt-2">
+                  <p className="text-base text-[#0B1B3A]/70 leading-relaxed pt-2">
                     {section.content}
                   </p>
                   {section.subPoints && (
@@ -119,7 +119,7 @@ const PrivacyPolicy = () => {
                       {section.subPoints.map((point, pointIndex) => (
                         <li
                           key={pointIndex}
-                          className="text-base text-white/70"
+                          className="text-base text-[#0B1B3A]/70"
                         >
                           {point}
                         </li>

@@ -36,8 +36,8 @@
     "isActive": true,
     "content": {
       "badge": "WHO WE ARE",
-      "heading": "Swiftly Shaping the Future of Technology",
-      "description": "At Swift Sign, we combine creativity, technology, and strategy to build digital products that make an impact. Our team specializes in crafting innovative solutions, from responsive web applications and intelligent AI tools to complete enterprise systems. We build success through smart swift solutions.",
+      "heading": "Connecting, Solving, and Empowering the Future of Technology",
+      "description": "At Elena IT Services, we combine creativity, technology, and strategy to build digital products that make an impact. Our team specializes in crafting innovative solutions, from responsive web applications and intelligent AI tools to complete enterprise systems. We build success by connecting, solving, and empowering.",
       "highlights": [
         "Technology Consultancy",
         "We Provide best services",
@@ -60,12 +60,12 @@
         {
           "id": 1,
           "question": "How do I request a new project or service?",
-          "answer": "You can submit a request through our Contact page or call us directly at +92 315 8399446. Our team will review your requirements and provide a detailed proposal within 24-48 hours."
+          "answer": "You can submit a request through our Contact page or call us directly at +971 52 321 6551. Our team will review your requirements and provide a detailed proposal within 24-48 hours."
         },
         {
           "id": 2,
           "question": "What are your support hours?",
-          "answer": "Our technical support team is available Monday through Saturday, 9:00 AM to 6:00 PM (PKT / GST). For urgent issues, we offer 24/7 emergency support via phone and WhatsApp."
+          "answer": "Our technical support team is available Monday through Saturday, 9:00 AM to 6:00 PM (GST). For urgent issues, we offer 24/7 emergency support via phone and WhatsApp."
         },
         {
           "id": 3,
@@ -94,21 +94,16 @@
       "infoTitle": "Contact Information",
       "infoSubtitle": "Let's Collaborate with Us!",
       "phoneLabel": "Call Us 7/24",
-      "phoneValue": "+92 315 8399446",
-      "phoneHref": "tel:+923158399446",
+      "phoneValue": "+971 52 321 6551",
+      "phoneHref": "tel:+971523216551",
       "emailLabel": "Make a Quote",
-      "emailValue": "info@it.swiftsignbm.com",
-      "emailHref": "mailto:info@it.swiftsignbm.com",
+      "emailValue": "info@elenaitservices.com",
+      "emailHref": "mailto:info@elenaitservices.com",
       "locations": [
         {
-          "label": "Location",
-          "text": "Office 22, 4th Floor, Pakland city center, I-8 Markaz, Islamabad, Pakistan.",
-          "href": "https://www.google.com/maps/place/Pakland+City+Centre/@33.6674951,73.0729195,17z/data=!4m10!1m2!2m1!1sPakland+City+Centre,+I-8+Markaz,+Islamabad,+Pakistan!3m6!1s0x38df95459e0a78e7:0xd3a23606fb4be450!8m2!3d33.6683328!4d73.0748494!15sCjRQYWtsYW5kIENpdHkgQ2VudHJlLCBJLTggTWFya2F6LCBJc2xhbWFiYWQsIFBha2lzdGFuWjMiMXBha2xhbmQgY2l0eSBjZW50cmUgaSA4IG1hcmtheiBpc2xhbWFiYWQgcGFraXN0YW6SARthc3NvY2lhdGlvbl9vcl9vcmdhbml6YXRpb26aASNDaFpEU1VoTk1HOW5TMFZKUTBGblNVUTFaMkpsTkZobkVBReABAPoBBAgAEEI!16s%2Fg%2F11hdb4bm79?entry=ttu&g_ep=EgoyMDI2MDMwMi4wIKXMDSoASAFQAw%3D%3D"
-        },
-        {
           "label": "Dubai Office",
-          "text": "Village Block-B, 3rd Floor, Office 301, Dubai, UAE",
-          "href": "https://www.google.com/maps?q=Parfait+Business+Center+Business+Village+Block+B+3rd+Floor+Office+301+Dubai+UAE"
+          "text": "Al Fajer Complex, 1st Floor 105, 12 Oud Metha, Dubai, UAE",
+          "href": "https://www.google.com/maps?q=Al+Fajer+Complex+Oud+Metha+Dubai+UAE"
         }
       ],
       "formBadge": "Get In Touch",
@@ -137,24 +132,24 @@
           "icon": "PhoneCall",
           "title": "Phone Support",
           "description": "Speak directly with our support team",
-          "value": "+92 315 8399446",
-          "href": "tel:+923158399446",
-          "color": "#3c72fc"
+          "value": "+971 52 321 6551",
+          "href": "tel:+971523216551",
+          "color": "#3C9F40"
         },
         {
           "icon": "MessageCircle",
           "title": "WhatsApp Chat",
           "description": "Quick answers via instant messaging",
-          "value": "+92 315 8399446",
-          "href": "https://wa.me/923158399446",
+          "value": "+971 52 321 6551",
+          "href": "https://wa.me/971523216551",
           "color": "#25D366"
         },
         {
           "icon": "Mail",
           "title": "Email Support",
           "description": "Detailed inquiries and documentation",
-          "value": "info@it.swiftsignbm.com",
-          "href": "mailto:info@it.swiftsignbm.com",
+          "value": "info@elenaitservices.com",
+          "href": "mailto:info@elenaitservices.com",
           "color": "#f59e0b"
         }
       ]
@@ -170,7 +165,7 @@
       "rows": [
         {
           "label": "Mon - Sat",
-          "value": "9:00 AM - 6:00 PM (PKT / GST)"
+          "value": "9:00 AM - 6:00 PM (GST)"
         },
         {
           "label": "Emergency Support",
@@ -189,7 +184,13 @@
     "order": 2,
     "isActive": true,
     "content": {
-      "brandDescription": "Swift Sign IT and Cyber Solutions transformed our IT infrastructure, improving performance, security, and scalability while reducing downtime and boosting efficiency.",
+      "brandName": "ELENA",
+      "brandSymbol": "©",
+      "brandDescription": "Elena IT Services transforms your IT infrastructure, improving performance, security, and scalability while reducing downtime and boosting efficiency.",
+      "qrCodeTitle": "Scan to Connect",
+      "qrCodeSubtitle": "Quick mobile access",
+      "quickLinksTitle": "Quick Links",
+      "itSolutionsTitle": "Core Services",
       "itSolutions": [
         {
           "name": "IT Consultancy",
@@ -212,6 +213,27 @@
           "href": "/services"
         }
       ],
+      "securitySolutionsTitle": "Security Solutions",
+      "securitySolutions": [
+        {
+          "name": "CCTV Services",
+          "href": "/services"
+        },
+        {
+          "name": "Alarm Systems",
+          "href": "/services"
+        },
+        {
+          "name": "Biometric Systems",
+          "href": "/services"
+        },
+        {
+          "name": "Parking Barrier System",
+          "href": "/services"
+        }
+      ],
+      "supportTitle": "Support & Info",
+      "socialsTitle": "Social Media",
       "quickLinks": [
         {
           "name": "About US",
@@ -237,30 +259,27 @@
       "socials": [
         {
           "name": "Facebook",
-          "href": "https://www.facebook.com/itandcybersolutions/"
+          "href": "#"
         },
         {
           "name": "LinkedIn",
-          "href": "https://www.linkedin.com/company/swift-sign-it-cyber-solutions/posts/?feedView=all"
+          "href": "#"
         },
         {
           "name": "Instagram",
-          "href": "https://www.instagram.com/ssitandcybersolutions"
+          "href": "#"
         }
       ],
       "locations": [
         {
-          "text": "Village Block-B, 3rd Floor, Office 301, Dubai, UAE",
-          "href": "https://www.google.com/maps?q=Parfait+Business+Center+Business+Village+Block+B+3rd+Floor+Office+301+Dubai+UAE"
-        },
-        {
-          "text": "Office 22, 4th Floor, Pakland city center, I-8 Markaz, Islamabad, Pakistan.",
-          "href": "https://www.google.com/maps/place/Pakland+City+Centre/@33.6674951,73.0729195,17z/data=!4m10!1m2!2m1!1sPakland+City+Centre,+I-8+Markaz,+Islamabad,+Pakistan!3m6!1s0x38df95459e0a78e7:0xd3a23606fb4be450!8m2!3d33.6683328!4d73.0748494!16s%2Fg%2F11hdb4bm79"
+          "text": "Al Fajer Complex, 1st Floor 105, 12 Oud Metha, Dubai, UAE",
+          "href": "https://www.google.com/maps?q=Al+Fajer+Complex+Oud+Metha+Dubai+UAE"
         }
       ],
       "openingHours": "Mon - Sat: 09:00 AM - 5:00 PM",
-      "phone": "+92 315 8399446",
-      "phoneHref": "tel:+923158399446",
+      "phone": "+971 52 321 6551",
+      "phoneHref": "tel:+971523216551",
+      "copyrightText": "© 2026 Elena IT Services. All rights reserved.",
       "policies": [
         {
           "name": "Privacy Policy",
@@ -282,7 +301,7 @@
       "topBar": {
         "liveLabel": "LIVE",
         "badgeText": "IT",
-        "message": "Swift Sign IT Solution delivers premium IT consulting and business services across the UAE and beyond. Trusted. Compliant. Scalable."
+        "message": "Elena IT Services delivers premium IT consulting and business services across the UAE and beyond. Trusted. Compliant. Scalable."
       },
       "logoUrl": "",
       "navLinks": [
@@ -321,22 +340,22 @@
         "text": "Get a Quote",
         "to": "/contact"
       },
-      "whatsappHref": "https://wa.me/923158399446",
+      "whatsappHref": "https://wa.me/971523216551",
       "mobile": {
-        "locationText": "Office 22, 4th Floor, Pakland city center, I-8 Markaz, Islamabad, Pakistan.",
-        "locationHref": "https://www.google.com/maps/place/Pakland+City+Centre/@33.6674951,73.0729195,17z/data=!4m10!1m2!2m1!1sPakland+City+Centre,+I-8+Markaz,+Islamabad,+Pakistan!3m6!1s0x38df95459e0a78e7:0xd3a23606fb4be450!8m2!3d33.6683328!4d73.0748494!16s%2Fg%2F11hdb4bm79",
-        "phone": "+92 315 8399446",
-        "phoneHref": "tel:+923158399446",
-        "email": "info@it.swiftsignbm.com",
-        "emailHref": "mailto:info@it.swiftsignbm.com",
+        "locationText": "Al Fajer Complex, 1st Floor 105, 12 Oud Metha, Dubai, UAE",
+        "locationHref": "https://www.google.com/maps?q=Al+Fajer+Complex+Oud+Metha+Dubai+UAE",
+        "phone": "+971 52 321 6551",
+        "phoneHref": "tel:+971523216551",
+        "email": "info@elenaitservices.com",
+        "emailHref": "mailto:info@elenaitservices.com",
         "socials": [
           {
             "name": "Facebook",
-            "href": "https://facebook.com"
+            "href": "#"
           },
           {
             "name": "LinkedIn",
-            "href": "https://linkedin.com"
+            "href": "#"
           }
         ]
       }
@@ -350,7 +369,7 @@
     "content": {
       "badge": "WHO WE ARE",
       "heading": "Ensuring Your Success Through Reliable IT Solutions",
-      "description": "At Swift Sign IT and Cyber Solutions, we combine creativity, technology, and strategy to build digital products that make an impact. Our team specializes in crafting innovative solutions, from responsive web applications and intelligent AI tools to complete enterprise systems. We build success through smart, swift solutions.",
+      "description": "At Elena IT Services, we combine creativity, technology, and strategy to build digital products that make an impact. Our team specializes in crafting innovative solutions, from responsive web applications and intelligent AI tools to complete enterprise systems. We build success by connecting, solving, and empowering.",
       "highlights": [
         "Quick Solutions",
         "Cost-Effectiveness",
@@ -368,7 +387,7 @@
     "isActive": true,
     "content": {
       "badge": "From Our Case Studies",
-      "heading": "Delivered Designed, Developed, And Delivered By Swift",
+      "heading": "Designed, Developed, and Delivered by Elena",
       "ctaText": "View All Cases",
       "ctaTo": "/projects"
     }
@@ -457,7 +476,7 @@
     "isActive": true,
     "content": {
       "badge": "SERVICES WE'RE OFFERING",
-      "heading": "Smart, Scalable, and Swift Solutions for the Digital Era"
+      "heading": "Smart, Scalable Solutions for the Digital Era"
     }
   }
 ]

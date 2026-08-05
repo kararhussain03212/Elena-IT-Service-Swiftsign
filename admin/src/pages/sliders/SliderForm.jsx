@@ -253,8 +253,8 @@ export default function SliderForm() {
             type="text"
             value={heading}
             onChange={(e) => setHeading(e.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
-            placeholder="SWIFT SIGN IT"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
+            placeholder="ELENA IT SERVICES"
           />
         </div>
 
@@ -275,7 +275,7 @@ export default function SliderForm() {
                 setImageAlt(nextTitle);
               }
             }}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             required
           />
         </div>
@@ -291,7 +291,7 @@ export default function SliderForm() {
               setSlug(e.target.value);
               setSlugTouched(true);
             }}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             required
           />
         </div>
@@ -304,7 +304,7 @@ export default function SliderForm() {
             type="text"
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
 
@@ -316,7 +316,7 @@ export default function SliderForm() {
             type="text"
             value={buttonText}
             onChange={(e) => setButtonText(e.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             placeholder="Get Started"
           />
         </div>
@@ -329,7 +329,7 @@ export default function SliderForm() {
             type="text"
             value={buttonLink}
             onChange={(e) => setButtonLink(e.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             placeholder="/services"
           />
           <p className="mt-1 text-xs text-white/55">
@@ -345,7 +345,7 @@ export default function SliderForm() {
             type="text"
             value={imageAlt}
             onChange={(e) => setImageAlt(e.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
             placeholder="Describe the slider image"
           />
         </div>
@@ -359,11 +359,11 @@ export default function SliderForm() {
             type="file"
             accept="image/*"
             onChange={onFileChange}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
 
           {(image || existingImageUrl) && (
-            <div className="mt-3 rounded-lg border border-white/20 bg-[#00060c] p-3">
+            <div className="mt-3 rounded-lg border border-white/20 bg-[#0B1B3A] p-3">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-xs text-white/60">
                   {image ? "Selected new image" : "Current saved image"}
@@ -401,11 +401,11 @@ export default function SliderForm() {
             type="file"
             accept="video/*"
             onChange={onVideoChange}
-            className="w-full rounded-lg border border-white/20 bg-[#00060c] px-3 py-2 text-white"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
 
           {(video || existingVideoUrl) && (
-            <div className="mt-3 rounded-lg border border-white/20 bg-[#00060c] p-3">
+            <div className="mt-3 rounded-lg border border-white/20 bg-[#0B1B3A] p-3">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <p className="text-xs text-white/60">
                   {video ? "Selected new video" : "Current saved video"}

@@ -58,7 +58,7 @@ const ScrollToTop = () => {
 
         .scroll-up:hover {
           transform: translateY(-4px);
-          background: rgba(60, 114, 252, 0.15);
+          background: rgba(14, 112, 196, 0.15);
           border-color: #6f95ff;
         }
 
@@ -79,14 +79,14 @@ const ScrollToTop = () => {
         }
 
         .scroll-progress .bar {
-          stroke: #3c72fc;
+          stroke: #1C64EC;
           transition: stroke-dashoffset 0.2s ease;
         }
 
         .scroll-up-icon {
           position: relative;
           z-index: 1;
-          color: #3c72fc;
+          color: #1C64EC;
           transition: color 0.3s ease;
         }
 

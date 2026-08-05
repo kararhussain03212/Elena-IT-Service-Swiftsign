@@ -45,12 +45,8 @@ const DesktopMenu = ({ menuLinks, isActive, sticky, isHashActive }) => (
     {menuLinks.map((link) => {
       const showDropdown = shouldShowDropdown(link);
       const linkTextClass = isActive(link.href)
-        ? sticky
-          ? "text-[#0f0d1d]"
-          : "text-[#3c72fc]"
-        : sticky
-          ? "text-white hover:text-[#0f0d1d]"
-          : "text-white hover:text-[#3c72fc]";
+        ? "text-[#1C64EC]"
+        : "text-[#0B1B3A] hover:text-[#1C64EC]";
 
       if (!showDropdown) {
         return (
@@ -73,7 +69,7 @@ const DesktopMenu = ({ menuLinks, isActive, sticky, isHashActive }) => (
             <span>{link.name}</span>
           </Link>
 
-          <div className="invisible absolute left-2 top-full z-30 min-w-60 translate-y-2 overflow-hidden rounded-xl border border-white/10 bg-[#121026]/95 opacity-0 shadow-[0_18px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+          <div className="invisible absolute left-2 top-full z-30 min-w-60 translate-y-2 overflow-hidden rounded-xl border border-black/10 bg-white opacity-0 shadow-[0_18px_40px_rgba(0,0,0,0.15)] transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
             <div className="py-2">
               {link.children.map((child) => (
                 <Link
@@ -81,8 +77,8 @@ const DesktopMenu = ({ menuLinks, isActive, sticky, isHashActive }) => (
                   to={child.href}
                   className={`block px-4 py-2.5 text-sm font-medium transition-colors ${
                     isHashActive(child.href)
-                      ? "text-[#3c72fc]"
-                      : "text-white/85 hover:bg-white/5 hover:text-[#3c72fc]"
+                      ? "text-[#1C64EC]"
+                      : "text-[#0B1B3A]/80 hover:bg-black/5 hover:text-[#1C64EC]"
                   }`}
                 >
                   {child.name}
@@ -115,12 +111,16 @@ const NavInner = ({
   return (
     <div className="mx-auto w-full max-w-430 px-6 md:px-10">
       <div className="flex h-25 items-center justify-between">
-        <Link to="/" aria-label="Swift Sign IT - Home">
+        <Link
+          to="/"
+          aria-label="Elena IT Services - Home"
+          className="flex items-center gap-3"
+        >
           {logoSrc ? (
             <img
               src={logoSrc}
-              alt="Swift Sign IT Logo"
-              className="h-20 w-auto"
+              alt="Elena IT Services Logo"
+              className="h-13 w-auto"
             />
           ) : null}
         </Link>
@@ -139,17 +139,6 @@ const NavInner = ({
             {cta?.text && cta?.to ? (
               <Button variant="quote" text={cta.text} to={cta.to} />
             ) : null}
-            {whatsappHref ? (
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Chat on WhatsApp"
-                className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_8px_20px_rgba(37,211,102,0.35)]"
-              >
-                <i className="fa-brands fa-whatsapp text-[28px]" />
-              </a>
-            ) : null}
           </div>
         ) : null}
 
@@ -160,7 +149,7 @@ const NavInner = ({
             aria-label="Open menu"
             aria-expanded={false}
           >
-            <Menu className="w-6 h-6 text-white" />
+            <Menu className="w-6 h-6 text-[#0B1B3A]" />
           </button>
         ) : null}
       </div>
@@ -262,7 +251,7 @@ const Navbar = ({ content = {} }) => {
   const apiRoot = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
   const logoSrc = (() => {
     const raw = String(content.logoUrl || "").trim();
-    const finalRaw = raw ? raw : "/swift.png";
+    const finalRaw = raw ? raw : "/elena logo.png";
     if (/^https?:\/\//i.test(finalRaw)) return finalRaw;
     if (finalRaw.startsWith("/uploads/")) return apiRoot + finalRaw;
     if (/^uploads\//i.test(finalRaw)) return apiRoot + "/" + finalRaw;
@@ -379,11 +368,11 @@ const Navbar = ({ content = {} }) => {
       `}</style>
 
       {hasTopBar ? (
-        <div className="border-b border-white/10 bg-[#061136]">
+        <div className="border-b border-black/10 bg-[#F3F6FB]">
           <div className="mx-auto flex h-9 w-full max-w-330 items-center gap-3 overflow-hidden px-6 md:px-10">
             {liveLabel ? (
-              <div className="flex shrink-0 items-center gap-2 text-[#00ff9c]">
-                <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#00ff9c]" />
+              <div className="flex shrink-0 items-center gap-2 text-[#0E9F6E]">
+                <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#0E9F6E]" />
                 <span className="text-sm font-bold leading-none">
                   {liveLabel}
                 </span>
@@ -391,13 +380,13 @@ const Navbar = ({ content = {} }) => {
             ) : null}
             {marqueeMessage ? (
               <div className="relative flex-1 overflow-hidden">
-                <div className="navbar-marquee-track flex w-max items-center gap-10 text-xs text-white/90 sm:text-sm">
+                <div className="navbar-marquee-track flex w-max items-center gap-10 text-xs text-[#0B1B3A]/80 sm:text-sm">
                   <span className="shrink-0 whitespace-nowrap">
                     {marqueeMessage}
                     {badgeText ? (
                       <>
                         &nbsp;
-                        <span className="mx-3 inline-flex rounded-full bg-[#6f3fff] px-2.5 py-0.5 text-[11px] font-semibold text-white sm:text-xs">
+                        <span className="mx-3 inline-flex rounded-full bg-[#1C64EC] px-2.5 py-0.5 text-[11px] font-semibold text-white sm:text-xs">
                           {badgeText}
                         </span>
                       </>
@@ -411,7 +400,7 @@ const Navbar = ({ content = {} }) => {
                     {badgeText ? (
                       <>
                         &nbsp;
-                        <span className="mx-3 inline-flex rounded-full bg-[#6f3fff] px-2.5 py-0.5 text-[11px] font-semibold text-white sm:text-xs">
+                        <span className="mx-3 inline-flex rounded-full bg-[#1C64EC] px-2.5 py-0.5 text-[11px] font-semibold text-white sm:text-xs">
                           {badgeText}
                         </span>
                       </>
@@ -424,7 +413,7 @@ const Navbar = ({ content = {} }) => {
         </div>
       ) : null}
 
-      <nav className="relative w-full bg-[#0f0d1d]">
+      <nav className="relative w-full bg-white border-b border-black/10">
         <NavInner
           isDesktopViewport={isDesktopViewport}
           isActive={isActive}
@@ -441,12 +430,7 @@ const Navbar = ({ content = {} }) => {
       </nav>
 
       {isDesktopViewport && isScrolled ? (
-        <nav
-          className="fixed top-0 inset-x-0 z-1000 w-full transition-all duration-500 translate-y-0 opacity-100 shadow-[0_4px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl border-b border-white/10"
-          style={{
-            background: "linear-gradient(270deg, #3c72fc 6.32%, #00060c 216.42%)",
-          }}
-        >
+        <nav className="fixed top-0 inset-x-0 z-1000 w-full transition-all duration-500 translate-y-0 opacity-100 shadow-[0_4px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl bg-white/95 border-b border-black/10">
           <NavInner
             sticky
             isDesktopViewport={isDesktopViewport}
@@ -478,168 +462,169 @@ const Navbar = ({ content = {} }) => {
 
       {!isDesktopViewport ? (
         <div
-          className={`fixed top-0 right-0 bottom-0 z-1050 w-full max-w-85 bg-[#07060e] shadow-2xl lg:hidden
+          className={`fixed top-0 right-0 bottom-0 z-1050 w-full max-w-85 bg-white shadow-2xl lg:hidden
             flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out ${
               isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
             }`}
         >
-        <div className="flex h-22 shrink-0 items-center justify-between border-b border-white/10 px-6">
-          <Link
-            to="/"
-            onClick={() => setIsMobileMenuOpen(false)}
-            aria-label="Swift Sign IT - Home"
-          >
-            {logoSrc ? (
-              <img
-                src={logoSrc}
-                alt="Swift Sign IT Logo"
-                className="h-14 w-auto"
-              />
-            ) : null}
-          </Link>
-          <button
-            onClick={() => setIsMobileMenuOpen(false)}
-            aria-label="Close menu"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-all duration-200 hover:border-[#3c72fc] hover:bg-[#3c72fc]/20 active:scale-90 hover:rotate-90"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+          <div className="flex h-22 shrink-0 items-center justify-between border-b border-black/10 px-6">
+            <Link
+              to="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Elena IT Services - Home"
+              className="flex items-center gap-2"
+            >
+              {logoSrc ? (
+                <img
+                  src={logoSrc}
+                  alt="Elena IT Services Logo"
+                  className="h-9 w-auto"
+                />
+              ) : null}
+            </Link>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-black/20 text-[#0B1B3A] transition-all duration-200 hover:border-[#0E70C4] hover:bg-[#0E70C4]/10 active:scale-90 hover:rotate-90"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
 
-        <div className="flex flex-col flex-1 px-8 pb-8 pt-6">
-          <nav className="flex flex-col mb-8">
-            {menuLinks.map((link) => {
-              const showDropdown = shouldShowDropdown(link);
+          <div className="flex flex-col flex-1 px-8 pb-8 pt-6">
+            <nav className="flex flex-col mb-8">
+              {menuLinks.map((link) => {
+                const showDropdown = shouldShowDropdown(link);
 
-              if (!showDropdown) {
-                return (
-                  <Link
-                    key={link.name}
-                    to={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`py-4 pl-3 text-lg font-medium border-b border-white/10 transition-all duration-200 ${
-                      isActive(link.href)
-                        ? "text-[#3c72fc]"
-                        : "text-white hover:text-[#3c72fc] hover:pl-5"
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                );
-              }
-
-              const isOpen = Boolean(openMobileGroups[link.href]);
-
-              return (
-                <div key={link.name} className="border-b border-white/10">
-                  <div className="flex items-center gap-2">
+                if (!showDropdown) {
+                  return (
                     <Link
+                      key={link.name}
                       to={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex-1 py-4 pl-3 text-lg font-medium transition-all duration-200 ${
+                      className={`py-4 pl-3 text-lg font-medium border-b border-black/10 transition-all duration-200 ${
                         isActive(link.href)
-                          ? "text-[#3c72fc]"
-                          : "text-white hover:text-[#3c72fc] hover:pl-5"
+                          ? "text-[#0E70C4]"
+                          : "text-[#0B1B3A] hover:text-[#0E70C4] hover:pl-5"
                       }`}
                     >
                       {link.name}
                     </Link>
-                    <button
-                      type="button"
-                      onClick={() => toggleMobileGroup(link.href)}
-                      className="mr-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/5 hover:text-[#3c72fc]"
-                      aria-label={`Toggle ${link.name} sub menu`}
-                      aria-expanded={isOpen}
-                    >
-                      <ChevronDown
-                        className={`h-4 w-4 transition-transform duration-200 ${
-                          isOpen ? "rotate-180" : "rotate-0"
-                        }`}
-                      />
-                    </button>
-                  </div>
+                  );
+                }
 
-                  <div
-                    className={`overflow-hidden transition-all duration-300 ${
-                      isOpen ? "max-h-105 pb-3" : "max-h-0"
-                    }`}
-                  >
-                    <div className="ml-5 border-l border-white/10 pl-4">
-                      {link.children.map((child) => (
-                        <Link
-                          key={`${link.name}-${child.name}`}
-                          to={child.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className={`block py-2 text-sm font-medium transition-colors ${
-                            isHashActive(child.href)
-                              ? "text-[#3c72fc]"
-                              : "text-white/80 hover:text-[#3c72fc]"
-                          }`}
-                        >
-                          {child.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </nav>
-
-          <div className="mt-auto space-y-4 border-t border-white/10 pt-6">
-            {mobile.locationHref && mobile.locationText ? (
-              <a
-                href={mobile.locationHref}
-                className="flex items-center gap-3 text-white/80 hover:text-[#3c72fc] transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MapPin className="w-5 h-5 shrink-0 text-[#3c72fc]" />
-                <span className="text-sm">{mobile.locationText}</span>
-              </a>
-            ) : null}
-
-            {mobile.phoneHref && mobile.phone ? (
-              <a
-                href={mobile.phoneHref}
-                className="flex items-center gap-3 text-white/80 hover:text-[#3c72fc] transition-colors"
-              >
-                <Phone className="w-5 h-5 shrink-0 text-[#3c72fc]" />
-                <span className="text-sm">{mobile.phone}</span>
-              </a>
-            ) : null}
-
-            {mobile.emailHref && mobile.email ? (
-              <a
-                href={mobile.emailHref}
-                className="flex items-center gap-3 text-white/80 hover:text-[#3c72fc] transition-colors"
-              >
-                <Mail className="w-5 h-5 shrink-0 text-[#3c72fc]" />
-                <span className="text-sm">{mobile.email}</span>
-              </a>
-            ) : null}
-
-            <div className="flex items-center gap-4 pt-4">
-              {mobileSocials.map((social) => {
-                const Icon = getSocialIcon(social?.name);
-                const label = social?.name;
+                const isOpen = Boolean(openMobileGroups[link.href]);
 
                 return (
-                  <a
-                    key={`${label}-${social?.href || ""}`}
-                    href={social?.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="w-10 h-10 flex items-center justify-center border border-white/30 rounded-full text-white hover:bg-[#3c72fc] hover:border-[#3c72fc] transition-all"
-                  >
-                    <Icon className="w-5 h-5" />
-                  </a>
+                  <div key={link.name} className="border-b border-black/10">
+                    <div className="flex items-center gap-2">
+                      <Link
+                        to={link.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex-1 py-4 pl-3 text-lg font-medium transition-all duration-200 ${
+                          isActive(link.href)
+                            ? "text-[#0E70C4]"
+                            : "text-[#0B1B3A] hover:text-[#0E70C4] hover:pl-5"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => toggleMobileGroup(link.href)}
+                        className="mr-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-[#0B1B3A]/70 transition-colors hover:bg-black/5 hover:text-[#0E70C4]"
+                        aria-label={`Toggle ${link.name} sub menu`}
+                        aria-expanded={isOpen}
+                      >
+                        <ChevronDown
+                          className={`h-4 w-4 transition-transform duration-200 ${
+                            isOpen ? "rotate-180" : "rotate-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ${
+                        isOpen ? "max-h-105 pb-3" : "max-h-0"
+                      }`}
+                    >
+                      <div className="ml-5 border-l border-black/10 pl-4">
+                        {link.children.map((child) => (
+                          <Link
+                            key={`${link.name}-${child.name}`}
+                            to={child.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={`block py-2 text-sm font-medium transition-colors ${
+                              isHashActive(child.href)
+                                ? "text-[#0E70C4]"
+                                : "text-[#0B1B3A]/70 hover:text-[#0E70C4]"
+                            }`}
+                          >
+                            {child.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
+            </nav>
+
+            <div className="mt-auto space-y-4 border-t border-black/10 pt-6">
+              {mobile.locationHref && mobile.locationText ? (
+                <a
+                  href={mobile.locationHref}
+                  className="flex items-center gap-3 text-[#0B1B3A]/70 hover:text-[#0E70C4] transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MapPin className="w-5 h-5 shrink-0 text-[#0E70C4]" />
+                  <span className="text-sm">{mobile.locationText}</span>
+                </a>
+              ) : null}
+
+              {mobile.phoneHref && mobile.phone ? (
+                <a
+                  href={mobile.phoneHref}
+                  className="flex items-center gap-3 text-[#0B1B3A]/70 hover:text-[#0E70C4] transition-colors"
+                >
+                  <Phone className="w-5 h-5 shrink-0 text-[#0E70C4]" />
+                  <span className="text-sm">{mobile.phone}</span>
+                </a>
+              ) : null}
+
+              {mobile.emailHref && mobile.email ? (
+                <a
+                  href={mobile.emailHref}
+                  className="flex items-center gap-3 text-[#0B1B3A]/70 hover:text-[#0E70C4] transition-colors"
+                >
+                  <Mail className="w-5 h-5 shrink-0 text-[#0E70C4]" />
+                  <span className="text-sm">{mobile.email}</span>
+                </a>
+              ) : null}
+
+              <div className="flex items-center gap-4 pt-4">
+                {mobileSocials.map((social) => {
+                  const Icon = getSocialIcon(social?.name);
+                  const label = social?.name;
+
+                  return (
+                    <a
+                      key={`${label}-${social?.href || ""}`}
+                      href={social?.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="w-10 h-10 flex items-center justify-center border border-black/20 rounded-full text-[#0B1B3A] hover:bg-[#0E70C4] hover:border-[#0E70C4] hover:text-white transition-all"
+                    >
+                      <Icon className="w-5 h-5" />
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
         </div>
       ) : null}
     </>

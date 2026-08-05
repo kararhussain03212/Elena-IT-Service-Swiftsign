@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import background from "@/assets/images/bg/case-two-bg.png";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -16,29 +15,30 @@ const ArrowIcon = ({ className = "" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    fill="currentColor"
     className={className}
   >
-    <line x1="5" y1="12" x2="19" y2="12" />
-    <polyline points="13 6 19 12 13 18" />
+    <path
+      fillRule="evenodd"
+      d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
+      clipRule="evenodd"
+    />
   </svg>
 );
 
 const Case = ({ content = {} }) => {
-  const swiperRef = useRef(null);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const headingRef = useScrollReveal();
+
+  const swiperRef = useRef(null);
   const sliderRef = useScrollReveal();
-  const badge = String(content?.badge || "").trim();
-  const heading = String(content?.heading || "").trim();
-  const ctaText = String(content?.ctaText || "").trim();
-  const ctaTo = String(content?.ctaTo || "").trim();
-  const shouldRenderSection = Boolean(badge || heading || (ctaText && ctaTo));
+  const headingRef = useScrollReveal();
+
+  const badge = String(content.badge || "").trim();
+  const heading = String(content.heading || "").trim();
+  const ctaText = String(content.ctaText || "").trim();
+  const ctaTo = String(content.ctaTo || "").trim();
+  const shouldRenderSection = Boolean(badge || heading || ctaText);
 
   const apiRoot = useMemo(() => {
     const base = import.meta.env.VITE_API_URL || "";
@@ -46,33 +46,25 @@ const Case = ({ content = {} }) => {
   }, []);
 
   const resolveImage = (value) => {
-    if (!value)
-      return "https://placehold.co/900x1200/0b1226/ffffff?text=Project";
+    if (!value) return "https://placehold.co/800x600/0B1B3A/ffffff?text=Project";
     if (value.startsWith("http")) return value;
     if (value.startsWith("/uploads/")) return apiRoot + value;
     return apiRoot + "/uploads/" + value;
   };
 
   useEffect(() => {
-    if (!shouldRenderSection) {
-      setProjects([]);
-      setLoading(false);
-      return;
-    }
-
-    const load = async () => {
+    if (!shouldRenderSection) return;
+    const fetchProjects = async () => {
       try {
         const res = await getProjects();
         setProjects(sortContentItems(Array.isArray(res.data) ? res.data : []));
-      } catch (error) {
-        console.error("Case projects load failed", error);
-        setProjects([]);
+      } catch (err) {
+        console.error("Failed to load projects:", err);
       } finally {
         setLoading(false);
       }
     };
-
-    load();
+    fetchProjects();
   }, [shouldRenderSection]);
 
   const canLoop = projects.length >= 5;
@@ -88,23 +80,20 @@ const Case = ({ content = {} }) => {
   if (!shouldRenderSection) return null;
 
   return (
-    <section
-      className="relative py-20 bg-[#0f0d1d] overflow-hidden"
-      style={{ backgroundImage: `url(${background})` }}
-    >
+    <section className="relative py-20 bg-white overflow-hidden">
       {/* Subtle grid/circuit background */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-10 "
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 20% 50%, #3c72fc22 0%, transparent 60%), radial-gradient(circle at 80% 20%, #3c72fc16 0%, transparent 50%)",
+            "radial-gradient(circle at 20% 50%, #0E70C4 0%, transparent 60%), radial-gradient(circle at 80% 20%, #0E70C4 0%, transparent 50%)",
         }}
       />
 
       <div className="mx-auto w-full max-w-[1270px] px-6 md:px-10">
         {/* ── Header row ── */}
         <div ref={headingRef} className="sr-hidden sr-up">
-          <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc] mb-3">
+          <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#04B4D4] mb-3">
             <svg
               className="mr-1"
               width="20"
@@ -119,7 +108,7 @@ const Case = ({ content = {} }) => {
                 width="18.5"
                 height="10.5"
                 rx="5.25"
-                stroke="#3C72FC"
+                stroke="#0E70C4"
                 strokeWidth="1.5"
               />
               <mask id="faq-mask" fill="white">
@@ -127,13 +116,13 @@ const Case = ({ content = {} }) => {
               </mask>
               <path
                 d="M3 5.9978C3 2.96024 5.46243 0.497803 8.5 0.497803H11.5C14.5376 0.497803 17 2.96024 17 5.9978C17 4.61709 15.2091 3.4978 13 3.4978H7C4.79086 3.4978 3 4.61709 3 5.9978ZM17 5.9978C17 9.03537 14.5376 11.4978 11.5 11.4978H8.5C5.46243 11.4978 3 9.03537 3 5.9978C3 7.37851 4.79086 8.4978 7 8.4978H13C15.2091 8.4978 17 7.37851 17 5.9978Z"
-                fill="#3C72FC"
+                fill="#0E70C4"
                 mask="url(#faq-mask)"
               />
             </svg>
             <h3>{badge}</h3>
           </div>
-          <h1 className="text-3xl md:text-[38px] font-bold text-white py-8 ">
+          <h1 className="text-3xl md:text-[38px] font-bold text-[#0B1B3A] py-8 ">
             {heading}
           </h1>
         </div>
@@ -142,14 +131,14 @@ const Case = ({ content = {} }) => {
           <button
             type="button"
             onClick={handlePrev}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#3c72fc] text-[#3c72fc] transition-colors hover:bg-[#3c72fc] hover:text-white"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#0E70C4] text-[#0E70C4] transition-colors hover:bg-[#0E70C4] hover:text-white"
           >
             <ChevronLeft size={22} />
           </button>
           <button
             type="button"
             onClick={handleNext}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#3c72fc] text-white transition-colors hover:bg-[#2d5fe0]"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#0E70C4] text-white transition-colors hover:bg-[#2d5fe0]"
           >
             <ChevronRight size={22} />
           </button>
@@ -157,7 +146,7 @@ const Case = ({ content = {} }) => {
             <Btn
               text={ctaText}
               to={ctaTo}
-              className="ml-auto text-sm font-medium text-[#3c72fc] hover:text-white transition-colors"
+              className="ml-auto text-sm font-medium text-[#0E70C4] hover:text-white transition-colors"
             />
           ) : null}
         </div>
@@ -201,7 +190,7 @@ const Case = ({ content = {} }) => {
           >
             {loading ? (
               <SwiperSlide>
-                <div className="h-[420px] grid place-items-center text-white/70">
+                <div className="h-[420px] grid place-items-center text-[#0B1B3A]/60">
                   Loading projects...
                 </div>
               </SwiperSlide>
@@ -234,7 +223,7 @@ const Case = ({ content = {} }) => {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#2f6bff] via-[#2f6bff]/55 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-90" />
 
                     {/* Hover border glow */}
-                    <div className="absolute border-[#3c72fc]/50 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                    <div className="absolute border-[#0E70C4]/50 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                     {/* Bottom label */}
                     <div className="absolute bottom-0 left-0 right-0 px-5 pb-5 pt-10 transition-transform duration-500 group-hover:translate-y-[-2px]">
                       <span className="block text-[#a6c2ff] text-xs font-semibold uppercase tracking-wider mb-1 transition-colors duration-300 group-hover:text-white">
@@ -252,7 +241,7 @@ const Case = ({ content = {} }) => {
                         >
                           {item.title}
                         </h3>
-                        <span className="shrink-0 ml-3 w-10 h-10 rounded-full border-2 border-white/60 flex items-center justify-center text-white transition-all duration-300 group-hover:bg-[#3c72fc] group-hover:border-[#3c72fc] group-hover:translate-x-1">
+                        <span className="shrink-0 ml-3 w-10 h-10 rounded-full border-2 border-white/60 flex items-center justify-center text-white transition-all duration-300 group-hover:bg-[#0E70C4] group-hover:border-[#0E70C4] group-hover:translate-x-1">
                           <ArrowIcon className="w-4 h-4" />
                         </span>
                       </div>

@@ -67,7 +67,7 @@ export default function NewsletterSubscriberList() {
           type="button"
           onClick={handleExport}
           disabled={exporting}
-          className="rounded-xl bg-[#3c72fc] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-60"
+          className="rounded-xl bg-[#0E70C4] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-60"
         >
           {exporting ? "Exporting..." : "Export CSV"}
         </button>
@@ -76,11 +76,11 @@ export default function NewsletterSubscriberList() {
       {loading ? (
         <p className="text-white/70">Loading subscribers...</p>
       ) : items.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-10 text-center text-sm text-white/60">
+        <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-10 text-center text-sm text-white/60">
           No subscribers yet.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0f0d1d]">
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0F2350]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/10 text-left text-xs uppercase tracking-wider text-white/50">

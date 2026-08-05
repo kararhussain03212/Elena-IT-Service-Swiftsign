@@ -36,14 +36,14 @@ const Info = ({ content = {} }) => {
   if (stats.length === 0) return null;
 
   return (
-    <section className="relative bg-[#151327] py-10 md:py-12">
+    <section className="relative bg-white py-10 md:py-12">
           <img
             src={righticon}
             alt="Circuit lines"
             className="pointer-events-none absolute right-0 top-0 hidden h-full w-auto opacity-70 md:block"
           />
       <div className="relative mx-auto w-full max-w-[1320px] px-6 md:px-10">
-        <div ref={statsRef} className="sr-hidden sr-up relative w-full bg-gradient-to-r from-[#3c72fc]/90 to-[#2a4aa3]/90 py-12 md:py-16">
+        <div ref={statsRef} className="sr-hidden sr-up relative w-full bg-gradient-to-r from-[#0E70C4]/90 to-[#2a4aa3]/90 py-12 md:py-16">
           <div className="relative z-10 px-6 md:px-10">
             <div className="grid gap-10 md:grid-cols-4">
               {stats.map((item) => (

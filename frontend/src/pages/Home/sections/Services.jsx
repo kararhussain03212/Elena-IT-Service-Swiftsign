@@ -50,7 +50,7 @@ const Services = ({ content = {} }) => {
     }
 
     // Fallback placeholder
-    return "https://placehold.co/800x500/1b1832/ffffff?text=Service";
+    return "https://placehold.co/800x500/142A52/ffffff?text=Service";
   };
 
   const pickServiceImage = (service) => {
@@ -112,7 +112,7 @@ const Services = ({ content = {} }) => {
 
   if (loading) {
     return (
-      <section className="py-20 bg-[#0f0d1d] text-white">
+      <section className="py-20 bg-white text-[#0B1B3A]">
         <div className="mx-auto w-full max-w-[1270px] px-4">
           Loading services...
         </div>
@@ -121,9 +121,9 @@ const Services = ({ content = {} }) => {
   }
 
   return (
-    <section className="relative overflow-hidden py-20 text-white md:py-28 bg-[#0f0d1d]">
+    <section className="relative overflow-hidden py-20 text-[#0B1B3A] md:py-28 bg-white">
       <div className="reveal-on-scrollrelative z-10 mx-auto w-full max-w-[1270px] px-4 md:px-6 lg:px-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc]">
+        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[#04B4D4]">
           {badge}
         </p>
 
@@ -137,14 +137,14 @@ const Services = ({ content = {} }) => {
           <button
             type="button"
             onClick={() => swiperRef.current?.slidePrev()}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#3c72fc] text-[#3c72fc] hover:bg-[#3c72fc] hover:text-white"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#0E70C4] text-[#0E70C4] hover:bg-[#0E70C4] hover:text-white"
           >
             <ChevronLeft size={22} />
           </button>
           <button
             type="button"
             onClick={() => swiperRef.current?.slideNext()}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#3c72fc] text-white hover:bg-[#2d5fe0]"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#0E70C4] text-white hover:bg-[#2d5fe0]"
           >
             <ChevronRight size={22} />
           </button>
@@ -180,7 +180,7 @@ const Services = ({ content = {} }) => {
                 key={service._id || service.slug || index}
                 className="h-full"
               >
-                <article className="group relative flex h-full flex-col overflow-hidden rounded-[60px] rounded-tr-none rounded-bl-none bg-[#1b1832]">
+                <article className="group relative flex h-full flex-col overflow-hidden rounded-[60px] rounded-tr-none rounded-bl-none bg-white border border-black/10 shadow-[0_18px_45px_rgba(11,27,58,0.08)]">
                   <img
                     src={resolveImage(pickServiceImage(service))}
                     alt={service.title}
@@ -191,19 +191,19 @@ const Services = ({ content = {} }) => {
                     <img
                       src={serviceItemShape}
                       alt=""
-                      className="pointer-events-none absolute right-0 top-3 w-[145px] opacity-35"
+                      className="pointer-events-none absolute right-0 top-3 w-[145px] opacity-10"
                     />
 
-                    <h3 className="text-[24px] font-bold leading-tight text-white">
+                    <h3 className="text-[24px] font-bold leading-tight text-[#0B1B3A]">
                       {service.title}
                     </h3>
-                    <p className="mt-3 text-[15px] leading-relaxed text-white/75">
+                    <p className="mt-3 text-[15px] leading-relaxed text-[#0B1B3A]/70">
                       {service.shortDescription || service.description}
                     </p>
 
                     <Link
                       to={"/services/" + service.slug}
-                      className="mt-auto inline-flex items-center gap-2 pt-5 text-[15px] font-semibold text-[#3c72fc] hover:text-white"
+                      className="mt-auto inline-flex items-center gap-2 pt-5 text-[15px] font-semibold text-[#0E70C4] hover:text-[#0B1B3A]"
                     >
                       <span>Read More</span>
                       <span>-&gt;</span>

@@ -129,7 +129,7 @@ export default function UserFormModal({
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-xl rounded-2xl border border-white/10 bg-[#0f0d1d] p-4 shadow-2xl shadow-black/50 transition-all duration-300 sm:p-5">
+      <div className="relative z-10 w-full max-w-xl rounded-2xl border border-white/10 bg-[#0F2350] p-4 shadow-2xl shadow-black/50 transition-all duration-300 sm:p-5">
         <header className="mb-4 flex items-start justify-between">
           <div>
             <h2 className="text-xl font-semibold text-white">
@@ -167,7 +167,7 @@ export default function UserFormModal({
             <input
               value={form.name}
               onChange={(event) => setField("name", event.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-[#151327] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#3c72fc] focus:outline-none"
+              className="w-full rounded-xl border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#0E70C4] focus:outline-none"
               placeholder="Jane Doe"
             />
             {errors.name ? (
@@ -183,7 +183,7 @@ export default function UserFormModal({
               type="email"
               value={form.email}
               onChange={(event) => setField("email", event.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-[#151327] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#3c72fc] focus:outline-none"
+              className="w-full rounded-xl border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#0E70C4] focus:outline-none"
               placeholder="jane@company.com"
             />
             {errors.email ? (
@@ -201,7 +201,7 @@ export default function UserFormModal({
                 onChange={(event) =>
                   setField("designation", event.target.value)
                 }
-                className="w-full rounded-xl border border-white/15 bg-[#151327] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#3c72fc] focus:outline-none"
+                className="w-full rounded-xl border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#0E70C4] focus:outline-none"
                 placeholder="Senior Editor"
               />
               {errors.designation ? (
@@ -218,7 +218,7 @@ export default function UserFormModal({
               <input
                 value={form.phone}
                 onChange={(event) => setField("phone", event.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-[#151327] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#3c72fc] focus:outline-none"
+                className="w-full rounded-xl border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#0E70C4] focus:outline-none"
                 placeholder="+92 300 1234567"
               />
               {errors.phone ? (
@@ -234,7 +234,7 @@ export default function UserFormModal({
             <input
               value={form.location}
               onChange={(event) => setField("location", event.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-[#151327] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#3c72fc] focus:outline-none"
+              className="w-full rounded-xl border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#0E70C4] focus:outline-none"
               placeholder="Lahore, Pakistan"
             />
             {errors.location ? (
@@ -250,7 +250,7 @@ export default function UserFormModal({
               type="password"
               value={form.password}
               onChange={(event) => setField("password", event.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-[#151327] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#3c72fc] focus:outline-none"
+              className="w-full rounded-xl border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white placeholder:text-white/35 focus:border-[#0E70C4] focus:outline-none"
               placeholder={
                 mode === "edit"
                   ? "Leave blank to keep existing password"
@@ -285,7 +285,7 @@ export default function UserFormModal({
                   }));
                   setSubmitError("");
                 }}
-                className="w-full rounded-xl border border-white/15 bg-[#151327] px-3 py-2 text-white focus:border-[#3c72fc] focus:outline-none"
+                className="w-full rounded-xl border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white focus:border-[#0E70C4] focus:outline-none"
               >
                 {ROLE_FORM_OPTIONS.map((roleOption) => (
                   <option key={roleOption.value} value={roleOption.value}>
@@ -305,7 +305,7 @@ export default function UserFormModal({
               <select
                 value={form.status}
                 onChange={(event) => setField("status", event.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-[#151327] px-3 py-2 text-white focus:border-[#3c72fc] focus:outline-none"
+                className="w-full rounded-xl border border-white/15 bg-[#0B1B3A] px-3 py-2 text-white focus:border-[#0E70C4] focus:outline-none"
               >
                 <option value="active">Active</option>
                 <option value="suspended">Suspended</option>
@@ -318,7 +318,7 @@ export default function UserFormModal({
             <span className="mb-2 block text-sm font-medium text-white/80">
               Permissions
             </span>
-            <div className="grid gap-2 rounded-xl border border-white/15 bg-[#151327] p-3 sm:grid-cols-2">
+            <div className="grid gap-2 rounded-xl border border-white/15 bg-[#0B1B3A] p-3 sm:grid-cols-2">
               {PERMISSION_OPTIONS.map((permission) => {
                 const checked = form.permissions.includes(permission.value);
                 return (
@@ -339,7 +339,7 @@ export default function UserFormModal({
                             : [...form.permissions, permission.value],
                         );
                       }}
-                      className="h-4 w-4 accent-[#3c72fc]"
+                      className="h-4 w-4 accent-[#0E70C4]"
                     />
                     {permission.label}
                   </label>
@@ -362,7 +362,7 @@ export default function UserFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-xl bg-[#3c72fc] px-4 py-2 text-sm font-medium text-white hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-xl bg-[#0E70C4] px-4 py-2 text-sm font-medium text-white hover:bg-[#2d5fe1] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting ? "Saving..." : "Save"}
             </button>

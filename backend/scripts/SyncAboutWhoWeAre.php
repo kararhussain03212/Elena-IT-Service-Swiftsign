@@ -8,8 +8,8 @@ $payload = [
     'key_name' => 'about.whoWeAre',
     'content' => [
         'badge' => 'WHO WE ARE',
-        'heading' => 'Swiftly Shaping the Future of Technology',
-        'description' => 'At Swift Sign, we combine creativity, technology, and strategy to build digital products that make an impact. Our team specializes in crafting innovative solutions, from responsive web applications and intelligent AI tools to complete enterprise systems. We build success through smart swift solutions.',
+        'heading' => 'Connecting, Solving, and Empowering the Future of Technology',
+        'description' => 'At Elena IT Services, we combine creativity, technology, and strategy to build digital products that make an impact. Our team specializes in crafting innovative solutions, from responsive web applications and intelligent AI tools to complete enterprise systems. We build success by connecting, solving, and empowering.',
         'highlights' => [
             'Technology Consultancy',
             'We Provide best services',

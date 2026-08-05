@@ -151,13 +151,13 @@ export default function ContactMessageList() {
       </header>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-white/10 bg-[#0f0d1d] p-4">
+        <div className="rounded-xl border border-white/10 bg-[#0F2350] p-4">
           <p className="text-xs uppercase tracking-wider text-white/55">
             Total
           </p>
           <p className="mt-2 text-2xl font-bold text-white">{counts.total}</p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-[#0f0d1d] p-4">
+        <div className="rounded-xl border border-white/10 bg-[#0F2350] p-4">
           <p className="text-xs uppercase tracking-wider text-white/55">
             Unread
           </p>
@@ -165,7 +165,7 @@ export default function ContactMessageList() {
             {counts.unread}
           </p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-[#0f0d1d] p-4">
+        <div className="rounded-xl border border-white/10 bg-[#0F2350] p-4">
           <p className="text-xs uppercase tracking-wider text-white/55">Read</p>
           <p className="mt-2 text-2xl font-bold text-green-300">
             {counts.total - counts.unread}
@@ -173,7 +173,7 @@ export default function ContactMessageList() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4">
+      <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-4">
         <div className="grid gap-3 md:grid-cols-[1fr_220px_220px]">
           <label className="space-y-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-white/55">
@@ -265,7 +265,7 @@ export default function ContactMessageList() {
       {loading ? (
         <p className="text-white/70">Loading contact messages...</p>
       ) : items.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-10 text-center text-sm text-white/60">
+        <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-10 text-center text-sm text-white/60">
           No messages found.
         </div>
       ) : (
@@ -273,7 +273,7 @@ export default function ContactMessageList() {
           {items.map((item) => (
             <article
               key={item._id}
-              className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4 sm:p-5"
+              className="rounded-2xl border border-white/10 bg-[#0F2350] p-4 sm:p-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>

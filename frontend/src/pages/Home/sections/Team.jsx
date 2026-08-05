@@ -14,21 +14,21 @@ const PLACEHOLDER_MEMBERS = [
     slug: "placeholder-1",
     name: "Alex Morgan",
     role: "Lead Developer",
-    image: "https://placehold.co/600x800/151327/3c72fc?text=Team+Member",
+    image: "https://placehold.co/600x800/0B1B3A/0E70C4?text=Team+Member",
     socialLinks: {},
   },
   {
     slug: "placeholder-2",
     name: "Sara Khan",
     role: "UI/UX Designer",
-    image: "https://placehold.co/600x800/1b1832/3c72fc?text=Team+Member",
+    image: "https://placehold.co/600x800/12224A/0E70C4?text=Team+Member",
     socialLinks: {},
   },
   {
     slug: "placeholder-3",
     name: "James Lee",
     role: "Project Manager",
-    image: "https://placehold.co/600x800/0f0d1d/3c72fc?text=Team+Member",
+    image: "https://placehold.co/600x800/0F2350/0E70C4?text=Team+Member",
     socialLinks: {},
   },
 ];
@@ -92,7 +92,7 @@ const Team = () => {
   }, []);
 
   const getImageUrl = (img) => {
-    if (!img) return "https://placehold.co/600x800/151327/ffffff?text=Team";
+    if (!img) return "https://placehold.co/600x800/0B1B3A/ffffff?text=Team";
     if (img.startsWith("http")) return img;
     if (img.startsWith("/uploads/")) return apiRoot + img;
     return apiRoot + "/uploads/" + img;
@@ -116,8 +116,8 @@ const Team = () => {
 
   if (loading) {
     return (
-      <section className="py-28 bg-[#151327]">
-        <div className="mx-auto w-full max-w-[1320px] px-6 md:px-10 text-white/70">
+      <section className="py-20 bg-[#FAF9F6] text-[#111111]">
+        <div className="mx-auto w-full max-w-[1320px] px-6 md:px-10">
           Loading team...
         </div>
       </section>
@@ -125,78 +125,80 @@ const Team = () => {
   }
 
   return (
-    <section className="py-28 bg-[#151327]">
+    <section className="py-20 bg-[#FAF9F6] border-t border-black/5 overflow-hidden">
       <div className="mx-auto w-full max-w-[1320px] px-6 md:px-10">
-        <div
-          ref={headingRef}
-          className="sr-hidden sr-up flex flex-col items-center justify-center"
-        >
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc]">
+        {/* Header row */}
+        <div ref={headingRef} className="sr-hidden sr-up text-center mb-12">
+          <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-[#1C64EC] mb-3">
             Our Team
           </p>
-          <h2 className="mb-12 text-3xl font-bold text-white md:text-4xl">
+          <h2 className="font-heading text-3xl md:text-[40px] font-extrabold text-[#111111] leading-tight">
             Our Leadership Team
           </h2>
         </div>
 
+        {/* Members Grid */}
         <div
           ref={gridRef}
-          className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
         >
           {displayMembers.map((member, index) => {
-            const socialLinks = normalizeSocialLinks(member.social_links ?? member.socialLinks);
+            const socialLinks = normalizeSocialLinks(
+              member.social_links ?? member.socialLinks,
+            );
 
             return (
               <div
                 key={(member.slug || "member") + "-" + index}
-                className="sr-hidden sr-up group relative w-full max-w-[380px] cursor-pointer lg:max-w-[300px] xl:max-w-[380px]"
+                className="sr-hidden sr-up flex flex-col w-full cursor-pointer"
               >
-                <div className="relative h-[480px] w-full overflow-hidden lg:h-[400px] xl:h-[500px]">
-                  <Link to={"/team/" + member.slug} className="block h-full">
+                {/* Portrait Container */}
+                <div className="group relative w-full aspect-[3/4] overflow-hidden rounded-none bg-[#ECEAE4] border border-black/5 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5">
+                  <Link
+                    to={"/team/" + member.slug}
+                    className="block h-full w-full"
+                  >
                     <img
                       src={getImageUrl(member.image)}
                       alt={member.name}
                       className="block h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     />
                   </Link>
+
+                  {/* Hover Overlay with Social Icons */}
+                  <div className="absolute inset-0 bg-[#111111]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 backdrop-blur-[2px] pointer-events-none group-hover:pointer-events-auto">
+                    {socialLinks.length > 0 ? (
+                      socialLinks.map((link) => {
+                        const Icon = getSocialIcon(link.platform);
+                        return (
+                          <a
+                            key={link.platform + link.url}
+                            href={link.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label={link.platform}
+                            className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#111111] hover:bg-[#1C64EC] hover:text-white transition-all duration-200 shadow-md transform hover:scale-110"
+                          >
+                            <Icon className="h-4 w-4" />
+                          </a>
+                        );
+                      })
+                    ) : (
+                      <span className="text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-none bg-white/20 backdrop-blur-md border border-white/10">
+                        Elena IT Services
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                <div className="absolute bottom-0 left-0 right-0 flex h-[110px] items-center bg-[linear-gradient(90deg,rgb(60,114,252)_-10.59%,rgb(0,6,12)_300.59%)] px-5">
-                  <div className="w-[260px]">
-                    <h3 className="text-[25px] font-bold leading-tight text-white">
-                      <Link to={"/team/" + member.slug}>{member.name}</Link>
-                    </h3>
-                    <p className="mt-0.5 text-[16px] text-white">{member.role}</p>
-                  </div>
-
-                  {socialLinks.length > 0 ? (
-                    <div className="group/share absolute bottom-[33px] right-[15px] z-30 flex flex-col items-center">
-                      <div className="mb-2 max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out group-hover/share:max-h-[200px]">
-                        <div className="flex max-h-[240px] flex-col items-center gap-1 overflow-y-auto rounded-full bg-[linear-gradient(90deg,rgb(60,114,252)_-10.59%,rgb(0,6,12)_300.59%)] px-[7px] py-3">
-                          {socialLinks.map((link) => {
-                            const Icon = getSocialIcon(link.platform);
-
-                            return (
-                              <a
-                                key={link.platform + link.url}
-                                href={link.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label={link.platform}
-                                className="flex h-9 w-9 items-center justify-center rounded-full text-white hover:bg-white hover:text-[#3c72fc]"
-                              >
-                                <Icon className="h-4 w-4" />
-                              </a>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      <button className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white">
-                        <IoShareSocialSharp className="h-5 w-5" />
-                      </button>
-                    </div>
-                  ) : null}
+                {/* Name & Role Text Block */}
+                <div className="mt-4 text-center">
+                  <h3 className="font-heading text-lg md:text-xl font-extrabold text-[#111111] hover:text-[#1C64EC] transition-colors">
+                    <Link to={"/team/" + member.slug}>{member.name}</Link>
+                  </h3>
+                  <p className="text-[11px] font-bold text-[#777777] uppercase tracking-wider mt-1">
+                    {member.role}
+                  </p>
                 </div>
               </div>
             );

@@ -226,21 +226,21 @@ const Contact = () => {
 
       {/* ── Support intro ── */}
       {hasSupportIntro ? (
-        <div className="bg-[#151327] py-16 sm:py-20">
+        <div className="bg-white py-16 sm:py-20">
           <div className="mx-auto w-full max-w-[1200px] px-6 md:px-10 text-center">
             {introBadge ? (
-              <div className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc] mb-4">
+              <div className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#04B4D4] mb-4">
                 <LifeBuoy className="w-4 h-4" />
                 {introBadge}
               </div>
             ) : null}
             {introHeading ? (
-              <h2 className="text-3xl md:text-[42px] font-bold text-white leading-snug">
+              <h2 className="text-3xl md:text-[42px] font-bold text-[#0B1B3A] leading-snug">
                 {introHeading}
               </h2>
             ) : null}
             {introDescription ? (
-              <p className="mt-4 text-base md:text-lg text-white/60 max-w-2xl mx-auto">
+              <p className="mt-4 text-base md:text-lg text-[#0B1B3A]/60 max-w-2xl mx-auto">
                 {introDescription}
               </p>
             ) : null}
@@ -250,7 +250,7 @@ const Contact = () => {
 
       {/* ── Support channels ── */}
       {hasSupportChannels ? (
-        <div className="bg-[#151327] py-16 sm:py-20">
+        <div className="bg-white py-16 sm:py-20">
           <div
             ref={channelsRef}
             className="sr-hidden sr-up mx-auto w-full max-w-[1200px] px-6 md:px-10"
@@ -258,7 +258,7 @@ const Contact = () => {
             <div className="grid gap-6 md:gap-8 md:grid-cols-3">
               {supportChannels.map((channel) => {
                 const Icon = CHANNEL_ICON_MAP[channel?.icon] || PhoneCall;
-                const channelColor = channel?.color || "#3c72fc";
+                const channelColor = channel?.color || "#1C64EC";
                 return (
                   <a
                     key={channel.title}
@@ -269,24 +269,24 @@ const Contact = () => {
                         : undefined
                     }
                     rel="noopener noreferrer"
-                    className="group cursor-pointer rounded-2xl border border-white/10 bg-[#1a1835] p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:border-[#3c72fc]/40 hover:shadow-[0_20px_40px_rgba(60,114,252,0.15)]"
+                    className="group cursor-pointer rounded-2xl border border-black/10 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-[#1C64EC]/40 hover:shadow-[0_20px_40px_rgba(14,112,196,0.15)]"
                   >
                     <div
                       className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: `${channelColor}22` }}
+                      style={{ background: `${channelColor}1a` }}
                     >
                       <Icon
                         className="w-7 h-7"
                         style={{ color: channelColor }}
                       />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">
+                    <h3 className="text-xl font-bold text-[#0B1B3A] mb-2">
                       {channel.title}
                     </h3>
-                    <p className="text-sm text-white/50 mb-4">
+                    <p className="text-sm text-[#0B1B3A]/60 mb-4">
                       {channel.description}
                     </p>
-                    <p className="text-[#3c72fc] font-semibold text-sm group-hover:text-white transition-colors">
+                    <p className="text-[#1C64EC] font-semibold text-sm group-hover:text-[#0B1B3A] transition-colors">
                       {channel.value}
                     </p>
                   </a>
@@ -299,24 +299,24 @@ const Contact = () => {
 
       {/* ── Support hours ── */}
       {hasSupportHours ? (
-        <div className="bg-[#151327] py-16">
+        <div className="bg-white py-16">
           <div className="mx-auto w-full max-w-[1200px] px-6 md:px-10">
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-[#3c72fc]/10 to-[#6f3fff]/10 p-8 md:p-12">
+            <div className="rounded-2xl border border-black/10 bg-gradient-to-r from-[#1C64EC]/5 to-[#04B4D4]/5 p-8 md:p-12">
               <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#3c72fc]/20">
-                  <Clock className="w-10 h-10 text-[#3c72fc]" />
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#1C64EC]/15">
+                  <Clock className="w-10 h-10 text-[#1C64EC]" />
                 </div>
                 <div className="text-center md:text-left">
                   {supportHoursTitle ? (
-                    <h3 className="text-2xl font-bold text-white mb-2">
+                    <h3 className="text-2xl font-bold text-[#0B1B3A] mb-2">
                       {supportHoursTitle}
                     </h3>
                   ) : null}
-                  <div className="space-y-1 text-white/70">
+                  <div className="space-y-1 text-[#0B1B3A]/70">
                     {supportHoursRows.map((row, index) => (
                       <p key={`${row?.label || "row"}-${index}`}>
                         {row?.label ? (
-                          <span className="text-white font-semibold">
+                          <span className="text-[#0B1B3A] font-semibold">
                             {row.label}:
                           </span>
                         ) : null}{" "}
@@ -333,100 +333,46 @@ const Contact = () => {
 
       {/* ── Main Contact Section ── */}
       {hasContactMainSection ? (
-        <div className="bg-[#151327] py-16 sm:py-20 md:py-28">
-          <div className="mx-auto w-full max-w-[1220px] px-4 sm:px-6 md:px-10">
+        <div className="bg-[#f7f7f7] py-16 sm:py-20 md:py-28">
+          <div className="mx-auto w-full max-w-[1140px] px-4 sm:px-6 md:px-10">
             <div
-              className={`grid gap-8 md:gap-10 ${
+              className={`grid gap-12 md:gap-16 ${
                 hasInfoSection && hasContactForm
-                  ? "lg:grid-cols-[0.9fr_1.1fr]"
+                  ? "lg:grid-cols-2"
                   : "lg:grid-cols-1"
-              } lg:gap-12`}
+              }`}
             >
               {hasInfoSection ? (
                 <div
                   ref={infoRef}
-                  className="sr-hidden sr-left bg-[#3c72fc] text-white p-6 sm:p-8 md:p-10"
+                  className="sr-hidden sr-left text-[#0B1B3A] py-4 sm:py-8 lg:pr-10"
                 >
                   {infoTitle ? (
-                    <h3 className="text-2xl sm:text-3xl font-bold">
+                    <h3 className="text-3xl sm:text-[40px] font-bold mb-4 leading-tight">
                       {infoTitle}
                     </h3>
                   ) : null}
                   {infoSubtitle ? (
-                    <p className="mt-3 text-sm sm:text-base text-white/90">
+                    <p className="text-[15px] text-[#555555] mb-10 leading-relaxed">
                       {infoSubtitle}
                     </p>
                   ) : null}
 
-                  <div className="mt-8 sm:mt-10 space-y-6 sm:space-y-8">
-                    {phoneValue ? (
-                      <div className="flex items-start gap-4 sm:gap-5">
-                        <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
-                          <PhoneCall className="h-5 w-5" />
-                        </div>
-                        <div>
-                          {phoneLabel ? (
-                            <p className="text-sm sm:text-base text-white/80">
-                              {phoneLabel}
-                            </p>
-                          ) : null}
-                          {phoneHref ? (
-                            <a
-                              href={phoneHref}
-                              className="text-[20px] font-semibold text-white"
-                            >
-                              {phoneValue}
-                            </a>
-                          ) : (
-                            <p className="text-[20px] font-semibold text-white">
-                              {phoneValue}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ) : null}
-
-                    {emailValue ? (
-                      <div className="flex items-start gap-4 sm:gap-5">
-                        <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
-                          <Mail className="h-5 w-5" />
-                        </div>
-                        <div>
-                          {emailLabel ? (
-                            <p className="text-sm sm:text-base text-white/80">
-                              {emailLabel}
-                            </p>
-                          ) : null}
-                          {emailHref ? (
-                            <a
-                              href={emailHref}
-                              className="text-sm sm:text-base font-semibold"
-                            >
-                              {emailValue}
-                            </a>
-                          ) : (
-                            <p className="text-sm sm:text-base font-semibold">
-                              {emailValue}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ) : null}
-
+                  <div className="mt-8 space-y-7">
                     {locations.map((location, index) => (
                       <div
                         key={`${location.label}-${index}`}
-                        className="flex items-start gap-4 sm:gap-5"
+                        className="flex items-center gap-5"
                       >
-                        <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
-                          <MapPin className="h-5 w-5" />
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#1C64EC] text-white shadow-sm">
+                          <MapPin className="h-[22px] w-[22px]" />
                         </div>
                         <div>
-                          <p className="text-sm sm:text-base text-white/80">
+                          <p className="text-[16px] font-bold text-[#0B1B3A]">
                             {location.label}
                           </p>
                           <a
-                            className="text-sm sm:text-base leading-7"
+                            className="text-[15px] text-[#555555] hover:text-[#1C64EC] transition-colors"
                             href={location.href}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -436,136 +382,170 @@ const Contact = () => {
                         </div>
                       </div>
                     ))}
+                    
+                    {phoneValue ? (
+                      <div className="flex items-center gap-5">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#1C64EC] text-white shadow-sm">
+                          <PhoneCall className="h-[22px] w-[22px]" />
+                        </div>
+                        <div>
+                          {phoneLabel ? (
+                            <p className="text-[16px] font-bold text-[#0B1B3A]">
+                              {phoneLabel}
+                            </p>
+                          ) : null}
+                          {phoneHref ? (
+                            <a
+                              href={phoneHref}
+                              className="text-[15px] text-[#555555] hover:text-[#1C64EC] transition-colors"
+                            >
+                              {phoneValue}
+                            </a>
+                          ) : (
+                            <p className="text-[15px] text-[#555555]">
+                              {phoneValue}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {emailValue ? (
+                      <div className="flex items-center gap-5">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#1C64EC] text-white shadow-sm">
+                          <Mail className="h-[22px] w-[22px]" />
+                        </div>
+                        <div>
+                          {emailLabel ? (
+                            <p className="text-[16px] font-bold text-[#0B1B3A]">
+                              {emailLabel}
+                            </p>
+                          ) : null}
+                          {emailHref ? (
+                            <a
+                              href={emailHref}
+                              className="text-[15px] text-[#555555] hover:text-[#1C64EC] transition-colors"
+                            >
+                              {emailValue}
+                            </a>
+                          ) : (
+                            <p className="text-[15px] text-[#555555]">
+                              {emailValue}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               ) : null}
 
               {hasContactForm ? (
-                <div ref={formRef} className="sr-hidden sr-right text-white">
-                  {formBadge ? (
-                    <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#3c72fc]">
-                      <svg
-                        className="me-1"
-                        width="20"
-                        height="12"
-                        viewBox="0 0 20 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <rect
-                          x="0.75"
-                          y="0.75"
-                          width="18.5"
-                          height="10.5"
-                          rx="5.25"
-                          stroke="#3C72FC"
-                          strokeWidth="1.5"
-                        />
-                        <mask id="path-2-inside-1_668_146" fill="white">
-                          <path d="M3 6C3 3.79086 4.79086 2 7 2H13C15.2091 2 17 3.79086 17 6C17 8.20914 15.2091 10 13 10H7C4.79086 10 3 8.20914 3 6Z" />
-                        </mask>
-                        <path
-                          d="M3 6C3 2.96243 5.46243 0.5 8.5 0.5H11.5C14.5376 0.5 17 2.96243 17 6C17 4.61929 15.2091 3.5 13 3.5H7C4.79086 3.5 3 4.61929 3 6ZM17 6C17 9.03757 14.5376 11.5 11.5 11.5H8.5C5.46243 11.5 3 9.03757 3 6C3 7.38071 4.79086 8.5 7 8.5H13C15.2091 8.5 17 7.38071 17 6ZM3 10V2V10ZM17 2V10V2Z"
-                          fill="#3C72FC"
-                          mask="url(#path-2-inside-1_668_146)"
-                        />
-                      </svg>
-                      {formBadge}
-                    </div>
-                  ) : null}
-                  {formHeading ? (
-                    <h2 className="mt-4 text-3xl md:text-4xl font-bold">
-                      {formHeading}
-                    </h2>
-                  ) : null}
-                  {formDescription ? (
-                    <p className="mt-4 text-base text-white/70">
-                      {formDescription}
-                    </p>
-                  ) : null}
+                <div ref={formRef} className="sr-hidden sr-right text-[#0B1B3A]">
+                  <div className="bg-white rounded-[24px] p-8 sm:p-12 shadow-sm border border-black/5">
+                    {formBadge ? (
+                      <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[#04B4D4] mb-2">
+                        {formBadge}
+                      </div>
+                    ) : null}
+                    {formHeading ? (
+                      <h2 className="text-2xl sm:text-[32px] font-bold mb-8">
+                        {formHeading}
+                      </h2>
+                    ) : null}
+                    {formDescription ? (
+                      <p className="mb-8 text-[15px] text-[#555555]">
+                        {formDescription}
+                      </p>
+                    ) : null}
 
-                  <form className="mt-6 space-y-7" onSubmit={handleSubmit}>
-                    <div className="grid gap-6 md:grid-cols-2">
-                      <div className="flex flex-col space-y-2">
+                    <form className="space-y-4" onSubmit={handleSubmit}>
+                      <div className="flex flex-col">
                         {formNameLabel ? (
-                          <label className="text-base font-semibold ">
+                          <label className="sr-only">
                             {formNameLabel}
                           </label>
                         ) : null}
                         <input
                           type="text"
                           name="name"
-                          placeholder={formNamePlaceholder}
+                          placeholder={formNamePlaceholder || "Name"}
                           value={formData.name}
                           onChange={handleChange}
                           required
-                          className="w-full rounded-md border border-white/20 bg-transparent px-4 py-3 text-base text-white placeholder:text-white/50 focus:outline-none focus:border-[#3c72fc]"
+                          className="w-full border-b border-black/10 bg-transparent px-2 py-4 text-[15px] text-[#0B1B3A] placeholder:text-[#999999] focus:outline-none focus:border-[#1C64EC] transition-colors"
                         />
                       </div>
-                      <div className="flex flex-col space-y-2">
+                      <div className="flex flex-col">
                         {formEmailLabel ? (
-                          <label className="text-base font-semibold">
+                          <label className="sr-only">
                             {formEmailLabel}
                           </label>
                         ) : null}
                         <input
                           type="email"
                           name="email"
-                          placeholder={formEmailPlaceholder}
+                          placeholder={formEmailPlaceholder || "E-mail address"}
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          className="w-full rounded-md border border-white/20 bg-transparent px-4 py-3 text-base text-white placeholder:text-white/50 focus:outline-none focus:border-[#3c72fc]"
+                          className="w-full border-b border-black/10 bg-transparent px-2 py-4 text-[15px] text-[#0B1B3A] placeholder:text-[#999999] focus:outline-none focus:border-[#1C64EC] transition-colors"
                         />
                       </div>
-                    </div>
 
-                    <div className="flex flex-col space-y-2">
-                      {formMessageLabel ? (
-                        <label className="text-base font-semibold">
-                          {formMessageLabel}
-                        </label>
-                      ) : null}
-                      <textarea
-                        rows={6}
-                        name="message"
-                        placeholder={formMessagePlaceholder}
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        className="w-full rounded-md border border-white/20 bg-transparent px-4 py-3 text-base text-white placeholder:text-white/50 focus:outline-none focus:border-[#3c72fc]"
+                      <div className="flex flex-col">
+                        {formMessageLabel ? (
+                          <label className="sr-only">
+                            {formMessageLabel}
+                          </label>
+                        ) : null}
+                        <textarea
+                          rows={3}
+                          name="message"
+                          placeholder={formMessagePlaceholder || "Message"}
+                          value={formData.message}
+                          onChange={handleChange}
+                          required
+                          className="w-full border-b border-black/10 bg-transparent px-2 py-4 text-[15px] text-[#0B1B3A] placeholder:text-[#999999] focus:outline-none focus:border-[#1C64EC] transition-colors resize-none"
+                        />
+                      </div>
+                      
+                      <div className="pt-4 pb-2">
+                        <p className="text-[12.5px] text-[#999999] leading-relaxed">
+                          By submitting, you agree to the processing of your personal data by us as described in the Privacy Statement.
+                        </p>
+                      </div>
+
+                      <RecaptchaField
+                        ref={recaptchaRef}
+                        onChange={(token) => setRecaptchaToken(token || "")}
                       />
-                    </div>
-                    <RecaptchaField
-                      ref={recaptchaRef}
-                      onChange={(token) => setRecaptchaToken(token || "")}
-                    />
-                    <Button
-                      type="submit"
-                      disabled={submitState.loading}
-                      text={
-                        submitState.loading
-                          ? "Sending..."
-                          : submitButtonText || "Submit"
-                      }
-                      className={
-                        submitState.loading
-                          ? "pointer-events-none opacity-70"
-                          : ""
-                      }
-                    />
 
-                    {submitState.error ? (
-                      <p className="text-sm text-red-400">
-                        {submitState.error}
-                      </p>
-                    ) : null}
-                    {submitState.success ? (
-                      <p className="text-sm text-green-400">
-                        {submitState.success}
-                      </p>
-                    ) : null}
-                  </form>
+                      <div className="mt-6 flex justify-end">
+                        <Button
+                          type="submit"
+                          disabled={submitState.loading}
+                          text={
+                            submitState.loading
+                              ? "Sending..."
+                              : submitButtonText || "Submit"
+                          }
+                          className={submitState.loading ? "pointer-events-none opacity-70" : ""}
+                        />
+                      </div>
+
+                      {submitState.error ? (
+                        <p className="text-sm text-red-500 mt-4 text-right">
+                          {submitState.error}
+                        </p>
+                      ) : null}
+                      {submitState.success ? (
+                        <p className="text-sm text-green-500 mt-4 text-right">
+                          {submitState.success}
+                        </p>
+                      ) : null}
+                    </form>
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -577,11 +557,11 @@ const Contact = () => {
               >
                 {mapLocations.map((location, index) => (
                   <div key={`${location.label}-${index}`}>
-                    <div className="mb-3 flex items-center justify-center gap-2 text-[#3c72fc] font-semibold">
+                    <div className="mb-3 flex items-center justify-center gap-2 text-[#1C64EC] font-semibold">
                       <MapPin className="h-4 w-4" />
                       {location.label}
                     </div>
-                    <div className="overflow-hidden rounded-xl border border-white/10">
+                    <div className="overflow-hidden rounded-xl border border-black/10">
                       <iframe
                         title={`${location.label} Map`}
                         src={location.embedUrl}
@@ -600,28 +580,28 @@ const Contact = () => {
 
       {/* ── FAQ section ── */}
       {hasFaqSection ? (
-        <div className="bg-[#151327] py-16 sm:py-20">
+        <div className="bg-white py-16 sm:py-20">
           <div
             ref={faqRef}
             className="sr-hidden sr-up mx-auto w-full max-w-[900px] px-6 md:px-10"
           >
             <div className="text-center mb-12">
               {faqHeading ? (
-                <h2 className="text-3xl md:text-[36px] font-bold text-white">
+                <h2 className="text-3xl md:text-[36px] font-bold text-[#0B1B3A]">
                   {faqHeading}
                 </h2>
               ) : null}
               {faqSubheading ? (
-                <p className="mt-3 text-white/60">{faqSubheading}</p>
+                <p className="mt-3 text-[#0B1B3A]/60">{faqSubheading}</p>
               ) : null}
             </div>
 
             {/* Accordion container with fixed border */}
             <div
-              className="overflow-hidden"
+              className="overflow-hidden rounded-xl"
               style={{
-                background: "#0f0d1d",
-                border: "1px solid rgba(60,114,252,0.15)",
+                background: "#ffffff",
+                border: "1px solid rgba(14,112,196,0.15)",
               }}
             >
               {faqData.map((faq, idx) => {
@@ -629,7 +609,7 @@ const Contact = () => {
                 return (
                   <div
                     key={faq.id}
-                    className={idx !== 0 ? "border-t border-white/10" : ""}
+                    className={idx !== 0 ? "border-t border-black/10" : ""}
                   >
                     {/* Question row */}
                     <button
@@ -639,7 +619,7 @@ const Contact = () => {
                     >
                       <span
                         className={`font-semibold text-[15px] pr-4 transition-colors duration-200 ${
-                          isOpen ? "text-[#3c72fc]" : "text-white"
+                          isOpen ? "text-[#0E70C4]" : "text-[#0B1B3A]"
                         }`}
                       >
                         {faq.question}
@@ -648,8 +628,8 @@ const Contact = () => {
                       <span
                         className={`flex-shrink-0 w-7 h-7 flex items-center justify-center text-lg font-bold transition-colors duration-200 ${
                           isOpen
-                            ? "bg-[#3c72fc] text-white"
-                            : "bg-transparent border border-white/30 text-white/60"
+                            ? "bg-[#0E70C4] text-white"
+                            : "bg-transparent border border-black/20 text-[#0B1B3A]/60"
                         }`}
                       >
                         {isOpen ? "−" : "+"}
@@ -665,7 +645,7 @@ const Contact = () => {
                       }}
                     >
                       <div style={{ overflow: "hidden", minHeight: 0 }}>
-                        <p className="px-5 pb-5 text-white/70 text-[14.5px] leading-relaxed">
+                        <p className="px-5 pb-5 text-[#0B1B3A]/70 text-[14.5px] leading-relaxed">
                           {faq.answer}
                         </p>
                       </div>

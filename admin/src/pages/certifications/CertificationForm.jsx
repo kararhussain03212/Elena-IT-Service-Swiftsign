@@ -8,7 +8,7 @@ import {
 import ImageUpload from "../../components/ImageUpload";
 
 const INPUT_CLASS =
-  "w-full rounded-lg border border-white/20 bg-[#151327] px-3 py-2 text-white outline-none focus:border-[#3c72fc]";
+  "w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white outline-none focus:border-[#0E70C4]";
 const SUBSECTION_CLASS = "rounded-lg border border-white/12 p-4 bg-white/2 space-y-4";
 
 export default function CertificationForm() {
@@ -201,7 +201,7 @@ export default function CertificationForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Core Metadata */}
         <section className={SUBSECTION_CLASS}>
-          <h3 className="text-md font-bold text-white border-l-2 border-[#3c72fc] pl-2">
+          <h3 className="text-md font-bold text-white border-l-2 border-[#0E70C4] pl-2">
             1. Core Info & Status
           </h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -226,7 +226,7 @@ export default function CertificationForm() {
               />
             </div>
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm text-white/80">Full Name (e.g. Swift Sign Cybersecurity Certification — Foundation (SSCC-F))</label>
+              <label className="mb-1 block text-sm text-white/80">Full Name (e.g. Elena Cybersecurity Certification — Foundation (SSCC-F))</label>
               <input
                 type="text"
                 required
@@ -286,7 +286,7 @@ export default function CertificationForm() {
                   type="checkbox"
                   checked={formData.isOpen}
                   onChange={(e) => setFormData({ ...formData, isOpen: e.target.checked })}
-                  className="w-4 h-4 accent-[#3c72fc]"
+                  className="w-4 h-4 accent-[#0E70C4]"
                 />
                 <span className="text-sm font-semibold text-white/90">Admissions Open (🟢)</span>
               </label>
@@ -296,7 +296,7 @@ export default function CertificationForm() {
 
         {/* Cover Image & QR Code */}
         <section className={SUBSECTION_CLASS}>
-          <h3 className="text-md font-bold text-white border-l-2 border-[#3c72fc] pl-2">
+          <h3 className="text-md font-bold text-white border-l-2 border-[#0E70C4] pl-2">
             2. Graphics & Links
           </h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -354,7 +354,7 @@ export default function CertificationForm() {
 
         {/* About & Outcome textareas */}
         <section className={SUBSECTION_CLASS}>
-          <h3 className="text-md font-bold text-white border-l-2 border-[#3c72fc] pl-2">
+          <h3 className="text-md font-bold text-white border-l-2 border-[#0E70C4] pl-2">
             3. Detailed Description
           </h3>
           <div className="space-y-4">
@@ -391,7 +391,7 @@ export default function CertificationForm() {
         {/* Audience strings list */}
         <section className={SUBSECTION_CLASS}>
           <div className="flex items-center justify-between">
-            <h3 className="text-md font-bold text-white border-l-2 border-[#3c72fc] pl-2">
+            <h3 className="text-md font-bold text-white border-l-2 border-[#0E70C4] pl-2">
               4. Target Audience
             </h3>
             <button
@@ -427,7 +427,7 @@ export default function CertificationForm() {
         {/* Modules list */}
         <section className={SUBSECTION_CLASS}>
           <div className="flex items-center justify-between">
-            <h3 className="text-md font-bold text-white border-l-2 border-[#3c72fc] pl-2">
+            <h3 className="text-md font-bold text-white border-l-2 border-[#0E70C4] pl-2">
               5. Modules Curriculum
             </h3>
             <button
@@ -463,7 +463,7 @@ export default function CertificationForm() {
         {/* Benefits list */}
         <section className={SUBSECTION_CLASS}>
           <div className="flex items-center justify-between">
-            <h3 className="text-md font-bold text-white border-l-2 border-[#3c72fc] pl-2">
+            <h3 className="text-md font-bold text-white border-l-2 border-[#0E70C4] pl-2">
               6. Program Benefits
             </h3>
             <button
@@ -499,7 +499,7 @@ export default function CertificationForm() {
         {/* Fees list */}
         <section className={SUBSECTION_CLASS}>
           <div className="flex items-center justify-between">
-            <h3 className="text-md font-bold text-white border-l-2 border-[#3c72fc] pl-2">
+            <h3 className="text-md font-bold text-white border-l-2 border-[#0E70C4] pl-2">
               7. Fee Structures
             </h3>
             <button
@@ -548,7 +548,7 @@ export default function CertificationForm() {
                       type="number"
                       value={fee.amountValue ?? ""}
                       onChange={(e) => handleFeeChange(idx, "amountValue", e.target.value)}
-                      className="w-28 rounded-lg border border-white/20 bg-[#151327] px-2 py-1 text-white outline-none focus:border-[#3c72fc]"
+                      className="w-28 rounded-lg border border-white/20 bg-[#0B1B3A] px-2 py-1 text-white outline-none focus:border-[#0E70C4]"
                       placeholder="40000"
                     />
                   </label>
@@ -558,7 +558,7 @@ export default function CertificationForm() {
                       type="number"
                       value={fee.scholarshipPercent ?? ""}
                       onChange={(e) => handleFeeChange(idx, "scholarshipPercent", e.target.value)}
-                      className="w-20 rounded-lg border border-white/20 bg-[#151327] px-2 py-1 text-white outline-none focus:border-[#3c72fc]"
+                      className="w-20 rounded-lg border border-white/20 bg-[#0B1B3A] px-2 py-1 text-white outline-none focus:border-[#0E70C4]"
                       placeholder="50"
                     />
                   </label>
@@ -567,7 +567,7 @@ export default function CertificationForm() {
                       type="checkbox"
                       checked={!!fee.isComputed}
                       onChange={(e) => handleFeeChange(idx, "isComputed", e.target.checked)}
-                      className="w-4 h-4 accent-[#3c72fc]"
+                      className="w-4 h-4 accent-[#0E70C4]"
                     />
                     <span>Auto-computed final total (Tuition × (1 − Scholarship %))</span>
                   </label>
@@ -598,7 +598,7 @@ export default function CertificationForm() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-[#3c72fc] px-6 py-3 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-50"
+            className="rounded-xl bg-[#0E70C4] px-6 py-3 text-sm font-semibold text-white hover:bg-[#2d5fe1] disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save Certification"}
           </button>

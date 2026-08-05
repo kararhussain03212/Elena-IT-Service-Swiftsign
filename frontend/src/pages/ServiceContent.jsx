@@ -27,7 +27,7 @@ const ServiceContent = () => {
 
   const resolveImage = (value) => {
     if (!value)
-      return "https://placehold.co/1000x600/1b1832/ffffff?text=Service";
+      return "https://placehold.co/1000x600/142A52/ffffff?text=Service";
     if (value.startsWith("http")) return value;
     if (value.startsWith("/uploads/")) return apiRoot + value;
     return apiRoot + "/uploads/" + value;
@@ -68,7 +68,7 @@ const ServiceContent = () => {
 
   if (loading) {
     return (
-      <section className="bg-[#151327] p-10 text-white">
+      <section className="bg-white p-10 text-[#0B1B3A]">
         Loading service...
       </section>
     );
@@ -76,16 +76,16 @@ const ServiceContent = () => {
 
   if (!service) {
     return (
-      <section className="bg-[#151327]">
+      <section className="bg-white">
         <Banner1 title="Service Details" />
-        <div className="mx-auto w-full max-w-[900px] px-6 md:px-10 py-20 text-white">
+        <div className="mx-auto w-full max-w-[900px] px-6 md:px-10 py-20 text-[#0B1B3A]">
           <h2 className="text-2xl font-bold">Service not found</h2>
-          <p className="mt-3 text-white/70">
+          <p className="mt-3 text-[#0B1B3A]/70">
             The service you are looking for does not exist.
           </p>
           <Link
             to="/services"
-            className="mt-6 inline-flex items-center gap-2 text-[#3c72fc] hover:text-white transition-colors"
+            className="mt-6 inline-flex items-center gap-2 text-[#0E70C4] hover:text-[#0B1B3A] transition-colors"
           >
             Back to Services
           </Link>
@@ -95,12 +95,12 @@ const ServiceContent = () => {
   }
 
   return (
-    <section className="bg-[#151327]">
+    <section className="bg-white">
       <Banner1 title={service.title} />
       <div className="py-20 md:py-28 ">
         <div className="mx-auto w-full max-w-[1320px] px-6 md:px-10">
           <div className="grid gap-10 lg:grid-cols-[1.3fr_0.6fr]">
-            <div className="text-white">
+            <div className="text-[#0B1B3A]">
               <div
                 ref={mainImageRef}
                 className="sr-hidden sr-up overflow-hidden"
@@ -117,11 +117,11 @@ const ServiceContent = () => {
                   <h3 className="text-2xl font-bold md:text-3xl">
                     {service.title}
                   </h3>
-                  <p className="mt-5 text-[17px] leading-7 text-white/80 md:text-[15px] text-justify">
+                  <p className="mt-5 text-[17px] leading-7 text-[#0B1B3A]/75 md:text-[15px] text-justify">
                     {service.description1 || service.description}
                   </p>
 
-                  <p className="mt-4 text-[17px] leading-7 text-white/80 md:text-[15px] text-justify">
+                  <p className="mt-4 text-[17px] leading-7 text-[#0B1B3A]/75 md:text-[15px] text-justify">
                     {service.description2 || ""}
                   </p>
                 </div>
@@ -133,13 +133,13 @@ const ServiceContent = () => {
                     <h4 className="text-xl font-semibold">
                       Benefits With Our Service
                     </h4>
-                    <ul className="mt-4 space-y-4 text-sm text-white/80">
+                    <ul className="mt-4 space-y-4 text-sm text-[#0B1B3A]/75">
                       {benefitItems.map((item, index) => (
                         <li
                           key={`${index}-${item}`}
                           className="flex items-center gap-3 text-[16px]"
                         >
-                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#3c72fc] text-white">
+                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#0E70C4] text-white">
                             <Check size={14} />
                           </span>
                           {item}
@@ -162,17 +162,17 @@ const ServiceContent = () => {
 
               {faqItems.length > 0 ? (
                 <div ref={faqRef} className="sr-hidden sr-up mt-12">
-                  <h4 className="text-xl font-bold text-white">
+                  <h4 className="text-xl font-bold text-[#0B1B3A]">
                     Most Common Questions
                   </h4>
-                  <div className="mt-5 overflow-hidden bg-[#0f0d1d]">
+                  <div className="mt-5 overflow-hidden bg-white border border-black/10 rounded-xl shadow-sm">
                     {faqItems.map((faq, idx) => {
                       const faqKey = faq?.id ?? idx;
                       const isOpen = openId === faqKey;
                       return (
                         <div
                           key={faqKey}
-                          className={`${idx !== 0 ? "border-t border-white/10" : ""}`}
+                          className={`${idx !== 0 ? "border-t border-black/10" : ""}`}
                         >
                           <button
                             onClick={() => toggle(faqKey)}
@@ -180,7 +180,7 @@ const ServiceContent = () => {
                           >
                             <span
                               className={`font-semibold text-[15px] pr-4 transition-colors duration-200 ${
-                                isOpen ? "text-[#3c72fc]" : "text-white"
+                                isOpen ? "text-[#0E70C4]" : "text-[#0B1B3A]"
                               }`}
                             >
                               {faq.question}
@@ -188,8 +188,8 @@ const ServiceContent = () => {
                             <span
                               className={`flex-shrink-0 w-7 h-7 flex items-center justify-center text-lg font-bold transition-colors duration-200 ${
                                 isOpen
-                                  ? "bg-[#3c72fc] text-white"
-                                  : "bg-transparent border border-white/30 text-white/60"
+                                  ? "bg-[#0E70C4] text-white"
+                                  : "bg-transparent border border-black/20 text-[#0B1B3A]/60"
                               }`}
                             >
                               {isOpen ? "-" : "+"}
@@ -203,7 +203,7 @@ const ServiceContent = () => {
                             }}
                           >
                             <div style={{ overflow: "hidden", minHeight: 0 }}>
-                              <p className="px-5 pb-5 text-white/70 text-[14.5px] leading-relaxed">
+                              <p className="px-5 pb-5 text-[#0B1B3A]/70 text-[14.5px] leading-relaxed">
                                 {faq.answer}
                               </p>
                             </div>
@@ -216,17 +216,17 @@ const ServiceContent = () => {
               ) : null}
             </div>
 
-            <aside ref={asideRef} className="sr-hidden sr-left text-white">
+            <aside ref={asideRef} className="sr-hidden sr-left text-[#0B1B3A]">
               <h4 className="text-lg font-semibold mb-4">All Services</h4>
               <div className="space-y-2">
                 {services.map((item) => (
                   <Link
                     key={item._id}
                     to={"/services/" + item.slug}
-                    className={`block px-4 py-5 text-sm font-semibold transition-colors ${
+                    className={`block px-4 py-5 text-sm font-semibold transition-colors rounded-lg ${
                       item.slug === service.slug
-                        ? "bg-[#3c72fc] text-white"
-                        : "bg-[#221a4a] text-white/90 hover:bg-[#2c1f62]"
+                        ? "bg-[#0E70C4] text-white"
+                        : "bg-[#F3F6FB] text-[#0B1B3A]/85 hover:bg-[#E5ECF7]"
                     }`}
                   >
                     {item.title}

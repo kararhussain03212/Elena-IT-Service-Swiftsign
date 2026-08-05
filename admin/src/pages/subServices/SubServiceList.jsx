@@ -93,7 +93,7 @@ export default function SubServiceList() {
           return (
             <article key={item._id} className="admin-modern-card p-5">
               <div className="mb-3 flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3c72fc]/20 text-[#9bb8ff]">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#0E70C4]/20 text-[#9bb8ff]">
                   {iconUrl ? (
                     <img src={iconUrl} alt={item.iconAlt || item.title + " icon"} className="h-6 w-6 object-contain" />
                   ) : (

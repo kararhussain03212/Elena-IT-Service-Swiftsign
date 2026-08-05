@@ -19,7 +19,7 @@ export default function UserTable({
   onDelete,
 }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0f0d1d]">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0F2350]">
       <div className="overflow-x-auto">
         <table className="min-w-full text-left text-sm">
           <thead>

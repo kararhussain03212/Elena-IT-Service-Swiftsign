@@ -28,17 +28,17 @@ const Button = ({
         // spacing & text
         "px-[25px] py-[15px] text-[15px] font-semibold capitalize text-white",
         // background — matches --gradient-bg variable
-        "bg-[linear-gradient(90deg,#3c72fc_-10.59%,#00060c_300.59%)]",
+        "bg-[linear-gradient(90deg,#1C64EC_-10.59%,#0B1B3A_300.59%)]",
         // no default border
         "border-none cursor-pointer disabled:cursor-not-allowed",
-        // ::before — bottom-left fill (--secondary-color: #0f0d1d)
+        // ::before — bottom-left fill (--secondary-color: #0F2350)
         "before:absolute before:bottom-0 before:left-0 before:-z-1",
-        "before:h-0 before:w-1/2 before:bg-[#0f0d1d]",
+        "before:h-0 before:w-1/2 before:bg-[#0F2350]",
         "before:content-[''] before:transition-all before:duration-300 before:ease-in-out",
         "hover:before:h-full",
-        // ::after — top-right fill (--secondary-color: #0f0d1d)
+        // ::after — top-right fill (--secondary-color: #0F2350)
         "after:absolute after:right-0 after:top-0 after:-z-1",
-        "after:h-0 after:w-1/2 after:bg-[#0f0d1d]",
+        "after:h-0 after:w-1/2 after:bg-[#0F2350]",
         "after:content-[''] after:transition-all after:duration-300 after:ease-in-out",
         "hover:after:h-full",
         // press state

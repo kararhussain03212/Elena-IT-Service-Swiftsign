@@ -209,7 +209,7 @@ export default function TestimonialForm() {
               accept="image/*"
               name="avatar"
               onChange={onChange}
-              className="w-full rounded-lg border border-white/20 bg-transparent px-3 py-2 text-white outline-none file:mr-4 file:rounded-md file:border-0 file:bg-[#3c72fc] file:px-3 file:py-1 file:text-white"
+              className="w-full rounded-lg border border-white/20 bg-transparent px-3 py-2 text-white outline-none file:mr-4 file:rounded-md file:border-0 file:bg-[#0E70C4] file:px-3 file:py-1 file:text-white"
             />
           </label>
 

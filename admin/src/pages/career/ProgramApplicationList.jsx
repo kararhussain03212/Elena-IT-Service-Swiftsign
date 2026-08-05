@@ -86,7 +86,7 @@ export default function ProgramApplicationList() {
         </p>
       </header>
 
-      <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4">
+      <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-4">
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="space-y-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-white/55">Status</span>
@@ -120,13 +120,13 @@ export default function ProgramApplicationList() {
       {loading ? (
         <p className="text-white/70">Loading applications...</p>
       ) : items.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-10 text-center text-sm text-white/60">
+        <div className="rounded-2xl border border-white/10 bg-[#0F2350] p-10 text-center text-sm text-white/60">
           No applications found.
         </div>
       ) : (
         <div className="space-y-4">
           {items.map((item) => (
-            <article key={item.id} className="rounded-2xl border border-white/10 bg-[#0f0d1d] p-4 sm:p-5">
+            <article key={item.id} className="rounded-2xl border border-white/10 bg-[#0F2350] p-4 sm:p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="text-lg font-bold text-white">{item.full_name}</h3>
