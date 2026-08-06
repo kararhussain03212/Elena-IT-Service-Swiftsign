@@ -28,7 +28,15 @@ const Footer = ({ content = {} }) => {
   const topRef = useScrollReveal({ threshold: 0.05, once: true });
   const midRef = useScrollReveal({ threshold: 0.05, once: true });
 
-  const logoSrc = content.logo || content.logoLight || logoLight;
+  const logoSrc = (() => {
+    const apiRoot = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
+    const raw = String(content.logo || content.logoLight || "").trim();
+    if (!raw) return logoLight;
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (raw.startsWith("/uploads/")) return apiRoot + raw;
+    if (/^uploads\//i.test(raw)) return apiRoot + "/" + raw;
+    return raw;
+  })();
   const brandName = String(content.brandName || "ELENA").trim();
   const brandSymbol = String(content.brandSymbol || "©").trim();
   const brandDescription = String(content.brandDescription || "").trim();
@@ -42,7 +50,7 @@ const Footer = ({ content = {} }) => {
 
   const quickLinksTitle = String(content.quickLinksTitle || "Quick Links").trim();
   const itSolutionsTitle = String(content.itSolutionsTitle || "IT Solutions").trim();
-  const securitySolutionsTitle = String(content.securitySolutionsTitle || "Security Solutions").trim();
+
   const supportTitle = String(content.supportTitle || "Support & Info").trim();
   const socialsTitle = String(content.socialsTitle || "Social Media").trim();
   const copyrightText = String(content.copyrightText || `© ${new Date().getFullYear()} Elena IT Services. All rights reserved.`).trim();
@@ -65,28 +73,7 @@ const Footer = ({ content = {} }) => {
         .filter(Boolean)
     : [];
 
-  const securitySolutions = Array.isArray(content.securitySolutions)
-    ? content.securitySolutions
-        .map((item) => {
-          if (typeof item === "string") {
-            const name = String(item || "").trim();
-            return name ? { name, href: "/services" } : null;
-          }
-          if (item && typeof item === "object") {
-            if (item.isActive === false) return null;
-            const name = String(item.name || "").trim();
-            const href = String(item.href || "/services").trim();
-            return name ? { name, href } : null;
-          }
-          return null;
-        })
-        .filter(Boolean)
-    : [
-        { name: "CCTV Services", href: "/services" },
-        { name: "Alarm Systems", href: "/services" },
-        { name: "Biometric Systems", href: "/services" },
-        { name: "Parking Barrier System", href: "/services" },
-      ];
+
 
   const quickLinks = Array.isArray(content.quickLinks)
     ? content.quickLinks.filter(
@@ -128,22 +115,19 @@ const Footer = ({ content = {} }) => {
       ];
 
   return (
-    <footer className="relative bg-white text-[#0B1B3A] w-full min-h-fit lg:min-h-screen flex flex-col justify-between px-6 md:px-12 lg:px-16 py-10 lg:py-14 select-none border-t border-black/10">
+    <footer className="relative bg-white text-[#0B1B3A] w-full min-h-fit flex flex-col justify-between px-6 md:px-12 lg:px-16 py-10 lg:py-14 border-t border-black/10">
       {/* ── 1. Giant Brand Header ── */}
       <div ref={topRef} className="sr-hidden sr-up w-full text-center sm:text-left pt-10 sm:pt-16 md:pt-20 lg:pt-24 pb-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6 border-b border-black/10 pb-6 md:pb-10">
           <div className="flex items-center pb-1">
             <img src={logoSrc} alt="Elena Logo" className="h-16 sm:h-20 md:h-20 lg:h-24 xl:h-32 w-auto object-contain opacity-95" />
           </div>
-          <h1 className="text-[12vw] sm:text-[10vw] md:text-[65px] lg:text-[90px] xl:text-[140px] 2xl:text-[170px] font-black uppercase tracking-tighter text-[#0B1B3A] leading-none font-sans text-right">
-            {brandName}<span className="text-[0.35em] font-normal align-super text-[#1C64EC] ml-1">{brandSymbol}</span>
-          </h1>
         </div>
       </div>
 
       {/* ── 2. Main Content Grid ── */}
       <div ref={midRef} className="sr-hidden sr-up my-auto py-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-6 xl:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 lg:gap-6 xl:gap-10">
           {/* Column 1: Description & QR */}
           <div className="flex flex-col space-y-6">
             <p className="text-[#585858] text-xs sm:text-sm xl:text-base leading-relaxed mt-1">
@@ -216,29 +200,7 @@ const Footer = ({ content = {} }) => {
             </ul>
           </div>
 
-          {/* Column 4: Security Solutions */}
-          <div>
-            <h4 className="text-sm sm:text-base xl:text-lg font-bold text-[#1C64EC] mb-4 lg:mb-6 whitespace-nowrap">
-              {securitySolutionsTitle}
-            </h4>
-            <ul className="space-y-2.5 lg:space-y-3 text-xs sm:text-sm xl:text-[15px] text-[#585858]">
-              {securitySolutions.map((item, idx) => (
-                <li key={`${item.name}-${idx}`}>
-                  {!item.href ? (
-                    <span className="font-medium">{item.name}</span>
-                  ) : isExternalHref(item.href) ? (
-                    <a href={item.href} target="_blank" rel="noopener noreferrer" className="hover:text-[#1C64EC] transition-colors font-medium">
-                      {item.name}
-                    </a>
-                  ) : (
-                    <Link to={item.href} className="hover:text-[#1C64EC] transition-colors font-medium">
-                      {item.name}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+
 
           {/* Column 5: Contact & Hours */}
           <div className="md:col-span-2 lg:col-span-1 space-y-5 lg:space-y-6">

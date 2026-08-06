@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import swiftLogo from "../assets/images/logo/swift.png";
+import swiftLogo from "../assets/images/logo/without text.png";
 import { convertImageFileToWebp } from "../utils/webpUpload";
 
 const ImageUpload = ({

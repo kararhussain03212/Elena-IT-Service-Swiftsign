@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth.js";
-import swiftLogo from "../assets/images/logo/swift.png";
+import swiftLogo from "../assets/images/logo/without text.png";
 import { normalizeUserRole } from "../modules/users/constants.js";
 import { SECTION_PAGES } from "../pages/sections/sectionDefinitions";
 

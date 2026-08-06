@@ -46,8 +46,7 @@ const createDefaultContentByKey = (key) => {
         quickLinksTitle: "Quick Links",
         itSolutionsTitle: "Core Services",
         itSolutions: [{ name: "", href: "/services" }],
-        securitySolutionsTitle: "Security Solutions",
-        securitySolutions: [{ name: "", href: "/services" }],
+
         quickLinks: [{ name: "", href: "" }],
         supportTitle: "Support & Info",
         socialsTitle: "Social Media",
@@ -1349,24 +1348,7 @@ const SectionContentEditor = ({
           })
           .filter(Boolean)
       : [];
-    const normalizedSecuritySolutions = Array.isArray(data.securitySolutions)
-      ? data.securitySolutions
-          .map((item) => {
-            if (typeof item === "string") {
-              return { name: item, href: "/services" };
-            }
 
-            if (item && typeof item === "object") {
-              return {
-                name: getTextValue(item.name),
-                href: getTextValue(item.href || "/services"),
-              };
-            }
-
-            return null;
-          })
-          .filter(Boolean)
-      : [];
 
     return (
       <div className="space-y-4">
@@ -1393,6 +1375,38 @@ const SectionContentEditor = ({
               setContent({ ...data, brandDescription: value })
             }
           />
+        </section>
+        <section className={SUBSECTION_CLASS}>
+          <ImageUpload
+            value={resolveUploadedAssetUrl(data.logo)}
+            onFileSelect={async (file) => {
+              if (typeof onUploadNavbarLogo !== "function") return;
+
+              const uploadedPath = await onUploadNavbarLogo(file);
+              if (!uploadedPath) return;
+
+              setContent({ ...data, logo: uploadedPath });
+            }}
+            label={
+              isUploadingNavbarLogo
+                ? "Uploading Footer Logo..."
+                : "Upload Footer Logo"
+            }
+            helperText="Auto-uploads to /uploads/... (fallback: inline image if endpoint unavailable)"
+          />
+          <div className="mt-3">
+            <TextInput
+              label="Logo URL / Path"
+              value={data.logo}
+              placeholder="https://... or /uploads/logo.png"
+              onChange={(value) => setContent({ ...data, logo: value })}
+            />
+          </div>
+          {navbarLogoUploadError ? (
+            <p className="mt-2 text-sm text-red-300">
+              {navbarLogoUploadError}
+            </p>
+          ) : null}
         </section>
         <section className={SUBSECTION_CLASS}>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -1461,31 +1475,7 @@ const SectionContentEditor = ({
           ]}
         />
 
-        <section className={SUBSECTION_CLASS}>
-          <TextInput
-            label="Security Solutions Column Title"
-            value={data.securitySolutionsTitle}
-            onChange={(value) =>
-              setContent({ ...data, securitySolutionsTitle: value })
-            }
-          />
-        </section>
 
-        <ObjectListEditor
-          title="Security Solutions"
-          items={normalizedSecuritySolutions}
-          onChange={(securitySolutions) =>
-            setContent({ ...data, securitySolutions })
-          }
-          createItem={() => ({ name: "", href: "/services" })}
-          fields={[
-            { key: "name", label: "Service Name" },
-            {
-              key: "href",
-              label: "Link (e.g. /services or https://example.com)",
-            },
-          ]}
-        />
 
         <section className={SUBSECTION_CLASS}>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

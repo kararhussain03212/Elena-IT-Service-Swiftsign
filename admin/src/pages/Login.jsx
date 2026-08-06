@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import swiftLogo from "../assets/images/logo/swift.png";
+import swiftLogo from "../assets/images/logo/without text.png";
 
 export default function Login() {
   const navigate = useNavigate();
