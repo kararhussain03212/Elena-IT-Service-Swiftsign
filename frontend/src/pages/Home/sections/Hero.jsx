@@ -35,58 +35,10 @@ const Hero = () => {
               ? data.data
               : [];
 
-        // If no sliders from API, use default sliders with Unsplash images
-        if (normalized.length === 0) {
-          setSlides([
-            {
-              _id: "slide-1",
-              heading: "CYBER SECURITY & CLOUD",
-              title: "Securing Your Digital Future",
-              subtitle:
-                "Protect your business with enterprise-grade security, cloud computing, and cutting-edge solutions.",
-              buttonText: "Get Started",
-              buttonLink: "/services",
-              image:
-                "https://images.unsplash.com/photo-1568992688065-536aad8a12f6?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            },
-            {
-              _id: "slide-2",
-              heading: "IT CONSULTING & SOLUTIONS",
-              title: "Transform Your Business Today",
-              subtitle:
-                "Expert IT consulting and innovative solutions to drive your business forward and maximize growth potential.",
-              buttonText: "Explore Solutions",
-              buttonLink: "/services",
-              image:
-                "https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            },
-          ]);
-        } else {
-          setSlides(sortContentItems(normalized));
-        }
+        setSlides(sortContentItems(normalized));
       } catch (error) {
         console.error("Slider load failed:", error);
-        // Use default slides on error
-        setSlides([
-          {
-            _id: "slide-1",
-            heading: "CYBER SECURITY & CLOUD",
-            title: "Securing Your Digital Future",
-            subtitle: "Protect your business with enterprise-grade security, cloud computing, and cutting-edge solutions.",
-            buttonText: "Get Started",
-            buttonLink: "/services",
-            image: "https://images.unsplash.com/photo-1568992688065-536aad8a12f6?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          },
-          {
-            _id: "slide-2",
-            heading: "IT CONSULTING & SOLUTIONS",
-            title: "Transform Your Business Today",
-            subtitle: "Expert IT consulting and innovative solutions to drive your business forward and maximize growth potential.",
-            buttonText: "Explore Solutions",
-            buttonLink: "/services",
-            image: "https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          },
-        ]);
+        setSlides([]);
       } finally {
         setLoading(false);
       }

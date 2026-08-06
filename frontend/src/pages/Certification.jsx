@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Banner from '@/components/Banner';
 import { getCertifications } from '@/api/Apis';
@@ -44,12 +44,12 @@ export default function Certification() {
     ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, "")
     : "";
 
-  const resolveImageUrl = (value, fallback) => {
+  const resolveImageUrl = useCallback((value, fallback) => {
     if (!value) return fallback;
     if (value.startsWith("http") || value.startsWith("data:")) return value;
     if (value.startsWith("/uploads/")) return apiRoot + value;
     return apiRoot + "/" + value;
-  };
+  }, [apiRoot]);
 
   useEffect(() => {
     const fetchCerts = async () => {
@@ -78,7 +78,7 @@ export default function Certification() {
       }
     };
     fetchCerts();
-  }, []);
+  }, [resolveImageUrl]);
 
   return (
     <>

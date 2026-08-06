@@ -358,7 +358,7 @@ export default function App() {
           <Route
             path="/career-page-settings"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute adminOnly>
                 <Layout>
                   <CareerPageSettings />
                 </Layout>
@@ -368,7 +368,7 @@ export default function App() {
           <Route
             path="/career-programs"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute adminOnly>
                 <Layout>
                   <CareerProgramList />
                 </Layout>
@@ -378,7 +378,7 @@ export default function App() {
           <Route
             path="/career-programs/new"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute adminOnly>
                 <Layout>
                   <CareerProgramForm />
                 </Layout>
@@ -388,7 +388,7 @@ export default function App() {
           <Route
             path="/career-programs/edit/:id"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute adminOnly>
                 <Layout>
                   <CareerProgramForm />
                 </Layout>

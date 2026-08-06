@@ -121,6 +121,10 @@ class ContactMessageController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = ContactMessageModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Contact message not found.');
+        }
         ContactMessageModel::delete($id);
         return ['message' => 'Deleted'];
     }

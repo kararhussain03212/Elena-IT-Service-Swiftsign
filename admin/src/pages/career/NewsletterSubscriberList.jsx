@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getNewsletterSubscribers, exportNewsletterSubscribersCsv } from "../../api/newsletterSubscriberApi";
 
 const formatDateTime = (value) => {
@@ -16,7 +16,7 @@ export default function NewsletterSubscriberList() {
   const [total, setTotal] = useState(0);
   const [exporting, setExporting] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const { data } = await getNewsletterSubscribers({ page, limit: 20 });
@@ -29,11 +29,11 @@ export default function NewsletterSubscriberList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]);
 
   useEffect(() => {
     load();
-  }, [page]);
+  }, [load]);
 
   const handleExport = async () => {
     setExporting(true);

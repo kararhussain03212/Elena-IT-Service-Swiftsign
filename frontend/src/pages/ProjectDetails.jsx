@@ -181,13 +181,14 @@ const ProjectDetails = () => {
               <h3 className="mb-3 text-[20px] sm:text-[22px] lg:text-[30px] font-extrabold text-[#0B1B3A] leading-snug">
                 {project.category ?? "Technology"} Project
               </h3>
-              <p className="mb-5 text-[15px]  text-[#0B1B3A]/55">
-                {project.challenge ??
-                  "The most significant challenges in development are in the intersection of data security and accessibility."}
-              </p>
+              
               <p className="mb-9 text-[15px] leading-[1.85] text-[#0B1B3A]/60">
                 {project.overview ??
                   "A clean, modern experience with strong visual hierarchy, fast loading, and a layout that scales across devices. The system is optimized for responsive behavior so users can browse comfortably on mobile, tablet, and desktop."}
+              </p>
+              <p className="mb-5 text-[15px]  text-[#0B1B3A]/55">
+                {project.challenge ??
+                  "The most significant challenges in development are in the intersection of data security and accessibility."}
               </p>
 
               {websiteUrl ? (

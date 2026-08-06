@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   getCareerProgramById,
@@ -37,10 +37,9 @@ export default function CareerProgramForm() {
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [moduleError, setModuleError] = useState("");
   const [newModule, setNewModule] = useState({ title: "", description: "" });
 
-  const loadProgram = async () => {
+  const loadProgram = useCallback(async () => {
     try {
       const { data } = await getCareerProgramById(id);
       const program = data?.data || data;
@@ -68,11 +67,11 @@ export default function CareerProgramForm() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     if (isEdit) loadProgram();
-  }, [id]);
+  }, [isEdit, loadProgram]);
 
   const handleArrayChange = (setter, list, index, value) => {
     const updated = [...list];

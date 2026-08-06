@@ -106,7 +106,12 @@ class CareerProgramController
 
     public static function updateModule(array $context): array
     {
+        $programId = (int) ($context['params']['id'] ?? 0);
         $moduleId = (int) ($context['params']['moduleId'] ?? 0);
+        $module = CareerProgramModuleModel::findById($moduleId);
+        if (!$module || (int) ($module['program_id'] ?? 0) !== $programId) {
+            error_response(404, 'Module not found.');
+        }
         $body = $context['body'] ?? [];
         $payload = [];
         if (array_key_exists('title', $body)) $payload['title'] = sanitize_string($body['title']);
@@ -123,7 +128,12 @@ class CareerProgramController
 
     public static function deleteModule(array $context): array
     {
+        $programId = (int) ($context['params']['id'] ?? 0);
         $moduleId = (int) ($context['params']['moduleId'] ?? 0);
+        $module = CareerProgramModuleModel::findById($moduleId);
+        if (!$module || (int) ($module['program_id'] ?? 0) !== $programId) {
+            error_response(404, 'Module not found.');
+        }
         CareerProgramModuleModel::delete($moduleId);
         return ['status' => 200, 'message' => 'Deleted'];
     }
@@ -133,8 +143,17 @@ class CareerProgramController
         $programId = (int) ($context['params']['id'] ?? 0);
         $body = $context['body'] ?? [];
         $order = is_array($body['moduleIds'] ?? null) ? $body['moduleIds'] : [];
-        foreach ($order as $index => $moduleId) {
+        // Only ever reorder modules that actually belong to this program — a
+        // stray/foreign moduleId in the payload is silently ignored rather
+        // than allowed to reorder a module under the wrong program.
+        $ownedIds = array_column(CareerProgramModuleModel::listForProgram($programId), 'id');
+        $index = 0;
+        foreach ($order as $moduleId) {
+            if (!in_array((int) $moduleId, $ownedIds, true)) {
+                continue;
+            }
             CareerProgramModuleModel::update((int) $moduleId, ['sort_order' => $index + 1]);
+            $index++;
         }
         return ['status' => 200, 'data' => CareerProgramModuleModel::listForProgram($programId)];
     }

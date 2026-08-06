@@ -40,7 +40,7 @@ const shouldShowDropdown = (link) => {
   return Array.isArray(link?.children) && link.children.length > 0;
 };
 
-const DesktopMenu = ({ menuLinks, isActive, sticky, isHashActive }) => (
+const DesktopMenu = ({ menuLinks, isActive, isHashActive }) => (
   <div className="hidden lg:flex items-center gap-1 font-semibold">
     {menuLinks.map((link) => {
       const showDropdown = shouldShowDropdown(link);
@@ -93,12 +93,9 @@ const DesktopMenu = ({ menuLinks, isActive, sticky, isHashActive }) => (
 );
 
 const NavInner = ({
-  sticky = false,
   isDesktopViewport,
   isActive,
   isHashActive,
-  openMobileGroups,
-  toggleMobileGroup,
   isMobileMenuOpen,
   setIsMobileMenuOpen,
   menuLinks,
@@ -129,7 +126,6 @@ const NavInner = ({
           <DesktopMenu
             menuLinks={menuLinks}
             isActive={isActive}
-            sticky={sticky}
             isHashActive={isHashActive}
           />
         ) : null}
@@ -191,13 +187,7 @@ const Navbar = ({ content = {} }) => {
     return String(left?.name || "").localeCompare(String(right?.name || ""));
   });
 
-  const hasCertificationsLink = sortedNavLinks.some(
-    (link) => {
-      const href = String(link.href || "").trim().toLowerCase();
-      const name = String(link.name || "").trim().toLowerCase();
-      return href === "/certification" || name.includes("certificat");
-    }
-  );
+
 
   const menuLinks = [];
   sortedNavLinks.forEach((link) => {
@@ -223,18 +213,6 @@ const Navbar = ({ content = {} }) => {
     }
 
     menuLinks.push(finalLink);
-
-    if (!hasCertificationsLink) {
-      const isBlogsLink = String(finalLink.href || "").trim().toLowerCase() === "/blog" ||
-                          String(finalLink.name || "").trim().toLowerCase() === "blogs";
-      if (isBlogsLink) {
-        menuLinks.push({
-          name: "Certifications",
-          href: "/certification",
-          children: [],
-        });
-      }
-    }
   });
 
   const cta = content.cta || {};
@@ -251,7 +229,7 @@ const Navbar = ({ content = {} }) => {
   const apiRoot = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
   const logoSrc = (() => {
     const raw = String(content.logoUrl || "").trim();
-    const finalRaw = raw ? raw : "/elena logo.png";
+    const finalRaw = raw ? raw : "/images/elena logo.png";
     if (/^https?:\/\//i.test(finalRaw)) return finalRaw;
     if (finalRaw.startsWith("/uploads/")) return apiRoot + finalRaw;
     if (/^uploads\//i.test(finalRaw)) return apiRoot + "/" + finalRaw;
@@ -274,19 +252,21 @@ const Navbar = ({ content = {} }) => {
 
   useEffect(() => {
     const onResize = () => {
-      setIsDesktopViewport(window.innerWidth >= 1024);
+      const nowDesktop = window.innerWidth >= 1024;
+      setIsDesktopViewport(nowDesktop);
+      // Collapse the mobile menu right at the transition that makes it
+      // irrelevant, instead of a separate effect reacting to the resulting
+      // state change.
+      if (nowDesktop) {
+        setIsMobileMenuOpen(false);
+        setOpenMobileGroups({});
+      }
     };
 
     window.addEventListener("resize", onResize, { passive: true });
     onResize();
     return () => window.removeEventListener("resize", onResize);
   }, []);
-
-  useEffect(() => {
-    if (!isDesktopViewport) return;
-    setIsMobileMenuOpen(false);
-    setOpenMobileGroups({});
-  }, [isDesktopViewport]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -316,8 +296,12 @@ const Navbar = ({ content = {} }) => {
     };
   }, [isMobileMenuOpen]);
 
+  // openMobileGroups is reset here rather than at each of the several
+  // "close menu" click handlers below, so closing the mobile menu always
+  // collapses its accordion state regardless of how it was closed.
   useEffect(() => {
     if (!isMobileMenuOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOpenMobileGroups({});
     }
   }, [isMobileMenuOpen]);
@@ -418,8 +402,6 @@ const Navbar = ({ content = {} }) => {
           isDesktopViewport={isDesktopViewport}
           isActive={isActive}
           isHashActive={isHashActive}
-          openMobileGroups={openMobileGroups}
-          toggleMobileGroup={toggleMobileGroup}
           isMobileMenuOpen={isMobileMenuOpen}
           setIsMobileMenuOpen={setIsMobileMenuOpen}
           menuLinks={menuLinks}
@@ -432,12 +414,9 @@ const Navbar = ({ content = {} }) => {
       {isDesktopViewport && isScrolled ? (
         <nav className="fixed top-0 inset-x-0 z-1000 w-full transition-all duration-500 translate-y-0 opacity-100 shadow-[0_4px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl bg-white/95 border-b border-black/10">
           <NavInner
-            sticky
             isDesktopViewport={isDesktopViewport}
             isActive={isActive}
             isHashActive={isHashActive}
-            openMobileGroups={openMobileGroups}
-            toggleMobileGroup={toggleMobileGroup}
             isMobileMenuOpen={isMobileMenuOpen}
             setIsMobileMenuOpen={setIsMobileMenuOpen}
             menuLinks={menuLinks}

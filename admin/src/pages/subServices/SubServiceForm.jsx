@@ -190,16 +190,6 @@ export default function SubServiceForm() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm text-white/80">Description</label>
-          <textarea
-            rows={4}
-            value={form.description}
-            onChange={(event) => setField("description", event.target.value)}
-            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
-          />
-        </div>
-
-        <div>
           <label className="mb-1 block text-sm text-white/80">Slug</label>
           <input
             value={form.slug}
@@ -210,14 +200,16 @@ export default function SubServiceForm() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm text-white/80">Icon URL / Path</label>
-          <input
-            value={form.icon}
-            onChange={(event) => setField("icon", event.target.value)}
-            placeholder="https://... or uploads/icon.png"
+          <label className="mb-1 block text-sm text-white/80">Description</label>
+          <textarea
+            rows={4}
+            value={form.description}
+            onChange={(event) => setField("description", event.target.value)}
             className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
           />
         </div>
+
+
 
         <div>
           <label className="mb-1 block text-sm text-white/80">Icon Alt Text</label>

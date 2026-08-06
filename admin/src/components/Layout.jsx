@@ -16,8 +16,8 @@ const baseNavItems = [
   { path: "/testimonials", label: "Testimonials" },
   { path: "/blogs", label: "Blogs" },
   { path: "/contact-messages", label: "Contact Messages", adminOnly: true },
-  { path: "/program-applications", label: "Program Applications" },
-  { path: "/newsletter-subscribers", label: "Newsletter Subscribers" },
+  // { path: "/program-applications", label: "Program Applications" },
+  // { path: "/newsletter-subscribers", label: "Newsletter Subscribers" },
   { path: "/settings", label: "Settings" },
 ];
 
@@ -27,7 +27,7 @@ const sectionNavItems = SECTION_PAGES.map((item) => ({
   label: item.label,
 }));
 
-const sectionGroupOrder = ["global", "home", "about", "contact", "career", "certification"];
+const sectionGroupOrder = ["global", "home", "about", "contact"];
 const sectionGroupLabels = {
   global: "Global",
   home: "Home",
@@ -47,7 +47,7 @@ const getSectionGroups = (isAdmin) => {
   return sectionGroupOrder
     .map((groupKey) => {
       let items = sectionNavItems.filter((item) => getSectionGroup(item.key) === groupKey);
-      if (groupKey === "career") {
+      if (groupKey === "career" && isAdmin) {
         const careerItems = [
           { path: "/career-page-settings", label: "Career Page Settings" },
           { path: "/career-programs", label: "Career Programs" },

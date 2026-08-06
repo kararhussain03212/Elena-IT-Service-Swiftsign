@@ -60,9 +60,13 @@ class SubServiceController
     {
         require_data_inserter();
         $body = $context['body'] ?? [];
+        $title = sanitize_string($body['title'] ?? '');
+        if ($title === '') {
+            error_response(400, 'Title is required.', ['field' => 'title']);
+        }
         $slug = self::ensureUniqueSlug((string) ($body['slug'] ?? $body['title'] ?? ''));
         $payload = [
-            'title' => sanitize_string($body['title'] ?? ''),
+            'title' => $title,
             'slug' => $slug,
             'description' => sanitize_string($body['description'] ?? ''),
             'icon' => sanitize_string($body['icon'] ?? ''),
@@ -81,6 +85,10 @@ class SubServiceController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = SubServiceModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Sub service not found.');
+        }
         $body = $context['body'] ?? [];
         $payload = [];
         if (array_key_exists('title', $body)) {
@@ -105,14 +113,17 @@ class SubServiceController
             $preferredSlug = (string) ($body['slug'] ?? $body['title'] ?? '');
             $payload['slug'] = self::ensureUniqueSlug($preferredSlug, $id);
         }
+        $oldIcon = null;
         $upload = handle_file_upload('iconFile');
         if ($upload) {
             $payload['icon'] = $upload['path'];
+            $oldIcon = $existing['icon'] ?? null;
         }
         $updated = SubServiceModel::update($id, $payload);
         if (!$updated) {
             error_response(404, 'Sub service not found.');
         }
+        delete_uploaded_file_if_present($oldIcon);
         return $updated;
     }
 
@@ -129,7 +140,12 @@ class SubServiceController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = SubServiceModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Sub service not found.');
+        }
         SubServiceModel::delete($id);
+        delete_uploaded_file_if_present($existing['icon'] ?? null);
         return ['message' => 'Deleted'];
     }
 }

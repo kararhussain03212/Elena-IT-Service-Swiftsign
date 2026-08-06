@@ -117,10 +117,14 @@ class TeamController
     {
         require_data_inserter();
         $body = $context['body'] ?? [];
+        $name = sanitize_string($body['name'] ?? '');
+        if ($name === '') {
+            error_response(400, 'Name is required.', ['field' => 'name']);
+        }
         $socialLinksPayload = self::buildSocialLinksPayload($body, [], true) ?? [];
 
         $payload = [
-            'name' => sanitize_string($body['name'] ?? ''),
+            'name' => $name,
             'slug' => slugify($body['slug'] ?? $body['name'] ?? ''),
             'role' => sanitize_string($body['role'] ?? ''),
             'bio' => sanitize_string($body['bio'] ?? ''),
@@ -195,15 +199,18 @@ class TeamController
             }
         }
 
+        $oldImage = null;
         $upload = handle_file_upload('image');
         if ($upload) {
             $payload['image'] = $upload['path'];
+            $oldImage = $existing['image'] ?? null;
         }
 
         $updated = TeamModel::update($id, $payload);
         if (!$updated) {
             error_response(404, 'Team member not found.');
         }
+        delete_uploaded_file_if_present($oldImage);
         if ($socialLinksPayload !== null) {
             TeamModel::replaceSocialLinks($id, $socialLinksPayload);
         }
@@ -225,7 +232,12 @@ class TeamController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = TeamModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Team member not found.');
+        }
         TeamModel::delete($id);
+        delete_uploaded_file_if_present($existing['image'] ?? null);
         return ['message' => 'Deleted'];
     }
 }

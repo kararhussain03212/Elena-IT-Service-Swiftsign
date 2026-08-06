@@ -37,8 +37,6 @@ const Footer = ({ content = {} }) => {
     if (/^uploads\//i.test(raw)) return apiRoot + "/" + raw;
     return raw;
   })();
-  const brandName = String(content.brandName || "ELENA").trim();
-  const brandSymbol = String(content.brandSymbol || "©").trim();
   const brandDescription = String(content.brandDescription || "").trim();
 
   const openingHours = String(content.openingHours || "Mon - Fri: 09:00 AM - 5:00 PM").trim();

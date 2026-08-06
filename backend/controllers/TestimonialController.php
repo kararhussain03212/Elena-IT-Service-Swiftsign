@@ -63,12 +63,20 @@ class TestimonialController
     {
         require_data_inserter();
         $body = $context['body'] ?? [];
+        $name = sanitize_string($body['name'] ?? '');
+        $message = sanitize_string($body['message'] ?? '');
+        if ($name === '') {
+            error_response(400, 'Name is required.', ['field' => 'name']);
+        }
+        if ($message === '') {
+            error_response(400, 'Message is required.', ['field' => 'message']);
+        }
         $payload = [
-            'name' => sanitize_string($body['name'] ?? ''),
+            'name' => $name,
             'role' => sanitize_string($body['role'] ?? ''),
             'company' => sanitize_string($body['company'] ?? ''),
-            'message' => sanitize_string($body['message'] ?? ''),
-            'rating' => parse_integer($body['rating'] ?? 5),
+            'message' => $message,
+            'rating' => max(1, min(5, parse_integer($body['rating'] ?? 5, 5))),
             'sort_order' => parse_integer($body['order'] ?? 0),
             'is_active' => parse_boolean($body['isActive'] ?? '', true) ? 1 : 0,
         ];
@@ -89,6 +97,10 @@ class TestimonialController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = TestimonialModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Testimonial not found.');
+        }
         $body = $context['body'] ?? [];
         $payload = [];
         foreach (['name', 'role', 'company', 'message'] as $field) {
@@ -104,7 +116,7 @@ class TestimonialController
             $payload['slug'] = self::ensureUniqueSlug($preferredSlug, $id);
         }
         if (array_key_exists('rating', $body)) {
-            $payload['rating'] = parse_integer($body['rating'], 5);
+            $payload['rating'] = max(1, min(5, parse_integer($body['rating'], 5)));
         }
         if (array_key_exists('order', $body)) {
             $payload['sort_order'] = parse_integer($body['order'], 0);
@@ -112,14 +124,17 @@ class TestimonialController
         if (array_key_exists('isActive', $body)) {
             $payload['is_active'] = parse_boolean($body['isActive'], true) ? 1 : 0;
         }
+        $oldAvatar = null;
         $upload = handle_file_upload('avatar');
         if ($upload) {
             $payload['avatar'] = $upload['path'];
+            $oldAvatar = $existing['avatar'] ?? null;
         }
         $updated = TestimonialModel::update($id, $payload);
         if (!$updated) {
             error_response(404, 'Testimonial not found.');
         }
+        delete_uploaded_file_if_present($oldAvatar);
         return $updated;
     }
 
@@ -136,7 +151,12 @@ class TestimonialController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = TestimonialModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Testimonial not found.');
+        }
         TestimonialModel::delete($id);
+        delete_uploaded_file_if_present($existing['avatar'] ?? null);
         return ['message' => 'Deleted'];
     }
 }

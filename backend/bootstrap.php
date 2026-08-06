@@ -1,4 +1,11 @@
 <?php
+// Never let PHP notices/warnings/deprecations leak into an API response body —
+// on a host where php.ini has display_errors on, an inline warning (e.g. an
+// "undefined array key" notice) gets printed before the JSON payload and
+// corrupts it for every client that parses the response as JSON. Log instead.
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+
 require_once __DIR__ . '/config/env.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/utils/helpers.php';

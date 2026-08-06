@@ -94,6 +94,10 @@ class ServiceController
     {
         require_data_inserter();
         $body = $context['body'] ?? [];
+        $title = sanitize_string($body['title'] ?? '');
+        if ($title === '') {
+            error_response(400, 'Title is required.', ['field' => 'title']);
+        }
         $benefits = self::normalizeBenefits($body['benefits'] ?? []);
         $faqs = self::normalizeFaqs($body['faqs'] ?? []);
         $slug = self::ensureUniqueSlug((string) ($body['slug'] ?? $body['title'] ?? ''));
@@ -138,18 +142,17 @@ class ServiceController
 
         $serviceId = (int) ($inserted['id'] ?? 0);
         if ($serviceId > 0) {
-            try {
-                if (ServiceModel::shouldUseExtrasTables()) {
-                    ServiceModel::replaceBenefits($serviceId, $benefits);
-                    ServiceModel::replaceFaqs($serviceId, $faqs);
-                } elseif (ServiceModel::shouldUseExtrasColumns()) {
-                    ServiceModel::update($serviceId, [
-                        'benefits' => json_encode($benefits, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-                        'faqs' => json_encode($faqs, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-                    ]);
-                }
-            } catch (Throwable $e) {
-                // Ignore extras save failures to avoid breaking service create.
+            // Let a sync failure propagate: the global handler in public/index.php
+            // turns it into a proper 500 instead of silently returning success
+            // while benefits/FAQs were never saved.
+            if (ServiceModel::shouldUseExtrasTables()) {
+                ServiceModel::replaceBenefits($serviceId, $benefits);
+                ServiceModel::replaceFaqs($serviceId, $faqs);
+            } elseif (ServiceModel::shouldUseExtrasColumns()) {
+                ServiceModel::update($serviceId, [
+                    'benefits' => json_encode($benefits, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                    'faqs' => json_encode($faqs, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                ]);
             }
         }
 
@@ -159,6 +162,10 @@ class ServiceController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = ServiceModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Service not found.');
+        }
         $body = $context['body'] ?? [];
         $payload = [];
         foreach ([
@@ -205,51 +212,57 @@ class ServiceController
         if (array_key_exists('isActive', $body)) {
             $payload['is_active'] = parse_boolean($body['isActive'], true) ? 1 : 0;
         }
+        $oldFileValues = [];
         $upload = handle_file_upload('image');
         if ($upload) {
             $payload['image'] = $upload['path'];
+            $oldFileValues[] = $existing['image'] ?? null;
         }
         $image1Upload = handle_file_upload('image1');
         if ($image1Upload) {
             $payload['image1'] = $image1Upload['path'];
+            $oldFileValues[] = $existing['image1'] ?? null;
         }
         $detailUpload = handle_file_upload('detailImage');
         if ($detailUpload) {
             $payload['detail_image'] = $detailUpload['path'];
+            $oldFileValues[] = $existing['detail_image'] ?? null;
         }
         $updated = ServiceModel::update($id, $payload);
         if (!$updated) {
             error_response(404, 'Service not found.');
         }
+        foreach ($oldFileValues as $oldValue) {
+            delete_uploaded_file_if_present($oldValue);
+        }
 
-        try {
-            if (ServiceModel::shouldUseExtrasTables()) {
-                if (array_key_exists('benefits', $body)) {
-                    ServiceModel::replaceBenefits($id, self::normalizeBenefits($body['benefits']));
-                }
-                if (array_key_exists('faqs', $body)) {
-                    ServiceModel::replaceFaqs($id, self::normalizeFaqs($body['faqs']));
-                }
-            } elseif (ServiceModel::shouldUseExtrasColumns()) {
-                $extrasPayload = [];
-                if (array_key_exists('benefits', $body)) {
-                    $extrasPayload['benefits'] = json_encode(
-                        self::normalizeBenefits($body['benefits']),
-                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-                    );
-                }
-                if (array_key_exists('faqs', $body)) {
-                    $extrasPayload['faqs'] = json_encode(
-                        self::normalizeFaqs($body['faqs']),
-                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-                    );
-                }
-                if (!empty($extrasPayload)) {
-                    $updated = ServiceModel::update($id, $extrasPayload);
-                }
+        // Let a sync failure propagate: the global handler in public/index.php
+        // turns it into a proper 500 instead of silently returning success
+        // while benefits/FAQs were never saved.
+        if (ServiceModel::shouldUseExtrasTables()) {
+            if (array_key_exists('benefits', $body)) {
+                ServiceModel::replaceBenefits($id, self::normalizeBenefits($body['benefits']));
             }
-        } catch (Throwable $e) {
-            // Ignore extras save failures to avoid breaking service update.
+            if (array_key_exists('faqs', $body)) {
+                ServiceModel::replaceFaqs($id, self::normalizeFaqs($body['faqs']));
+            }
+        } elseif (ServiceModel::shouldUseExtrasColumns()) {
+            $extrasPayload = [];
+            if (array_key_exists('benefits', $body)) {
+                $extrasPayload['benefits'] = json_encode(
+                    self::normalizeBenefits($body['benefits']),
+                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                );
+            }
+            if (array_key_exists('faqs', $body)) {
+                $extrasPayload['faqs'] = json_encode(
+                    self::normalizeFaqs($body['faqs']),
+                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                );
+            }
+            if (!empty($extrasPayload)) {
+                $updated = ServiceModel::update($id, $extrasPayload);
+            }
         }
 
         return ServiceModel::attachExtras($updated ?: []);
@@ -268,7 +281,14 @@ class ServiceController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = ServiceModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Service not found.');
+        }
         ServiceModel::delete($id);
+        delete_uploaded_file_if_present($existing['image'] ?? null);
+        delete_uploaded_file_if_present($existing['image1'] ?? null);
+        delete_uploaded_file_if_present($existing['detail_image'] ?? null);
         return ['message' => 'Deleted'];
     }
 }

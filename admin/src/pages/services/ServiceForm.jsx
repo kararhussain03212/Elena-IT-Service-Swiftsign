@@ -389,43 +389,21 @@ export default function ServiceForm() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm text-white/80">
-              Icon URL / Path
-            </label>
-            <input
-              value={form.icon}
-              onChange={(e) => setField("icon", e.target.value)}
-              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
-            />
-          </div>
-        </div>
+
         <ImageUpload
           value={toImageUrl(form.image1)}
           onFileSelect={(file) => setField("image1File", file)}
           label="Upload Service Detail Image"
           helperText="This is the second image (shown on service details)."
         />
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm text-white/80">Detail Image Alt Text</label>
-            <input
-              value={form.image1Alt}
-              onChange={(e) => setField("image1Alt", e.target.value)}
-              placeholder="Describe the detail image for SEO"
-              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm text-white/80">Detail Top Image Alt Text</label>
-            <input
-              value={form.detailImageAlt}
-              onChange={(e) => setField("detailImageAlt", e.target.value)}
-              placeholder="Describe the top detail image for SEO"
-              className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
-            />
-          </div>
+        <div>
+          <label className="mb-1 block text-sm text-white/80">Detail Image Alt Text</label>
+          <input
+            value={form.image1Alt}
+            onChange={(e) => setField("image1Alt", e.target.value)}
+            placeholder="Describe the detail image for SEO"
+            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
+          />
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

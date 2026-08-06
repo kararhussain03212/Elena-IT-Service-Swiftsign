@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getProgramApplications, updateProgramApplicationStatus } from "../../api/programApplicationApi";
 import { getAdminCareerPrograms } from "../../api/careerApi";
 
@@ -40,7 +40,7 @@ export default function ProgramApplicationList() {
       .catch(() => setPrograms([]));
   }, []);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const params = { page, limit: 20 };
@@ -56,11 +56,11 @@ export default function ProgramApplicationList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, statusFilter, programFilter]);
 
   useEffect(() => {
     load();
-  }, [page, statusFilter, programFilter]);
+  }, [load]);
 
   const handleStatusChange = async (id, status) => {
     try {

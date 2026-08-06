@@ -5,6 +5,7 @@ require_once __DIR__ . '/../utils/helpers.php';
 require_once __DIR__ . '/../utils/jwt.php';
 require_once __DIR__ . '/../utils/rbac.php';
 require_once __DIR__ . '/../utils/request_context.php';
+require_once __DIR__ . '/../utils/rate_limit.php';
 
 class AuthController
 {
@@ -46,6 +47,14 @@ class AuthController
 
     public static function register(array $context): array
     {
+        // 10 registrations per hour per IP — self-registration has no
+        // reCAPTCHA (unlike every other public POST endpoint), so this is
+        // the only thing standing between it and mass throwaway-account
+        // creation.
+        if (!check_rate_limit('register_ip:' . client_ip(), 10, 3600)) {
+            error_response(429, 'Too many registration attempts. Please try again later.');
+        }
+
         require_data_inserter();
         $body = $context['body'] ?? [];
         $name = sanitize_string($body['name'] ?? '');
@@ -99,6 +108,19 @@ class AuthController
         if ($email === '' || $password === '') {
             error_response(400, 'Email and password are required.');
         }
+
+        // Two layers: a looser per-IP cap (catches an attacker cycling through
+        // many emails from one source) and a tighter per-IP+email cap (catches
+        // repeated guesses against one account, without letting a shared IP —
+        // e.g. an office NAT — lock everyone out over one bad actor).
+        $ip = client_ip();
+        if (!check_rate_limit('login_ip:' . $ip, 20, 900)) {
+            error_response(429, 'Too many login attempts from this network. Please try again later.');
+        }
+        if (!check_rate_limit('login_ip_email:' . $ip . ':' . $email, 5, 900)) {
+            error_response(429, 'Too many login attempts for this account. Please try again later.');
+        }
+
         $user = UserModel::findByEmailWithPassword($email);
         if (!$user || !password_verify($password, $user['password'] ?? '')) {
             error_response(401, 'Invalid credentials.');
@@ -203,10 +225,12 @@ class AuthController
             $changed[] = 'bio';
         }
 
+        $oldAvatar = null;
         $upload = handle_file_upload('avatar');
         if ($upload) {
             $updates['avatar'] = $upload['path'];
             $changed[] = 'avatar';
+            $oldAvatar = $user['avatar'] ?? null;
         } elseif (array_key_exists('avatar', $body)) {
             $value = self::normalize_avatar($body['avatar']);
             if ($value !== $user['avatar']) {
@@ -228,6 +252,7 @@ class AuthController
         $updates['activity'] = $activity;
 
         $updated = UserModel::update((int) $user['id'], $updates);
+        delete_uploaded_file_if_present($oldAvatar);
         return ['data' => ['message' => 'Profile updated successfully.', 'user' => self::sanitizeUser($updated ?? $user)]];
     }
 

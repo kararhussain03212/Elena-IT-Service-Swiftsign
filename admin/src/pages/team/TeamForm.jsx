@@ -261,7 +261,7 @@ export default function TeamForm() {
           nextErrors[key] = true;
           hasError = true;
         }
-      } catch (_unusedError) {
+      } catch {
         nextErrors[key] = true;
         hasError = true;
       }

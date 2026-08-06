@@ -1,0 +1,9 @@
+Options -Indexes
+
+# Defense in depth: this directory is only ever written to by handle_file_upload()
+# (backend/utils/helpers.php), which now only accepts real images (converted to
+# .webp) and, for the slider "video" field, real mp4/webm/ogv files. Nothing here
+# should ever be executable, but this blocks execution even if that ever changes.
+<FilesMatch "\.(php|phtml|phar|php\d+|cgi|pl|py|sh|asp|aspx|jsp)$">
+  Deny from all
+</FilesMatch>

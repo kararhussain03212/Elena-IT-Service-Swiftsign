@@ -80,7 +80,11 @@ abstract class BaseModel
     protected static function prepareValue(string $column, $value)
     {
         if (in_array($column, static::$jsonColumns, true)) {
-            return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            // Only encode real array payloads. A null/non-array value (e.g. an
+            // explicit null passed to clear a JSON column) must be stored as a
+            // genuine SQL NULL, not the literal string "null" — mirrors the
+            // is_array() gate that Certification::create() already applies.
+            return is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $value;
         }
         return $value;
     }

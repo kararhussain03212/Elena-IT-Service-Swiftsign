@@ -38,8 +38,6 @@ const createDefaultContentByKey = (key) => {
       };
     case "global.footer":
       return {
-        brandName: "ELENA",
-        brandSymbol: "©",
         brandDescription: "",
         qrCodeTitle: "Scan to Connect",
         qrCodeSubtitle: "Quick mobile access",
@@ -89,7 +87,7 @@ const createDefaultContentByKey = (key) => {
       return {
         badge: "FAQ",
         heading: "",
-        items: [{ id: 1, question: "", answer: "" }],
+        items: [{ question: "", answer: "" }],
       };
     case "home.servicesHeader":
       return {
@@ -113,10 +111,10 @@ const createDefaultContentByKey = (key) => {
     case "about.stats":
       return {
         items: [
-          { iconKey: "icon1", value: "300+", label: "Satisfied Clients" },
-          { iconKey: "icon2", value: "1000+", label: "Finished Projects" },
-          { iconKey: "icon3", value: "60+", label: "Skilled Experts" },
-          { iconKey: "icon4", value: "1000+", label: "Media Posts" },
+          { value: "300+", label: "Satisfied Clients" },
+          { value: "1000+", label: "Finished Projects" },
+          { value: "60+", label: "Skilled Experts" },
+          { value: "1000+", label: "Media Posts" },
         ],
       };
     case "contact.supportChannels":
@@ -126,11 +124,24 @@ const createDefaultContentByKey = (key) => {
         introDescription: "",
         channels: [
           {
-            icon: "PhoneCall",
-            title: "",
-            description: "",
-            value: "",
-            href: "",
+            title: "Phone Support",
+            description: "Speak directly with our support team",
+            value: "+971 52 321 6551",
+            href: "tel:+971523216551",
+            color: "#0E70C4",
+          },
+          {
+            title: "WhatsApp Chat",
+            description: "Quick answers via instant messaging",
+            value: "+971 52 321 6551",
+            href: "https://wa.me/971523216551",
+            color: "#25D366",
+          },
+          {
+            title: "Email Support",
+            description: "Get answers to detailed questions",
+            value: "info@elenaitservices.com",
+            href: "mailto:info@elenaitservices.com",
             color: "#0E70C4",
           },
         ],
@@ -144,7 +155,7 @@ const createDefaultContentByKey = (key) => {
       return {
         heading: "Frequently Asked Questions",
         subheading: "",
-        items: [{ id: 1, question: "", answer: "" }],
+        items: [{ question: "", answer: "" }],
       };
     case "contact.main":
       return {
@@ -636,7 +647,6 @@ const SectionContentEditor = ({
           items={data.channels}
           onChange={(channels) => setContent({ ...data, channels })}
           createItem={() => ({
-            icon: "PhoneCall",
             title: "",
             description: "",
             value: "",
@@ -644,7 +654,6 @@ const SectionContentEditor = ({
             color: "#0E70C4",
           })}
           fields={[
-            { key: "icon", label: "Icon (PhoneCall / MessageCircle / Mail)" },
             { key: "title", label: "Title" },
             { key: "description", label: "Description" },
             { key: "value", label: "Display Value" },
@@ -675,22 +684,12 @@ const SectionContentEditor = ({
         <ObjectListEditor
           title="Items"
           items={data.items}
-          onChange={(items) =>
-            setContent({
-              ...data,
-              items: items.map((item, index) => ({
-                ...item,
-                id: Number(item?.id || index + 1),
-              })),
-            })
-          }
+          onChange={(items) => setContent({ ...data, items })}
           createItem={() => ({
-            id: (Array.isArray(data.items) ? data.items.length : 0) + 1,
             question: "",
             answer: "",
           })}
           fields={[
-            { key: "id", label: "ID", type: "number" },
             { key: "question", label: "Question" },
             { key: "answer", label: "Answer", type: "textarea", rows: 4 },
           ]}
@@ -889,22 +888,12 @@ const SectionContentEditor = ({
         <ObjectListEditor
           title="Items"
           items={data.items}
-          onChange={(items) =>
-            setContent({
-              ...data,
-              items: items.map((item, index) => ({
-                ...item,
-                id: Number(item?.id || index + 1),
-              })),
-            })
-          }
+          onChange={(items) => setContent({ ...data, items })}
           createItem={() => ({
-            id: (Array.isArray(data.items) ? data.items.length : 0) + 1,
             question: "",
             answer: "",
           })}
           fields={[
-            { key: "id", label: "ID", type: "number" },
             { key: "question", label: "Question" },
             { key: "answer", label: "Answer", type: "textarea", rows: 4 },
           ]}
@@ -1008,9 +997,8 @@ const SectionContentEditor = ({
         title="Stats"
         items={data.items}
         onChange={(items) => setContent({ ...data, items })}
-        createItem={() => ({ iconKey: "icon1", value: "", label: "" })}
+        createItem={() => ({ value: "", label: "" })}
         fields={[
-          { key: "iconKey", label: "Icon Key (icon1 / icon2 / icon3 / icon4)" },
           { key: "value", label: "Value (e.g. 300+)" },
           { key: "label", label: "Label" },
         ]}
@@ -1204,14 +1192,7 @@ const SectionContentEditor = ({
               }
               helperText="Auto-uploads to /uploads/... (fallback: inline image if endpoint unavailable)"
             />
-            <div className="mt-3">
-              <TextInput
-                label="Logo URL / Path"
-                value={data.logoUrl}
-                placeholder="https://... or /uploads/logo.png"
-                onChange={(value) => setContent({ ...data, logoUrl: value })}
-              />
-            </div>
+
             {navbarLogoUploadError ? (
               <p className="mt-2 text-sm text-red-300">
                 {navbarLogoUploadError}
@@ -1353,20 +1334,6 @@ const SectionContentEditor = ({
     return (
       <div className="space-y-4">
         <section className={SUBSECTION_CLASS}>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <TextInput
-              label="Brand Name"
-              value={data.brandName}
-              onChange={(value) => setContent({ ...data, brandName: value })}
-            />
-            <TextInput
-              label="Brand Symbol (e.g. ©)"
-              value={data.brandSymbol}
-              onChange={(value) => setContent({ ...data, brandSymbol: value })}
-            />
-          </div>
-        </section>
-        <section className={SUBSECTION_CLASS}>
           <TextAreaInput
             label="Brand Description"
             rows={5}
@@ -1394,14 +1361,7 @@ const SectionContentEditor = ({
             }
             helperText="Auto-uploads to /uploads/... (fallback: inline image if endpoint unavailable)"
           />
-          <div className="mt-3">
-            <TextInput
-              label="Logo URL / Path"
-              value={data.logo}
-              placeholder="https://... or /uploads/logo.png"
-              onChange={(value) => setContent({ ...data, logo: value })}
-            />
-          </div>
+
           {navbarLogoUploadError ? (
             <p className="mt-2 text-sm text-red-300">
               {navbarLogoUploadError}
@@ -1911,16 +1871,7 @@ export default function SectionForm({
         onSubmit={handleSubmit}
         className="admin-modern-form admin-modern-panel"
       >
-        {normalizedFixedKey ? (
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <label className="mb-1 block text-sm text-white/80">
-                Section Key
-              </label>
-              <input value={form.key} readOnly className={INPUT_CLASS} />
-            </div>
-          </div>
-        ) : (
+        {!normalizedFixedKey && (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm text-white/80">Page</label>

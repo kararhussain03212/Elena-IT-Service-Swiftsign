@@ -12,7 +12,7 @@ const isValidSocialUrl = (value) => {
   try {
     const parsed = new URL(raw);
     return parsed.protocol === "http:" || parsed.protocol === "https:";
-  } catch (_unusedError) {
+  } catch {
     return false;
   }
 };

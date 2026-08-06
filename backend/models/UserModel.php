@@ -35,6 +35,14 @@ class UserModel extends BaseModel
         return $user ? static::decodeRow($user) : null;
     }
 
+    public static function countByRole(string $role): int
+    {
+        $sql = sprintf('SELECT COUNT(*) FROM %s WHERE role = :role', static::$table);
+        $stmt = self::getConnection()->prepare($sql);
+        $stmt->execute(['role' => $role]);
+        return (int) $stmt->fetchColumn();
+    }
+
     public static function list(array $filters): array
     {
         $page = max(1, (int) ($filters['page'] ?? 1));

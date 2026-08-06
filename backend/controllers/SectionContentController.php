@@ -71,9 +71,17 @@ class SectionContentController
     {
         require_data_inserter();
         $body = $context['body'] ?? [];
+        $page = sanitize_string($body['page'] ?? '');
+        $key = sanitize_string($body['key'] ?? '');
+        if ($page === '') {
+            error_response(400, 'Page is required.', ['field' => 'page']);
+        }
+        if ($key === '') {
+            error_response(400, 'Key is required.', ['field' => 'key']);
+        }
         $payload = [
-            'page' => sanitize_string($body['page'] ?? ''),
-            'key_name' => sanitize_string($body['key'] ?? ''),
+            'page' => $page,
+            'key_name' => $key,
             'content' => self::normalizeContent($body['content'] ?? []),
             'sort_order' => parse_integer($body['order'] ?? 0),
             'is_active' => parse_boolean($body['isActive'] ?? '', true) ? 1 : 0,
@@ -123,7 +131,12 @@ class SectionContentController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = SectionContentModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Section content not found.');
+        }
         SectionContentModel::delete($id);
+        delete_uploaded_file_if_present($existing['image'] ?? null);
         return ['message' => 'Deleted'];
     }
 }

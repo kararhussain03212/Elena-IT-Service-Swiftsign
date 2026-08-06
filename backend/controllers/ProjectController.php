@@ -4,6 +4,31 @@ require_once __DIR__ . '/../utils/helpers.php';
 
 class ProjectController
 {
+    private static function ensureUniqueSlug(string $preferredSlug, ?int $ignoreId = null): string
+    {
+        $base = slugify($preferredSlug);
+        if ($base === '') {
+            $base = 'project';
+        }
+
+        $candidate = $base;
+        $suffix = 2;
+        while (true) {
+            $existing = ProjectModel::findBySlug($candidate, true);
+            if (!$existing) {
+                return $candidate;
+            }
+
+            $existingId = (int) ($existing['id'] ?? $existing['_id'] ?? 0);
+            if ($ignoreId !== null && $existingId === $ignoreId) {
+                return $candidate;
+            }
+
+            $candidate = $base . '-' . $suffix;
+            $suffix++;
+        }
+    }
+
     public static function list(array $context): array
     {
         $includeAll = ($context['query']['all'] ?? '') === '1';
@@ -24,9 +49,13 @@ class ProjectController
     {
         require_data_inserter();
         $body = $context['body'] ?? [];
+        $title = sanitize_string($body['title'] ?? '');
+        if ($title === '') {
+            error_response(400, 'Title is required.', ['field' => 'title']);
+        }
         $payload = [
-            'title' => sanitize_string($body['title'] ?? ''),
-            'slug' => slugify($body['slug'] ?? $body['title'] ?? ''),
+            'title' => $title,
+            'slug' => self::ensureUniqueSlug((string) ($body['slug'] ?? $body['title'] ?? '')),
             'description' => sanitize_string($body['description'] ?? ''),
             'overview' => sanitize_string($body['overview'] ?? ''),
             'challenge' => sanitize_string($body['challenge'] ?? ''),
@@ -57,11 +86,14 @@ class ProjectController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = ProjectModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Project not found.');
+        }
         $body = $context['body'] ?? [];
         $payload = [];
         $mapping = [
             'title' => 'title',
-            'slug' => 'slug',
             'description' => 'description',
             'overview' => 'overview',
             'challenge' => 'challenge',
@@ -83,6 +115,10 @@ class ProjectController
         if (array_key_exists('coverAlt', $body) && table_has_column('projects', 'cover_alt')) {
             $payload['cover_alt'] = sanitize_string($body['coverAlt'] ?? '');
         }
+        if (array_key_exists('slug', $body) || array_key_exists('title', $body)) {
+            $preferredSlug = (string) ($body['slug'] ?? $body['title'] ?? '');
+            $payload['slug'] = self::ensureUniqueSlug($preferredSlug, $id);
+        }
         if (array_key_exists('tags', $body)) {
             $payload['tags'] = parse_tags($body['tags']);
         }
@@ -92,14 +128,17 @@ class ProjectController
         if (array_key_exists('isActive', $body)) {
             $payload['is_active'] = parse_boolean($body['isActive'], true) ? 1 : 0;
         }
+        $oldCoverImage = null;
         $upload = handle_file_upload('coverImage');
         if ($upload) {
             $payload['cover_image'] = $upload['path'];
+            $oldCoverImage = $existing['cover_image'] ?? null;
         }
         $updated = ProjectModel::update($id, $payload);
         if (!$updated) {
             error_response(404, 'Project not found.');
         }
+        delete_uploaded_file_if_present($oldCoverImage);
         return $updated;
     }
 
@@ -116,7 +155,12 @@ class ProjectController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = ProjectModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Project not found.');
+        }
         ProjectModel::delete($id);
+        delete_uploaded_file_if_present($existing['cover_image'] ?? null);
         return ['message' => 'Deleted'];
     }
 }

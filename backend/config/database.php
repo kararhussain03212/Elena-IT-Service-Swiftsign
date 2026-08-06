@@ -24,6 +24,14 @@ class Database
             ];
 
             self::$instance = new PDO($dsn, $username, $password, $options);
+
+            // Without STRICT_TRANS_TABLES, MySQL silently truncates values that
+            // exceed a column's length instead of raising an error — e.g. a title
+            // over 255 chars gets cut to 255 with the API still reporting 201
+            // success. Enforcing strict mode turns that into a catchable
+            // PDOException (surfaced as a 500 by the global handler) instead of
+            // quietly losing data with no error at all.
+            self::$instance->exec("SET SESSION sql_mode = CONCAT(@@SESSION.sql_mode, ',STRICT_TRANS_TABLES')");
         }
 
         return self::$instance;

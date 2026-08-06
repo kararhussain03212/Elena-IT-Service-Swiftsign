@@ -5,6 +5,21 @@ require_once __DIR__ . '/../utils/recaptcha.php';
 
 class CertController
 {
+    private static function hasUploadedCertImage(): bool
+    {
+        return !empty($_FILES['image']) && (int) ($_FILES['image']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK;
+    }
+
+    private static function decodeJsonListField(array $body, string $key): array
+    {
+        $value = $body[$key] ?? [];
+        if (is_string($value)) {
+            $decoded = $value === '' ? [] : json_decode($value, true);
+            return is_array($decoded) ? $decoded : [];
+        }
+        return is_array($value) ? $value : [];
+    }
+
     private static function resolveCertImage(array $body = []): ?string
     {
         $uploadKeys = ['image'];
@@ -80,10 +95,18 @@ class CertController
     public static function create(array $context): array
     {
         $body = $context['body'] ?? [];
-        
+        $code = sanitize_string($body['code'] ?? '');
+        $title = sanitize_string($body['title'] ?? '');
+        if ($code === '') {
+            error_response(400, 'Code is required.', ['field' => 'code']);
+        }
+        if ($title === '') {
+            error_response(400, 'Title is required.', ['field' => 'title']);
+        }
+
         $payload = [
-            'code' => sanitize_string($body['code'] ?? ''),
-            'title' => sanitize_string($body['title'] ?? ''),
+            'code' => $code,
+            'title' => $title,
             'fullName' => sanitize_string($body['fullName'] ?? ''),
             'isOpen' => parse_boolean($body['isOpen'] ?? '', false) ? 1 : 0,
             'tagline' => sanitize_string($body['tagline'] ?? ''),
@@ -92,11 +115,11 @@ class CertController
             'mode' => sanitize_string($body['mode'] ?? ''),
             'prerequisite' => sanitize_string($body['prerequisite'] ?? ''),
             'aboutText' => $body['aboutText'] ?? '',
-            'audience' => is_string($body['audience'] ?? '') ? json_decode($body['audience'], true) : ($body['audience'] ?? []),
-            'modules' => is_string($body['modules'] ?? '') ? json_decode($body['modules'], true) : ($body['modules'] ?? []),
-            'benefits' => is_string($body['benefits'] ?? '') ? json_decode($body['benefits'], true) : ($body['benefits'] ?? []),
+            'audience' => self::decodeJsonListField($body, 'audience'),
+            'modules' => self::decodeJsonListField($body, 'modules'),
+            'benefits' => self::decodeJsonListField($body, 'benefits'),
             'outcome' => $body['outcome'] ?? '',
-            'fees' => is_string($body['fees'] ?? '') ? json_decode($body['fees'], true) : ($body['fees'] ?? []),
+            'fees' => self::decodeJsonListField($body, 'fees'),
             'feeFootnote' => $body['feeFootnote'] ?? '',
             'applicationLink' => sanitize_string($body['applicationLink'] ?? ''),
             'qrCodeUrl' => sanitize_string($body['qrCodeUrl'] ?? ''),
@@ -127,8 +150,12 @@ class CertController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = Certification::findById($id);
+        if (!$existing) {
+            error_response(404, "Certification not found.");
+        }
         $body = $context['body'] ?? [];
-        
+
         $payload = [];
         $fields = [
             'code', 'title', 'fullName', 'isOpen', 'tagline', 'duration',
@@ -149,6 +176,7 @@ class CertController
             }
         }
 
+        $hasNewUpload = self::hasUploadedCertImage();
         $image = self::resolveCertImage($body);
         if ($image !== null) {
             $payload['image'] = $image;
@@ -157,6 +185,9 @@ class CertController
         $updated = Certification::update($id, $payload);
         if (!$updated) {
             error_response(404, "Certification not found.");
+        }
+        if ($hasNewUpload) {
+            delete_uploaded_file_if_present($existing['image'] ?? null);
         }
 
         return [
@@ -168,7 +199,12 @@ class CertController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = Certification::findById($id);
+        if (!$existing) {
+            error_response(404, "Certification not found.");
+        }
         Certification::delete($id);
+        delete_uploaded_file_if_present($existing['image'] ?? null);
         return [
             'status' => 200,
             'message' => 'Deleted'

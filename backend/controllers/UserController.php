@@ -179,10 +179,12 @@ class UserController
             }
             $updates['password'] = UserModel::hashPassword($body['password']);
         }
+        $oldAvatar = null;
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
             $upload = handle_file_upload('avatar');
             if ($upload) {
                 $updates['avatar'] = $upload['path'];
+                $oldAvatar = $existing['avatar'] ?? null;
             }
         } elseif (isset($body['avatar'])) {
             $updates['avatar'] = self::normalize_avatar($body['avatar']);
@@ -193,13 +195,30 @@ class UserController
         $updates['activity'] = ensure_array($existing['activity'] ?? []);
         $updates['activity'][] = ['action' => 'user_updated', 'description' => 'Profile was updated by admin.', 'at' => now()];
         $updated = UserModel::update($id, $updates);
+        delete_uploaded_file_if_present($oldAvatar);
         return ['data' => self::sanitizeUserRecord($updated)];
     }
 
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = UserModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'User not found.');
+        }
+
+        $currentUser = RequestContext::getUser();
+        if ($currentUser && (int) ($currentUser['id'] ?? 0) === $id) {
+            error_response(400, 'You cannot delete your own account.');
+        }
+
+        $role = normalize_role_value($existing['role'] ?? '');
+        if ($role === 'admin' && UserModel::countByRole('admin') <= 1) {
+            error_response(400, 'Cannot delete the last remaining admin account.');
+        }
+
         UserModel::delete($id);
+        delete_uploaded_file_if_present($existing['avatar'] ?? null);
         return ['message' => 'User deleted successfully.'];
     }
 }

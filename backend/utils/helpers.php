@@ -152,18 +152,20 @@ function detect_uploaded_image_type(string $tmpFile): ?string
         return 'png';
     }
 
-    $finfo = @finfo_open(FILEINFO_MIME_TYPE);
-    if ($finfo !== false) {
-        $mime = (string) @finfo_file($finfo, $tmpFile);
-        @finfo_close($finfo);
-        if ($mime === 'image/jpeg') {
-            return 'jpeg';
-        }
-        if ($mime === 'image/png') {
-            return 'png';
-        }
-        if ($mime === 'image/webp') {
-            return 'webp';
+    if (function_exists('finfo_open')) {
+        $finfo = @finfo_open(FILEINFO_MIME_TYPE);
+        if ($finfo !== false) {
+            $mime = (string) @finfo_file($finfo, $tmpFile);
+            @finfo_close($finfo);
+            if ($mime === 'image/jpeg') {
+                return 'jpeg';
+            }
+            if ($mime === 'image/png') {
+                return 'png';
+            }
+            if ($mime === 'image/webp') {
+                return 'webp';
+            }
         }
     }
 
@@ -299,9 +301,16 @@ function handle_file_upload(string $field, string $subFolder = 'uploads'): ?arra
     $sanitized = sanitize_upload_filename($originalName);
     $imageType = detect_uploaded_image_type($tmpFile);
 
-    // Detect by real file content, not field name. This guarantees all uploaded images
-    // are normalized to WebP across all pages/endpoints.
-    if (in_array($imageType, ['jpeg', 'png', 'webp'], true) === false && str_starts_with((string) ($_FILES[$field]['type'] ?? ''), 'image/')) {
+    // Only the slider "video" field legitimately needs a non-image upload. Every other
+    // field on every controller is a picture, so anything that isn't a real detected
+    // image (jpeg/png/webp, verified from file content, never from the client-supplied
+    // Content-Type/filename) is rejected outright. This closes an arbitrary-file-upload
+    // hole where a client could omit/spoof the "image/*" Content-Type to make an
+    // upload of any extension (.php, .svg, .html, ...) fall through unfiltered.
+    if (in_array($imageType, ['jpeg', 'png', 'webp'], true) === false) {
+        if ($field === 'video') {
+            return handle_video_upload($field, $subFolder, $tmpFile, $originalName);
+        }
         error_response(400, 'Only JPG, JPEG, PNG, and WebP images are allowed.', ['field' => $field]);
     }
 
@@ -339,8 +348,37 @@ function handle_file_upload(string $field, string $subFolder = 'uploads'): ?arra
         error_response(500, 'WebP conversion failed. Enable GD (with WebP) or Imagick on the server.', ['field' => $field]);
     }
 
-    // Non-image uploads: preserve previous behavior.
-    $filename = resolve_unique_upload_filename($subFolder, $sanitized);
+    // Unreachable: every non-"video" field either matched a real image type above
+    // (and returned) or was rejected before this point.
+    error_response(400, 'Only JPG, JPEG, PNG, and WebP images are allowed.', ['field' => $field]);
+}
+
+function handle_video_upload(string $field, string $subFolder, string $tmpFile, string $originalName): array
+{
+    // Real video files only, verified from file content — never trust the client's
+    // Content-Type or the uploaded filename's extension.
+    $allowedMimeToExtension = [
+        'video/mp4' => 'mp4',
+        'video/webm' => 'webm',
+        'video/ogg' => 'ogv',
+    ];
+
+    $mime = null;
+    if (function_exists('finfo_open')) {
+        $finfo = @finfo_open(FILEINFO_MIME_TYPE);
+        if ($finfo !== false) {
+            $mime = (string) @finfo_file($finfo, $tmpFile);
+            @finfo_close($finfo);
+        }
+    }
+
+    if ($mime === null || !isset($allowedMimeToExtension[$mime])) {
+        error_response(400, 'Only MP4, WebM, and OGG videos are allowed.', ['field' => $field]);
+    }
+
+    $extension = $allowedMimeToExtension[$mime];
+    $base = pathinfo(sanitize_upload_filename($originalName), PATHINFO_FILENAME);
+    $filename = resolve_unique_upload_filename($subFolder, $base . '.' . $extension);
     $relative = trim($subFolder, '/') . '/' . $filename;
     $destination = ensure_uploaded_directory($relative);
     if (!move_uploaded_file($tmpFile, $destination)) {
@@ -376,6 +414,19 @@ function slugify(string $value): string
 {
     $value = preg_replace('/[^a-z0-9]+/i', '-', trim(strtolower($value)));
     return trim($value, '-');
+}
+
+// CSV formula-injection guard: a cell value opening with =, +, -, @, or a tab
+// is interpreted as a formula by Excel/Sheets when the file is opened. Prefix
+// it with a leading apostrophe (standard mitigation) so it's always read back
+// as literal text.
+function csv_safe_cell(?string $value): string
+{
+    $value = (string) $value;
+    if ($value !== '' && preg_match('/^[=+\-@\t]/', $value) === 1) {
+        return "'" . $value;
+    }
+    return $value;
 }
 
 function parse_tags($value): array
@@ -636,6 +687,43 @@ function normalize_model_image_urls(array $data, array $imageFields): array
     return $data;
 }
 
+function delete_uploaded_file_if_present(?string $relativePathOrUrl): void
+{
+    $raw = trim((string) ($relativePathOrUrl ?? ''));
+    if ($raw === '' || preg_match('#^https?://#i', $raw)) {
+        return;
+    }
+
+    // Normalize into a path relative to backend/ (sibling of backend/public),
+    // the same way ensure_uploaded_directory() resolves upload paths.
+    $relative = ltrim($raw, '/');
+    if ($relative === '') {
+        return;
+    }
+    if (stripos($relative, 'uploads/') !== 0 && strpos($relative, '/') === false) {
+        // Bare filename with no directory — assume it lives directly under uploads/.
+        $relative = 'uploads/' . $relative;
+    }
+
+    $base = realpath(__DIR__ . '/../uploads');
+    if ($base === false) {
+        return;
+    }
+
+    $target = realpath(__DIR__ . '/../' . $relative);
+    if ($target === false || !is_file($target)) {
+        return;
+    }
+
+    // Containment check mirrors resolve_static_candidate() in public/router.php:
+    // only unlink files that resolve strictly inside backend/uploads.
+    if (strpos($target, $base . DIRECTORY_SEPARATOR) !== 0) {
+        return;
+    }
+
+    @unlink($target);
+}
+
 function table_has_column(string $table, string $column): bool
 {
     static $cache = [];
@@ -670,4 +758,121 @@ function table_has_column(string $table, string $column): bool
     }
 
     return $cache[$key];
+}
+
+/**
+ * Allowlist-based HTML sanitizer for stored rich text (currently: blog post
+ * content, which renders on the public site via dangerouslySetInnerHTML).
+ * No external dependency (this app is intentionally dependency-free) — uses
+ * PHP's built-in DOMDocument.
+ *
+ * Strategy: walk the DOM depth-first, POST-order (children before parent) so
+ * that when a disallowed wrapper element is unwrapped or a dangerous element
+ * is dropped, its descendants have already been fully sanitized — a
+ * <script> nested inside some unknown tag can never survive by riding along
+ * when the wrapper is unwrapped.
+ */
+function sanitize_html(?string $html): string
+{
+    $html = (string) $html;
+    if (trim($html) === '') {
+        return '';
+    }
+
+    $doc = new DOMDocument('1.0', 'UTF-8');
+    libxml_use_internal_errors(true);
+    $doc->loadHTML(
+        '<?xml encoding="UTF-8"><div id="__sanitize_root__">' . $html . '</div>',
+        LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+    );
+    libxml_clear_errors();
+
+    $root = $doc->getElementById('__sanitize_root__');
+    if ($root === null) {
+        return '';
+    }
+
+    sanitize_html_node($root);
+
+    $out = '';
+    foreach (iterator_to_array($root->childNodes) as $child) {
+        $out .= $doc->saveHTML($child);
+    }
+    return trim($out);
+}
+
+function sanitize_html_node(DOMElement $node): void
+{
+    static $allowedTags = [
+        'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'strike',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'ul', 'ol', 'li', 'a', 'img', 'blockquote', 'code', 'pre',
+        'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'hr', 'sub', 'sup',
+    ];
+    // Removed along with their entire contents (unlike an unrecognized tag,
+    // which is just unwrapped) — these are either inherently dangerous or
+    // never a legitimate part of rich-text body copy.
+    static $stripEntirely = [
+        'script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button',
+        'textarea', 'select', 'link', 'meta', 'base', 'svg', 'math', 'noscript', 'applet',
+    ];
+    static $allowedAttributesByTag = [
+        'a' => ['href', 'title', 'target', 'rel'],
+        'img' => ['src', 'alt', 'title', 'width', 'height'],
+    ];
+
+    foreach (iterator_to_array($node->childNodes) as $child) {
+        if ($child instanceof DOMComment || $child instanceof DOMProcessingInstruction) {
+            $node->removeChild($child);
+            continue;
+        }
+        if (!($child instanceof DOMElement)) {
+            continue; // text node — left as-is (DOMDocument already entity-escapes on save)
+        }
+
+        // Post-order: sanitize the subtree before deciding this node's fate.
+        sanitize_html_node($child);
+
+        $tag = strtolower($child->tagName);
+
+        if (in_array($tag, $stripEntirely, true)) {
+            $node->removeChild($child);
+            continue;
+        }
+
+        if (!in_array($tag, $allowedTags, true)) {
+            while ($child->firstChild) {
+                $node->insertBefore($child->firstChild, $child);
+            }
+            $node->removeChild($child);
+            continue;
+        }
+
+        $allowedAttributes = array_merge(['class'], $allowedAttributesByTag[$tag] ?? []);
+        foreach (iterator_to_array($child->attributes ?? []) as $attr) {
+            $attrName = strtolower($attr->name);
+            if (str_starts_with($attrName, 'on') || !in_array($attrName, $allowedAttributes, true)) {
+                $child->removeAttribute($attr->name);
+                continue;
+            }
+            if (in_array($attrName, ['href', 'src'], true) && !is_safe_url_scheme($attr->value)) {
+                $child->removeAttribute($attr->name);
+            }
+        }
+        if ($tag === 'a' && $child->getAttribute('target') === '_blank') {
+            $child->setAttribute('rel', 'noopener noreferrer');
+        }
+    }
+}
+
+function is_safe_url_scheme(string $url): bool
+{
+    $url = trim($url);
+    if ($url === '') {
+        return true;
+    }
+    if (!preg_match('#^([a-zA-Z][a-zA-Z0-9+.\-]*):#', $url, $matches)) {
+        return true; // no scheme => relative URL, safe
+    }
+    return in_array(strtolower($matches[1]), ['http', 'https', 'mailto', 'tel'], true);
 }

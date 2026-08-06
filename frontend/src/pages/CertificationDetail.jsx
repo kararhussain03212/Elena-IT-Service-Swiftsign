@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import Banner from '@/components/Banner';
 import RecaptchaField from '@/components/RecaptchaField';
@@ -47,12 +47,7 @@ export default function CertificationDetail() {
   const [notifyRecaptchaToken, setNotifyRecaptchaToken] = useState('');
   const notifyRecaptchaRef = useRef(null);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    fetchCertDetails();
-  }, [id]);
-
-  const fetchCertDetails = async () => {
+  const fetchCertDetails = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -75,7 +70,12 @@ export default function CertificationDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchCertDetails();
+  }, [fetchCertDetails]);
 
   const renderApplyDescription = () => {
     const template = certData.applyDescription

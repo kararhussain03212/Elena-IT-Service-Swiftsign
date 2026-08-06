@@ -64,9 +64,9 @@ class NewsletterSubscriberController
         fputcsv($out, ['Email', 'Source Page', 'Subscribed At']);
         foreach ($subscribers as $subscriber) {
             fputcsv($out, [
-                $subscriber['email'] ?? '',
-                $subscriber['source_page'] ?? '',
-                $subscriber['subscribed_at'] ?? '',
+                csv_safe_cell($subscriber['email'] ?? ''),
+                csv_safe_cell($subscriber['source_page'] ?? ''),
+                csv_safe_cell($subscriber['subscribed_at'] ?? ''),
             ]);
         }
         fclose($out);

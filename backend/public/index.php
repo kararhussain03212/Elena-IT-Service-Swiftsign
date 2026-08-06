@@ -81,8 +81,8 @@ $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $configuredOrigins = (string) env('CORS_ALLOWED_ORIGINS', '');
 $parsedOrigins = array_values(array_filter(array_map('trim', explode(',', $configuredOrigins))));
 $allowedOrigins = !empty($parsedOrigins) ? $parsedOrigins : [
-    'https://it.swiftsignbm.com',
-    'https://www.it.swiftsignbm.com',
+    'https://elenaitservices.com',
+    'https://www.elenaitservices.com',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'http://localhost:5174',
@@ -92,10 +92,12 @@ $allowedOrigins = !empty($parsedOrigins) ? $parsedOrigins : [
 $isLocalDevOrigin = preg_match('#^https?://(localhost|127\.0\.0\.1)(:\d+)?$#i', $origin) === 1;
 $isAllowedOrigin = in_array($origin, $allowedOrigins, true) || $isLocalDevOrigin;
 
-$allowOrigin = $isAllowedOrigin ? $origin : '*';
 header('Vary: Origin, Access-Control-Request-Headers, Access-Control-Request-Method');
-header('Access-Control-Allow-Origin: ' . $allowOrigin);
-if ($allowOrigin !== '*') {
+if ($isAllowedOrigin) {
+    // Fail closed: only echo back Access-Control-Allow-Origin for an allowlisted
+    // origin. Omitting the header entirely for unknown origins (instead of falling
+    // back to "*") makes the browser block cross-origin reads of the response.
+    header('Access-Control-Allow-Origin: ' . $origin);
     header('Access-Control-Allow-Credentials: true');
 }
 

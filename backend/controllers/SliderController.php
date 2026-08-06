@@ -60,6 +60,14 @@ class SliderController
     {
         require_data_inserter();
         $body = $context['body'] ?? [];
+        $heading = sanitize_string($body['heading'] ?? '');
+        $title = sanitize_string($body['title'] ?? '');
+        if ($heading === '') {
+            error_response(400, 'Heading is required.', ['field' => 'heading']);
+        }
+        if ($title === '') {
+            error_response(400, 'Title is required.', ['field' => 'title']);
+        }
         $slug = self::ensureUniqueSlug((string) ($body['slug'] ?? $body['title'] ?? ''));
         $payload = [
             'heading' => sanitize_string($body['heading'] ?? ''),
@@ -85,6 +93,10 @@ class SliderController
     public static function update(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = SliderModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Slider not found.');
+        }
         $body = $context['body'] ?? [];
         $payload = [];
         foreach (['heading', 'title', 'subtitle', 'buttonText', 'buttonLink'] as $key) {
@@ -105,19 +117,25 @@ class SliderController
         if (array_key_exists('isActive', $body)) {
             $payload['is_active'] = parse_boolean($body['isActive'], true) ? 1 : 0;
         }
+        $oldFileValues = [];
         foreach (['image', 'video'] as $field) {
             $upload = handle_file_upload($field);
+            $removeKey = 'remove' . ucfirst($field);
+            $shouldRemove = parse_boolean($body[$removeKey] ?? '', false);
             if ($upload) {
                 $payload[$field] = $upload['path'];
-            }
-            $removeKey = 'remove' . ucfirst($field);
-            if (parse_boolean($body[$removeKey] ?? '', false)) {
+                $oldFileValues[] = $existing[$field] ?? null;
+            } elseif ($shouldRemove) {
                 $payload[$field] = null;
+                $oldFileValues[] = $existing[$field] ?? null;
             }
         }
         $updated = SliderModel::update($id, $payload);
         if (!$updated) {
             error_response(404, 'Slider not found.');
+        }
+        foreach ($oldFileValues as $oldValue) {
+            delete_uploaded_file_if_present($oldValue);
         }
         return $updated;
     }
@@ -135,7 +153,13 @@ class SliderController
     public static function delete(array $context): array
     {
         $id = (int) ($context['params']['id'] ?? 0);
+        $existing = SliderModel::findById($id);
+        if (!$existing) {
+            error_response(404, 'Slider not found.');
+        }
         SliderModel::delete($id);
+        delete_uploaded_file_if_present($existing['image'] ?? null);
+        delete_uploaded_file_if_present($existing['video'] ?? null);
         return ['message' => 'Deleted'];
     }
 }

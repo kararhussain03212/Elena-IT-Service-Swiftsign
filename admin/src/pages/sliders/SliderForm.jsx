@@ -6,6 +6,7 @@ import {
   updateSlider,
 } from "../../api/sliderApi";
 import { convertImageFileToWebp } from "../../utils/webpUpload";
+import ImageUpload from "../../components/ImageUpload";
 
 export default function SliderForm() {
   const { id } = useParams();
@@ -13,7 +14,6 @@ export default function SliderForm() {
   const isEditing = Boolean(id);
   const formRef = useRef(null);
   const fileInputRef = useRef(null);
-  const videoInputRef = useRef(null);
 
   const [heading, setHeading] = useState("");
   const [title, setTitle] = useState("");
@@ -24,11 +24,8 @@ export default function SliderForm() {
   const [buttonText, setButtonText] = useState("Get Started");
   const [buttonLink, setButtonLink] = useState("/services");
   const [image, setImage] = useState(null);
-  const [video, setVideo] = useState(null);
   const [existingImage, setExistingImage] = useState("");
-  const [existingVideo, setExistingVideo] = useState("");
   const [removeImage, setRemoveImage] = useState(false);
-  const [removeVideo, setRemoveVideo] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
   const [removingNow, setRemovingNow] = useState(false);
@@ -44,13 +41,6 @@ export default function SliderForm() {
     if (existingImage.startsWith("/uploads/")) return apiRoot + existingImage;
     return apiRoot + "/uploads/" + existingImage;
   }, [existingImage, apiRoot]);
-
-  const existingVideoUrl = useMemo(() => {
-    if (!existingVideo) return "";
-    if (existingVideo.startsWith("http")) return existingVideo;
-    if (existingVideo.startsWith("/uploads/")) return apiRoot + existingVideo;
-    return apiRoot + "/uploads/" + existingVideo;
-  }, [existingVideo, apiRoot]);
 
   const resolvePreviewUrl = (file) => (file ? URL.createObjectURL(file) : "");
   const toSlug = (value) =>
@@ -81,7 +71,6 @@ export default function SliderForm() {
         setButtonText(slider.buttonText || "Get Started");
         setButtonLink(slider.buttonLink || "/services");
         setExistingImage(slider.image || "");
-        setExistingVideo(slider.video || "");
       } catch (error) {
         console.error("Failed to load slider", error);
       }
@@ -105,28 +94,6 @@ export default function SliderForm() {
     return () => window.removeEventListener("keydown", handleShortcut);
   }, []);
 
-  const onFileChange = async (event) => {
-    const file = event.target.files?.[0] || null;
-    let nextFile = file;
-    if (file) {
-      try {
-        nextFile = (await convertImageFileToWebp(file)) || file;
-      } catch (error) {
-        console.error("Slider image conversion failed; using original file.", error);
-      }
-    }
-    setImage(nextFile);
-    setStatus("");
-    if (nextFile) setRemoveImage(false);
-  };
-
-  const onVideoChange = (event) => {
-    const file = event.target.files?.[0] || null;
-    setVideo(file);
-    setStatus("");
-    if (file) setRemoveVideo(false);
-  };
-
   const removeMediaRealtime = async (field) => {
     if (!isEditing) return;
 
@@ -139,22 +106,16 @@ export default function SliderForm() {
       formData.append("subtitle", subtitle);
       formData.append("buttonText", buttonText);
       formData.append("buttonLink", buttonLink);
-      formData.append(`remove${field === "image" ? "Image" : "Video"}`, "true");
+      formData.append(`removeImage`, "true");
 
       await updateSlider(id, formData);
 
-      if (field === "image") {
-        setExistingImage("");
-        setRemoveImage(true);
-        setStatus("Image deleted instantly.");
-      } else {
-        setExistingVideo("");
-        setRemoveVideo(true);
-        setStatus("Video deleted instantly.");
-      }
+      setExistingImage("");
+      setRemoveImage(true);
+      setStatus("Image deleted instantly.");
     } catch (error) {
-      console.error(`Realtime ${field} delete failed`, error);
-      setStatus(`Failed to delete ${field}. Try again.`);
+      console.error(`Realtime image delete failed`, error);
+      setStatus(`Failed to delete image. Try again.`);
     } finally {
       setRemovingNow(false);
     }
@@ -173,19 +134,6 @@ export default function SliderForm() {
     setStatus("Selected image removed.");
   };
 
-  const handleRemoveVideo = async () => {
-    setVideo(null);
-    if (videoInputRef.current) videoInputRef.current.value = "";
-
-    if (isEditing && existingVideo) {
-      await removeMediaRealtime("video");
-      return;
-    }
-
-    setRemoveVideo(true);
-    setStatus("Selected video removed.");
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -201,9 +149,7 @@ export default function SliderForm() {
     formData.append("buttonLink", buttonLink);
 
     if (image) formData.append("image", image);
-    if (video) formData.append("video", video);
     if (removeImage) formData.append("removeImage", "true");
-    if (removeVideo) formData.append("removeVideo", "true");
 
     try {
       if (isEditing) await updateSlider(id, formData);
@@ -354,87 +300,27 @@ export default function SliderForm() {
           <label className="mb-1 block text-sm font-medium text-white/90">
             Image (optional)
           </label>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={onFileChange}
-            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
+          <ImageUpload
+            key={removeImage ? "removed" : "active"}
+            value={!removeImage && existingImageUrl ? encodeURI(existingImageUrl) : ""}
+            onFileSelect={(file) => {
+              setImage(file);
+              setStatus("");
+              setRemoveImage(false);
+            }}
+            label="Slider Image"
+            helperText="Upload a slider image"
           />
-
-          {(image || existingImageUrl) && (
-            <div className="mt-3 rounded-lg border border-white/20 bg-[#0B1B3A] p-3">
-              <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs text-white/60">
-                  {image ? "Selected new image" : "Current saved image"}
-                </p>
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  disabled={removingNow}
-                  className="rounded-md bg-red-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-60"
-                  title="Remove image"
-                >
-                  {removingNow ? "..." : "x"}
-                </button>
-              </div>
-
-              <img
-                src={image ? resolvePreviewUrl(image) : encodeURI(existingImageUrl)}
-                alt="Slider preview"
-                className="h-40 w-full rounded object-cover sm:h-48"
-              />
-            </div>
+          {(image || (!removeImage && existingImageUrl)) && (
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              disabled={removingNow}
+              className="mt-2 rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+            >
+              {removingNow ? "Removing..." : "Remove Image"}
+            </button>
           )}
-
-          <p className="mt-2 text-xs text-white/50">
-            Optional. Upload an image, video, or both.
-          </p>
-        </div>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-white/90">
-            Video (optional)
-          </label>
-          <input
-            ref={videoInputRef}
-            type="file"
-            accept="video/*"
-            onChange={onVideoChange}
-            className="w-full rounded-lg border border-white/20 bg-[#0B1B3A] px-3 py-2 text-white"
-          />
-
-          {(video || existingVideoUrl) && (
-            <div className="mt-3 rounded-lg border border-white/20 bg-[#0B1B3A] p-3">
-              <div className="mb-2 flex items-center justify-between gap-3">
-                <p className="text-xs text-white/60">
-                  {video ? "Selected new video" : "Current saved video"}
-                </p>
-                <button
-                  type="button"
-                  onClick={handleRemoveVideo}
-                  disabled={removingNow}
-                  className="rounded-md bg-red-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-60"
-                  title="Remove video"
-                >
-                  {removingNow ? "..." : "x"}
-                </button>
-              </div>
-
-              <video
-                src={video ? resolvePreviewUrl(video) : encodeURI(existingVideoUrl)}
-                controls
-                muted
-                playsInline
-                className="h-40 w-full rounded object-cover sm:h-48"
-              />
-            </div>
-          )}
-
-          <p className="mt-2 text-xs text-white/50">
-            Optional. If both are present, the hero will prefer the video and use
-            the image as a fallback/poster.
-          </p>
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
