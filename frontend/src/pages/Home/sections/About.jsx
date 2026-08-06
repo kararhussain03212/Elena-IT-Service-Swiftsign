@@ -1,6 +1,6 @@
 import React from "react";
 import { FaCheck } from "react-icons/fa6";
-import video from "../../../assets/images/video/cyber.mp4";
+import image from "../../../assets/images/bg/robot.jpeg";
 import Button from "../../../components/Button";
 import aboutShape from "@/assets/images/shape/about-two-shape.png";
 import useScrollReveal from "@/hooks/useScrollReveal";
@@ -40,14 +40,10 @@ const About = ({ content = {} }) => {
             ref={videoRef}
             className="sr-hidden sr-left overflow-hidden rounded-3xl border border-white/10 bg-black/20 shadow-[0_28px_80px_rgba(0,0,0,0.5)]"
           >
-            <video
-              src={video}
+            <img
+              src={image}
+              alt="Robot AI Illustration"
               className="h-[340px] w-full object-cover md:h-[540px]"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
             />
           </div>
 

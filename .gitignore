@@ -1,0 +1,75 @@
+# Environment variables & credentials
+.env
+.env.local
+.env.*.local
+.env.cpanel
+*.pem
+*.key
+
+# Node modules & dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build & dist folders
+admin/dist/
+frontend/dist/
+admin/node_modules/
+frontend/node_modules/
+e2e-tests/node_modules/
+
+# IDE & Editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Uploaded files & user content
+backend/uploads/
+backend/public/uploads/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+backend/tests/fixtures/
+e2e-tests/test-results/
+e2e-tests/report/
+e2e-tests/playwright-report/
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build artifacts
+*.zip
+*.tar.gz
+dist.zip
+
+# Local database files (if using SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Private configuration
+config.local.js
+config.local.php
+
+# IDE install logs
+e2e-tests/install*.log
