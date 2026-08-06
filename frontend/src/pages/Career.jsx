@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Banner from '@/components/Banner';
-import RecaptchaField from '@/components/RecaptchaField';
 import { getCareerPage, getCareerPrograms, submitProgramApplication, subscribeNewsletter } from '@/api/Apis';
 import {
   BookOpen,
@@ -26,13 +25,9 @@ export default function Career() {
     completedPrior: 'No'
   });
   const [applyState, setApplyState] = useState({ submitting: false, success: '', error: '' });
-  const [applyRecaptchaToken, setApplyRecaptchaToken] = useState('');
-  const applyRecaptchaRef = useRef(null);
 
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterState, setNewsletterState] = useState({ submitting: false, success: '', error: '' });
-  const [newsletterRecaptchaToken, setNewsletterRecaptchaToken] = useState('');
-  const newsletterRecaptchaRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -67,11 +62,6 @@ export default function Career() {
       return;
     }
 
-    if (!applyRecaptchaToken) {
-      setApplyState({ submitting: false, success: '', error: 'Please complete the reCAPTCHA verification.' });
-      return;
-    }
-
     setApplyState({ submitting: true, success: '', error: '' });
 
     try {
@@ -81,17 +71,12 @@ export default function Career() {
         email: formData.email,
         contactNumber: formData.phone,
         hasBasicItKnowledge: formData.completedPrior === 'Yes',
-        recaptchaToken: applyRecaptchaToken,
       });
       setApplyState({ submitting: false, success: data?.message || 'Application submitted successfully.', error: '' });
       setFormData({ name: '', email: '', phone: '', completedPrior: 'No' });
-      applyRecaptchaRef.current?.reset();
-      setApplyRecaptchaToken('');
       setTimeout(() => setApplyState((prev) => ({ ...prev, success: '' })), 6000);
     } catch (error) {
       const message = error?.response?.data?.message || 'Failed to submit application. Please try again.';
-      applyRecaptchaRef.current?.reset();
-      setApplyRecaptchaToken('');
       setApplyState({ submitting: false, success: '', error: message });
     }
   };
@@ -99,28 +84,18 @@ export default function Career() {
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
 
-    if (!newsletterRecaptchaToken) {
-      setNewsletterState({ submitting: false, success: '', error: 'Please complete the reCAPTCHA verification.' });
-      return;
-    }
-
     setNewsletterState({ submitting: true, success: '', error: '' });
 
     try {
       const { data } = await subscribeNewsletter({
         email: newsletterEmail,
         sourcePage: 'career',
-        recaptchaToken: newsletterRecaptchaToken,
       });
       setNewsletterState({ submitting: false, success: data?.message || 'Subscribed successfully.', error: '' });
       setNewsletterEmail('');
-      newsletterRecaptchaRef.current?.reset();
-      setNewsletterRecaptchaToken('');
       setTimeout(() => setNewsletterState((prev) => ({ ...prev, success: '' })), 6000);
     } catch (error) {
       const message = error?.response?.data?.message || 'Failed to subscribe. Please try again.';
-      newsletterRecaptchaRef.current?.reset();
-      setNewsletterRecaptchaToken('');
       setNewsletterState({ submitting: false, success: '', error: message });
     }
   };
@@ -355,11 +330,6 @@ export default function Career() {
                     </div>
                   </div>
 
-                  <RecaptchaField
-                    ref={applyRecaptchaRef}
-                    onChange={(token) => setApplyRecaptchaToken(token || '')}
-                  />
-
                   {applyState.error && (
                     <p className="text-rose-400 text-sm font-semibold text-center">{applyState.error}</p>
                   )}
@@ -462,10 +432,6 @@ export default function Career() {
                 {newsletterState.submitting ? 'Subscribing...' : 'Subscribe'}
               </button>
             </div>
-            <RecaptchaField
-              ref={newsletterRecaptchaRef}
-              onChange={(token) => setNewsletterRecaptchaToken(token || '')}
-            />
           </form>
         </div>
         {(newsletterState.success || newsletterState.error) && (

@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import Banner from '@/components/Banner';
-import RecaptchaField from '@/components/RecaptchaField';
 import { 
   BookOpen, 
   Users, 
@@ -44,8 +43,6 @@ export default function CertificationDetail() {
     completedPrior: 'No'
   });
   const [subscribed, setSubscribed] = useState(false);
-  const [notifyRecaptchaToken, setNotifyRecaptchaToken] = useState('');
-  const notifyRecaptchaRef = useRef(null);
 
   const fetchCertDetails = useCallback(async () => {
     setLoading(true);
@@ -103,11 +100,6 @@ export default function CertificationDetail() {
     e.preventDefault();
     if (!certData) return;
 
-    if (!notifyRecaptchaToken) {
-      alert('Please complete the reCAPTCHA verification.');
-      return;
-    }
-
     try {
       const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
@@ -117,7 +109,6 @@ export default function CertificationDetail() {
         body: JSON.stringify({
           ...formData,
           certCode: certData.code,
-          recaptchaToken: notifyRecaptchaToken
         })
       });
 
@@ -125,14 +116,10 @@ export default function CertificationDetail() {
       if (result.success) {
         setSubscribed(true);
         setFormData({ name: '', email: '', phone: '', completedPrior: 'No' });
-        notifyRecaptchaRef.current?.reset();
-        setNotifyRecaptchaToken('');
         setTimeout(() => {
           setSubscribed(false);
         }, 5000);
       } else {
-        notifyRecaptchaRef.current?.reset();
-        setNotifyRecaptchaToken('');
         alert(result.message || 'Failed to submit registration. Please try again.');
       }
     } catch (err) {
@@ -474,12 +461,6 @@ export default function CertificationDetail() {
                           </div>
                         </div>
                       )}
-
-                      <RecaptchaField
-                        ref={notifyRecaptchaRef}
-                        onChange={(token) => setNotifyRecaptchaToken(token || '')}
-                        className="mt-2"
-                      />
 
                       <button
                         type="submit"

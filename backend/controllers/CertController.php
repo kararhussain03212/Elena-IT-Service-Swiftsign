@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/Certification.php';
 require_once __DIR__ . '/../utils/helpers.php';
-require_once __DIR__ . '/../utils/recaptcha.php';
 
 class CertController
 {
@@ -221,9 +220,6 @@ class CertController
             if (empty($body[$field])) {
                 error_response(400, "Field '{$field}' is required.");
             }
-        }
-        if (!verify_recaptcha((string) ($body['recaptchaToken'] ?? ''))) {
-            error_response(400, 'reCAPTCHA verification failed. Please try again.');
         }
 
         $saved = Certification::saveRegistration($body);

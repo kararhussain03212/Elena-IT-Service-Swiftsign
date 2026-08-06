@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "@/components/Banner";
 import {
   Mail,
@@ -166,15 +166,6 @@ const Contact = () => {
 
     if (submitState.loading) return;
 
-    if (!recaptchaToken) {
-      setSubmitState({
-        loading: false,
-        error: "Please complete the reCAPTCHA verification.",
-        success: "",
-      });
-      return;
-    }
-
     setSubmitState({ loading: true, error: "", success: "" });
 
     try {
@@ -182,7 +173,6 @@ const Contact = () => {
         name: formData.name,
         email: formData.email,
         message: formData.message,
-        recaptchaToken,
       });
 
       setSubmitState({
@@ -194,8 +184,6 @@ const Contact = () => {
             : "Thank you! Your message has been sent.",
       });
       setFormData({ name: "", email: "", message: "" });
-      recaptchaRef.current?.reset();
-      setRecaptchaToken("");
     } catch (error) {
       const details =
         (typeof error?.response?.data?.message === "string" &&
@@ -203,8 +191,6 @@ const Contact = () => {
         (typeof error?.message === "string" && error.message.trim()) ||
         "";
 
-      recaptchaRef.current?.reset();
-      setRecaptchaToken("");
       setSubmitState({
         loading: false,
         error: details || CONTACT_SEND_FAILED,
@@ -503,11 +489,6 @@ const Contact = () => {
                           By submitting, you agree to the processing of your personal data by us as described in the Privacy Statement.
                         </p>
                       </div>
-
-                      <RecaptchaField
-                        ref={recaptchaRef}
-                        onChange={(token) => setRecaptchaToken(token || "")}
-                      />
 
                       <div className="mt-6 flex justify-end">
                         <Button

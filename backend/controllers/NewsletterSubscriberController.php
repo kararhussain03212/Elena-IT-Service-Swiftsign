@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/NewsletterSubscriberModel.php';
 require_once __DIR__ . '/../utils/helpers.php';
-require_once __DIR__ . '/../utils/recaptcha.php';
 
 class NewsletterSubscriberController
 {
@@ -13,9 +12,6 @@ class NewsletterSubscriberController
 
         if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             error_response(400, 'A valid email is required.');
-        }
-        if (!verify_recaptcha((string) ($body['recaptchaToken'] ?? ''))) {
-            error_response(400, 'reCAPTCHA verification failed. Please try again.');
         }
 
         $existing = NewsletterSubscriberModel::findByEmail($email);

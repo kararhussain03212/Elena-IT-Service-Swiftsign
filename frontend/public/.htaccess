@@ -1,4 +1,14 @@
-﻿Options -Indexes
+Options -Indexes
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';"
+</IfModule>
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -6,59 +16,18 @@
 
   RewriteRule ^index\.html$ - [L]
 
-  # Serve existing files/directories as-is
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Route backend endpoints when frontend and backend are deployed together.
   RewriteRule ^api/?$ backend/public/index.php?route=/api [L,QSA]
   RewriteRule ^api/(.*)$ backend/public/index.php?route=/api/$1 [L,QSA]
 
   RewriteRule ^uploads/?$ backend/public/router.php?asset=/uploads/ [L,QSA]
   RewriteRule ^uploads/(.*)$ backend/public/router.php?asset=/uploads/$1 [L,QSA]
 
-  # Do not rewrite missing static assets to index.html
   RewriteCond %{REQUEST_URI} \.(?:js|mjs|css|map|json|txt|xml|svg|png|jpe?g|gif|webp|ico|woff2?|ttf|eot|mp4|webm|ogg)$ [NC]
   RewriteRule ^ - [R=404,L]
 
-  # SPA fallback (React Router)
   RewriteRule . /index.html [L]
 </IfModule>
-
-
-<!-- ﻿Options -Indexes
-
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-
-  RewriteRule ^index\.html$ - [L]
-
-  # Serve existing files/directories as-is
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-
-  # Route backend endpoints when frontend and backend are deployed together.
-  RewriteRule ^api/?$ backend/public/index.php?route=/api [L,QSA]
-  RewriteRule ^api/(.*)$ backend/public/index.php?route=/api/$1 [L,QSA]
-
-  RewriteRule ^uploads/?$ backend/public/router.php?asset=/uploads/ [L,QSA]
-  RewriteRule ^uploads/(.*)$ backend/public/router.php?asset=/uploads/$1 [L,QSA]
-
-  # Do not rewrite missing static assets to index.html
-  RewriteCond %{REQUEST_URI} \.(?:js|mjs|css|map|json|txt|xml|svg|png|jpe?g|gif|webp|ico|woff2?|ttf|eot|mp4|webm|ogg)$ [NC]
-  RewriteRule ^ - [R=404,L]
-
-  # SPA fallback (React Router)
-  RewriteRule . /index.html [L]
-</IfModule>
-
-# php -- BEGIN cPanel-generated handler, do not edit
-# Set the “ea-php82” package as the default “PHP” programming language.
-<IfModule mime_module>
-  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
-</IfModule>
-# php -- END cPanel-generated handler, do not edit -->
-
