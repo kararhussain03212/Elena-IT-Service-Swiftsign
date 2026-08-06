@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import Banner from "@/components/Banner";
-import RecaptchaField from "@/components/RecaptchaField";
 import {
   Mail,
   MapPin,
@@ -89,9 +88,6 @@ const Contact = () => {
   const formEmailPlaceholder = String(
     contactMainSection.formEmailPlaceholder || "",
   ).trim();
-  const formMessageLabel = String(
-    contactMainSection.formMessageLabel || "",
-  ).trim();
   const formMessagePlaceholder = String(
     contactMainSection.formMessagePlaceholder || "",
   ).trim();
@@ -135,7 +131,6 @@ const Contact = () => {
       formNamePlaceholder ||
       formEmailLabel ||
       formEmailPlaceholder ||
-      formMessageLabel ||
       formMessagePlaceholder,
     );
   const hasContactMainSection = hasInfoSection || hasContactForm;
@@ -153,8 +148,6 @@ const Contact = () => {
     success: "",
   });
   const [openFaq, setOpenFaq] = useState(firstFaqId);
-  const [recaptchaToken, setRecaptchaToken] = useState("");
-  const recaptchaRef = useRef(null);
 
   useEffect(() => {
     setOpenFaq(firstFaqId);
@@ -494,11 +487,6 @@ const Contact = () => {
                       </div>
 
                       <div className="flex flex-col">
-                        {formMessageLabel ? (
-                          <label className="sr-only">
-                            {formMessageLabel}
-                          </label>
-                        ) : null}
                         <textarea
                           rows={3}
                           name="message"

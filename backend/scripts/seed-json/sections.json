@@ -113,7 +113,6 @@
       "formNamePlaceholder": "Your Name",
       "formEmailLabel": "Your Email*",
       "formEmailPlaceholder": "Your Email",
-      "formMessageLabel": "Write Message*",
       "formMessagePlaceholder": "Write Message",
       "submitButtonText": "Send Message"
     }

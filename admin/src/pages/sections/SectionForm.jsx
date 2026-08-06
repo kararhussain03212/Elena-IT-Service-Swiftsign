@@ -178,7 +178,6 @@ const createDefaultContentByKey = (key) => {
         formNamePlaceholder: "Your Name",
         formEmailLabel: "Your Email*",
         formEmailPlaceholder: "Your Email",
-        formMessageLabel: "Write Message*",
         formMessagePlaceholder: "Write Message",
         submitButtonText: "Send Message",
       };
@@ -1106,13 +1105,6 @@ const SectionContentEditor = ({
               value={data.formEmailPlaceholder}
               onChange={(value) =>
                 setContent({ ...data, formEmailPlaceholder: value })
-              }
-            />
-            <TextInput
-              label="Message Label"
-              value={data.formMessageLabel}
-              onChange={(value) =>
-                setContent({ ...data, formMessageLabel: value })
               }
             />
             <TextInput
