@@ -66,6 +66,14 @@ export default function TestimonialForm() {
     load();
   }, [id, isEdit, apiRoot]);
 
+  const generateSlug = (text) =>
+    String(text || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
+
   const onChange = async (e) => {
     const { name, value, type, checked, files } = e.target;
 
@@ -93,16 +101,11 @@ export default function TestimonialForm() {
 
     setForm((prev) => {
       const next = { ...prev, [name]: value };
-      if (name === "name" && !isEdit && !prev.slug) {
-        next.slug = String(value || "")
-          .toLowerCase()
-          .trim()
-          .replace(/[^a-z0-9\s-]/g, "")
-          .replace(/\s+/g, "-")
-          .replace(/-+/g, "-");
-      }
-      if (name === "name" && !prev.avatarAlt) {
-        next.avatarAlt = value;
+      if (name === "name") {
+        next.slug = generateSlug(value);
+        if (!prev.avatarAlt) {
+          next.avatarAlt = value;
+        }
       }
       return next;
     });
@@ -111,13 +114,7 @@ export default function TestimonialForm() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const fallbackSlug = String(form.name || "")
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-");
-    const finalSlug = String(form.slug || "").trim() || fallbackSlug;
+    const finalSlug = String(form.slug || "").trim() || generateSlug(form.name);
 
     const payload = new FormData();
     payload.append("name", form.name);
@@ -182,12 +179,12 @@ export default function TestimonialForm() {
           </label>
 
           <label className="space-y-2">
-            <span className="text-sm text-white/70">Slug</span>
+            <span className="text-sm text-white/70">Slug (auto-generated from name)</span>
             <input
-              required
               name="slug"
               value={form.slug}
               onChange={onChange}
+              placeholder="Auto-generated from name"
               className="w-full rounded-lg border border-white/20 bg-transparent px-3 py-2 text-white outline-none"
             />
           </label>

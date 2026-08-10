@@ -136,17 +136,15 @@ export function AuthProvider({ children }) {
         const profile = response.data || null;
         persistUser(profile);
       } catch {
-        if (ignore) return;
-        clearSession();
+        // Ignore failures here; the session stays active until the user
+        // explicitly logs out or a real API request comes back unauthorized.
       }
     };
 
     hydrateUser();
-    const intervalId = setInterval(hydrateUser, 15000);
 
     return () => {
       ignore = true;
-      clearInterval(intervalId);
     };
   }, [token]);
 

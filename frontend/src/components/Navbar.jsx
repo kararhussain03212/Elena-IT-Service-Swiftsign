@@ -229,7 +229,7 @@ const Navbar = ({ content = {} }) => {
   const apiRoot = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
   const logoSrc = (() => {
     const raw = String(content.logoUrl || "").trim();
-    const finalRaw = raw ? raw : "/images/elena logo.png";
+    const finalRaw = raw ? raw : "/images/without text.png";
     if (/^https?:\/\//i.test(finalRaw)) return finalRaw;
     if (finalRaw.startsWith("/uploads/")) return apiRoot + finalRaw;
     if (/^uploads\//i.test(finalRaw)) return apiRoot + "/" + finalRaw;
