@@ -65,6 +65,7 @@ const createDefaultContentByKey = (key) => {
         highlights: [""],
         buttonText: "",
         buttonTo: "",
+        mainImage: "",
       };
     case "about.whoWeAre":
       return {
@@ -82,6 +83,7 @@ const createDefaultContentByKey = (key) => {
         featureCards: [{ iconKey: "icon1", title: "", description: "" }],
         progressBars: [{ label: "", value: 0 }],
         videoUrl: "",
+        image: "",
       };
     case "home.faq":
       return {
@@ -740,6 +742,26 @@ const SectionContentEditor = ({
             />
           </div>
         </section>
+        <section className={SUBSECTION_CLASS}>
+          <ImageUpload
+            value={resolveUploadedAssetUrl(data.mainImage)}
+            onFileSelect={async (file) => {
+              if (typeof onUploadNavbarLogo !== "function") return;
+
+              const uploadedPath = await onUploadNavbarLogo(file);
+              if (!uploadedPath) return;
+
+              setContent({ ...data, mainImage: uploadedPath });
+            }}
+            label={
+              isUploadingNavbarLogo ? "Uploading Image..." : "Upload Main Image"
+            }
+            helperText="Auto-uploads to backend uploads and stores returned path"
+          />
+          {navbarLogoUploadError ? (
+            <p className="mt-2 text-sm text-red-300">{navbarLogoUploadError}</p>
+          ) : null}
+        </section>
       </div>
     );
   }
@@ -862,6 +884,26 @@ const SectionContentEditor = ({
             value={data.videoUrl}
             onChange={(value) => setContent({ ...data, videoUrl: value })}
           />
+        </section>
+        <section className={SUBSECTION_CLASS}>
+          <ImageUpload
+            value={resolveUploadedAssetUrl(data.image)}
+            onFileSelect={async (file) => {
+              if (typeof onUploadNavbarLogo !== "function") return;
+
+              const uploadedPath = await onUploadNavbarLogo(file);
+              if (!uploadedPath) return;
+
+              setContent({ ...data, image: uploadedPath });
+            }}
+            label={
+              isUploadingNavbarLogo ? "Uploading Image..." : "Upload Image"
+            }
+            helperText="Auto-uploads to backend uploads and stores returned path"
+          />
+          {navbarLogoUploadError ? (
+            <p className="mt-2 text-sm text-red-300">{navbarLogoUploadError}</p>
+          ) : null}
         </section>
       </div>
     );

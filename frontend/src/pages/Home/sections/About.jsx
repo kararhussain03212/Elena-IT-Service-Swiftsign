@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { FaCheck } from "react-icons/fa6";
 import image from "../../../assets/images/bg/robot.jpeg";
 import Button from "../../../components/Button";
@@ -11,6 +11,27 @@ const About = ({ content = {} }) => {
   const textRef = useScrollReveal();
   const listRef = useScrollReveal();
   const btnRef = useScrollReveal();
+
+  const apiRoot = useMemo(() => {
+    const base = import.meta.env.VITE_API_URL || "/api";
+    return base.replace(/\/api\/?$/, "");
+  }, []);
+
+  const resolveImage = (value) => {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    if (/^data:/i.test(raw)) return raw;
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (/^\/?backend\/uploads\//i.test(raw)) {
+      const fileName = raw.split("/").filter(Boolean).pop();
+      return fileName ? `${apiRoot}/uploads/${fileName}` : "";
+    }
+    if (raw.startsWith("/uploads/")) return apiRoot + raw;
+    if (/^uploads\//i.test(raw)) return apiRoot + "/" + raw;
+    return raw;
+  };
+
+  const mainImage = resolveImage(content.mainImage) || image;
 
   const badge = String(content.badge || "").trim();
   const heading = String(content.heading || "").trim();
@@ -41,7 +62,7 @@ const About = ({ content = {} }) => {
             className="sr-hidden sr-left overflow-hidden rounded-3xl border border-white/10 bg-black/20 shadow-[0_28px_80px_rgba(0,0,0,0.5)]"
           >
             <img
-              src={image}
+              src={mainImage}
               alt="Robot AI Illustration"
               className="h-[340px] w-full object-cover md:h-[540px]"
             />

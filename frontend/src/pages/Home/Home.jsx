@@ -20,7 +20,7 @@ const Home = () => {
       <About content={sections.about} />
       <Services content={sections.servicesHeader} />
       <ChooseUs content={sections.chooseUs} />
-      <Team />
+      {/* <Team /> */}
       <FAQ content={sections.faq} />
       <Case content={sections.caseStudiesHeader} />
       <Testimonials />

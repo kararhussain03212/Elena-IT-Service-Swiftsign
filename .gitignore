@@ -5,6 +5,7 @@
 .env.cpanel
 *.pem
 *.key
+credentials.md
 
 # Node modules & dependencies
 node_modules/

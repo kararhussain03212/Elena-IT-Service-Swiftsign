@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaArrowUp, FaWhatsapp } from "react-icons/fa";
 
-const FloatingButtons = ({ whatsappNumber = "+1234567890" }) => {
+const FloatingButtons = ({ whatsappNumber = "+971 52 321 6551" }) => {
   const [scrollVisible, setScrollVisible] = useState(false);
   const [progress, setProgress] = useState(0);
 

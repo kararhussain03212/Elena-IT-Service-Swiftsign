@@ -58,11 +58,7 @@ const FAQ = ({ content = {} }) => {
           >
             {/* Dark blue blob behind the person */}
             <div
-              className="absolute inset-x-4 bottom-0 top-6 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] z-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse at 60% 40%, #1e2a6e 0%, #0d1240 100%)",
-              }}
+              className="absolute inset-x-4 bottom-0 top-6 "
             />
             <img
               src={faqImage}

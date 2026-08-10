@@ -43,9 +43,9 @@ const AboutUs = () => {
       <section id="about-stats" className="scroll-mt-32">
         <Info content={sections.stats} />
       </section>
-      <section id="about-team" className="scroll-mt-32">
+      {/* <section id="about-team" className="scroll-mt-32">
         <Team />
-      </section>
+      </section> */}
     </div>
   );
 };

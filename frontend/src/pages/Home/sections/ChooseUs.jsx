@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { FaPlay } from "react-icons/fa";
 import chooseImg from "../../../assets/images/choose/choose-image1.png";
 import icon1 from "../../../assets/images/icon/about-icon1.png";
@@ -14,6 +15,25 @@ const ChooseUs = ({ content = {} }) => {
   const imgRef = useScrollReveal();
   const contentRef = useScrollReveal();
 
+  const apiRoot = useMemo(() => {
+    const base = import.meta.env.VITE_API_URL || "/api";
+    return base.replace(/\/api\/?$/, "");
+  }, []);
+
+  const resolveImage = (value) => {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    if (/^data:/i.test(raw)) return raw;
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (/^\/?backend\/uploads\//i.test(raw)) {
+      const fileName = raw.split("/").filter(Boolean).pop();
+      return fileName ? `${apiRoot}/uploads/${fileName}` : "";
+    }
+    if (raw.startsWith("/uploads/")) return apiRoot + raw;
+    if (/^uploads\//i.test(raw)) return apiRoot + "/" + raw;
+    return raw;
+  };
+
   const badge = String(content.badge || "").trim();
   const heading = String(content.heading || "").trim();
   const featureCards = Array.isArray(content.featureCards)
@@ -23,6 +43,7 @@ const ChooseUs = ({ content = {} }) => {
     ? content.progressBars.filter((item) => item?.isActive !== false)
     : [];
   const videoUrl = String(content.videoUrl || "").trim();
+  const image = resolveImage(content.image) || chooseImg;
 
   const hasContent =
     Boolean(badge || heading || videoUrl) ||
@@ -153,7 +174,7 @@ const ChooseUs = ({ content = {} }) => {
           ].join(" ")}
         >
           <img
-            src={chooseImg}
+            src={image}
             alt="Why choose us"
             className="h-full w-full object-cover object-center block"
           />
